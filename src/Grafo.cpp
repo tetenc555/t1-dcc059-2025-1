@@ -1,7 +1,11 @@
 #include "Grafo.h"
 
 
-Grafo::Grafo() {
+Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
+    this->in_direcionado = direcionado;
+    this->in_ponderado_aresta= paresta;
+    this->in_ponderado_vertice= pvertice;
+    this->ordem=ordem;
 }
 
 Grafo::~Grafo() {
@@ -68,5 +72,6 @@ vector<char> Grafo::vertices_de_articulacao() {
 }
 
 void Grafo::imprimirGrafo(){
-    cout << "Hello world";
+    cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
+    cout << this->ordem;
 }
