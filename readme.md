@@ -33,7 +33,7 @@ para passar ao programa todas as informações necessárias ao seu funcionamento
 - Cada grupo enviará um único trabalho contendo **APENAS** os arquivos fonte (extensão cpp e h) e os arquivos de entrada utilizados (caso estes não tenham sido disponibilizados);
 O padrão para compilação a ser utilizado (ambiente Linux ou IOS) será
 ~~~
-g++ *.cpp -o execGrupoX
+g++ ./src/*.cpp -o ./src/execGrupoX && ./src/execGrupoX
 ~~~
 Onde “GrupoX” indica a qual grupo o trabalho se refere; 
 
