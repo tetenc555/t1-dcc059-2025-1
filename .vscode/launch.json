@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/tetenc555/Coding/t1-dcc059-2025-1/src",
+      "program": "/Users/tetenc555/Coding/t1-dcc059-2025-1/src/build/Debug/outDebug"
+    }
+  ]
+}

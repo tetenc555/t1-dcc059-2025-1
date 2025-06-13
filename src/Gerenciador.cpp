@@ -12,6 +12,7 @@ void Gerenciador::comandos(Grafo* grafo) {
     cout<<"(f) Arvore Geradora Minima (Algoritmo de Kruskal);"<<endl;
     cout<<"(g) Arvore de caminhamento em profundidade;"<<endl;
     cout<<"(h) Raio, diametro, centro e periferia do grafo;"<<endl;
+    cout<<"(j) Imprimir grafo;"<<endl;
     cout<<"(0) Sair;"<<endl<<endl;
 
     char resp;
@@ -158,6 +159,10 @@ void Gerenciador::comandos(Grafo* grafo) {
             }
 
             break;
+        }
+        case 'j': {
+            grafo->imprimirGrafo();
+
         }
 
         case '0': {

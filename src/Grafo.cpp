@@ -66,3 +66,7 @@ vector<char> Grafo::vertices_de_articulacao() {
     cout<<"Metodo nao implementado"<<endl;
     return {};
 }
+
+void Grafo::imprimirGrafo(){
+    cout << "Hello world";
+}
