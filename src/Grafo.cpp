@@ -73,5 +73,5 @@ vector<char> Grafo::vertices_de_articulacao() {
 
 void Grafo::imprimirGrafo(){
     cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
-    cout << this->ordem;
+    cout << this->ordem << endl;
 }
