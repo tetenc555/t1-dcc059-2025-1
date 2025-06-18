@@ -39,7 +39,7 @@ Onde “GrupoX” indica a qual grupo o trabalho se refere;
 
 - O padrão para a execução a ser utilizado pelo professor será a linha abaixo, executada em ambiente **Linux** ou **IOS**:
 ~~~
-./execGrupoX <arquivo_entrada>
+./src/execGrupoX <arquivo_entrada>
 ~~~
 Onde *<arquivo_entrada>* é o nome do arquivo que contém as informações do grafo.
 
