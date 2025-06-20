@@ -38,7 +38,7 @@ public:
     bool in_ponderado_aresta;
     bool in_ponderado_vertice;
     vector<No*> lista_adj;
-    listaArestas* listaArestas = nullptr;
+    listaArestas* lista_arestas = nullptr;
 };
 
 

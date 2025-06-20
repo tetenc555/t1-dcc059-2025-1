@@ -31,7 +31,7 @@ Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
         this->lista_adj[indice]->criaAresta(idAlvoAresta,pvertice);
     }
     //criacao da lista de arestas
-    listaArestas* l = new listaArestas(this->lista_adj,direcionado);
+    this->lista_arestas = new listaArestas(this->lista_adj,direcionado);
 }
 
 Grafo::~Grafo() {

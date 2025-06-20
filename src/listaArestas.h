@@ -8,6 +8,7 @@
 
 
 class listaArestas {
+public:
     listaArestas(vector<No*> lista_adj,bool ehDir);
     ~listaArestas();
 
