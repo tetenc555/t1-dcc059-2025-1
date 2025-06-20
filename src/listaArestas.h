@@ -13,6 +13,7 @@ public:
     ~listaArestas();
 
     vector<tuple<char,char>> conexoes;
+    void imprimeArestas();
 };
 
 
