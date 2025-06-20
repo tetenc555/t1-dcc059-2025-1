@@ -1,17 +1,18 @@
 #include "Grafo.h"
 
-
 Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
     this->in_direcionado = direcionado;
     this->in_ponderado_aresta= paresta;
     this->in_ponderado_vertice= pvertice;
     this->ordem=ordem;
+    //insercao de nos
     for (int i = 0; i < ordem; i++) {
         char idAddNo;
         cin >> idAddNo;
         No* addNo = new No(idAddNo,pvertice);
         this->lista_adj.push_back(addNo);
     }
+    //insercao de arestas
     for (int i = 0; i < ordem; i++) {
         char idNoOrigem;
         cin>>idNoOrigem;
@@ -27,8 +28,10 @@ Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
         }
         char idAlvoAresta;
         cin>>idAlvoAresta;
-        this->lista_adj[indice]->criaAresta(idAlvoAresta,pvertice  );
+        this->lista_adj[indice]->criaAresta(idAlvoAresta,pvertice);
     }
+    //criacao da lista de arestas
+    listaArestas* l = new listaArestas(this->lista_adj,direcionado);
 }
 
 Grafo::~Grafo() {

@@ -9,6 +9,8 @@
 #include <iostream>
 #include <vector>
 
+#include "listaArestas.h"
+
 
 using namespace std;
 class Grafo {
@@ -36,6 +38,7 @@ public:
     bool in_ponderado_aresta;
     bool in_ponderado_vertice;
     vector<No*> lista_adj;
+    listaArestas* listaArestas = nullptr;
 };
 
 
