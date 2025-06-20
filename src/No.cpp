@@ -1,13 +1,21 @@
 #include "No.h"
 
-No::No(int peso, char id, bool ehPondVertice) {
+#include <iostream>
+
+No::No(char id, bool ehPondVertice) {
     this->id=id;
+    this->peso=0;
     if (ehPondVertice) {
-        this->peso=peso;
+        cin>> this->peso;
     }
 }
 
-void No::criaAresta() {
-
+void No::criaAresta(char alvo, bool ehPondVertice) {
+    int peso=0;
+    if (ehPondVertice) {
+        cin>> peso;
+    }
+    Aresta* addAresta = new Aresta(alvo, peso);
+    arestas.push_back(addAresta);
 }
 

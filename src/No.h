@@ -9,7 +9,7 @@
 using namespace std;
 class No {
 public:
-    No(int peso, char id, bool ehPondVertice);
+    No(char id, bool ehPondVertice);
     ~No();
 
     char id;
