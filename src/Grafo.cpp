@@ -6,6 +6,29 @@ Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
     this->in_ponderado_aresta= paresta;
     this->in_ponderado_vertice= pvertice;
     this->ordem=ordem;
+    for (int i = 0; i < ordem; i++) {
+        char idAddNo;
+        cin >> idAddNo;
+        No* addNo = new No(idAddNo,pvertice);
+        this->lista_adj.push_back(addNo);
+    }
+    for (int i = 0; i < ordem; i++) {
+        char idNoOrigem;
+        cin>>idNoOrigem;
+        int indice=-1;
+        for (int j = 0; j < ordem; j++) {
+            if (this->lista_adj[j]->id == idNoOrigem) {
+                indice=j; //define indice
+                break;
+            }
+        }
+        if (indice==-1) { //verifica se indice eh valido
+            break;
+        }
+        char idAlvoAresta;
+        cin>>idAlvoAresta;
+        this->lista_adj[indice]->criaAresta(idAlvoAresta,pvertice  );
+    }
 }
 
 Grafo::~Grafo() {
