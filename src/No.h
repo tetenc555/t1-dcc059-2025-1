@@ -15,7 +15,7 @@ public:
     char id;
     int peso;
     vector<Aresta*> arestas;
-    void criaAresta();
+    void criaAresta(char alvo, bool ehPondVertice);
 };
 
 
