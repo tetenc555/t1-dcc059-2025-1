@@ -28,8 +28,10 @@ listaArestas::listaArestas(vector<No *> lista_adj, bool ehDir) {
 
 void listaArestas::imprimeArestas() {
     cout << "Lista de Arestas: {";
-    for (int i = 0; i < conexoes.size(); i++) {
-        cout << "(" << get<0>(conexoes[i]) << "," << get<1>(conexoes[i]) << ")" << endl;
+    int tamanho = conexoes.size();
+    for (int i = 0; i < tamanho; i++) {
+        cout << "(" << get<0>(conexoes[i]) << "," << get<1>(conexoes[i]) << ") ,";
     }
+    cout << "}" << endl;
 }
 
