@@ -42,7 +42,8 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
             this->lista_adj[indice]->arestas.back()->peso=pesoAresta;
         }
 
-        if (!direcionado) { // faz processo contrario, pois no nao direcionado ambos terao a conexao
+        if (!direcionado && (idNoOrigem!=idAlvoAresta)) { // faz processo contrario, pois no não direcionado ambos terao a conexao
+            //PROCESSO NÃO E FEITO CASO SEJA LACO, pois isto causa duplicatas! (pois não e preciso registrar "a volta", tendo em vista que eh identica à ida)
             int indiceVolta=-1;
             for (int k = 0; k < ordem; k++) {
                 if (this->lista_adj[k]->id == idAlvoAresta) {
