@@ -101,4 +101,7 @@ void Grafo::imprimirGrafo(){
     cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
     cout << this->ordem << endl;
     this->lista_arestas->imprimeArestas();
+    for (int i = 0; i < this->ordem; i++) {
+        this->lista_adj[i]->imprimeConexoes(this->in_ponderado_aresta);
+    }
 }
