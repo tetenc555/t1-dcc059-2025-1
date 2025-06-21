@@ -9,7 +9,7 @@
 
 class listaArestas {
 public:
-    listaArestas(vector<No*> lista_adj,bool ehDir);
+    listaArestas(vector<No*> lista_adj);
     ~listaArestas();
 
     vector<tuple<char,char>> conexoes;

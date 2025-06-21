@@ -65,7 +65,7 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
     }
 
     //criacao da lista de arestas
-    this->lista_arestas = new listaArestas(this->lista_adj,direcionado);
+    this->lista_arestas = new listaArestas(this->lista_adj);
 }
 
 Grafo::~Grafo() {

@@ -8,7 +8,7 @@
 #include <tuple>
 using namespace std;
 
-listaArestas::listaArestas(vector<No *> lista_adj, bool ehDir) {
+listaArestas::listaArestas(vector<No *> lista_adj) {
     int qtdNos = lista_adj.size();
     for(int i=0;i<qtdNos;i++) {
         No* no = lista_adj[i];
