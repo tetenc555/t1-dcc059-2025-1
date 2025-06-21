@@ -18,6 +18,9 @@ void No::criaAresta(char alvo) {
 void No::imprimeConexoes(bool ehPondAresta) {
     cout << "Conexões do Nó " << this->id ;
     int tamanho = arestas.size();
+    if (ehPondAresta) {
+        cout << " (Peso: " << this->peso << ")";
+    }
     if (tamanho == 0) {
         cout << " -- " << endl;
         return;
