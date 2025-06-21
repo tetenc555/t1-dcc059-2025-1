@@ -2,3 +2,4 @@ src/execGrupoX
 .idea/discord.xml
 .idea/
 build/
+.DS_Store

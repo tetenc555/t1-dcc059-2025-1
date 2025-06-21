@@ -159,12 +159,11 @@ void Gerenciador::comandos(Grafo* grafo) {
             }
 
             break;
-        }
+
+    }
         case 'j': {
-            grafo->imprimirGrafo();
-
-        }
-
+        grafo->imprimirGrafo();
+    }
         case '0': {
             exit(0);
         }

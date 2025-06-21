@@ -9,11 +9,13 @@
 #include <iostream>
 #include <vector>
 
+#include "listaArestas.h"
+
 
 using namespace std;
 class Grafo {
 public:
-    Grafo(bool direcionado, bool paresta, bool pvertice, int ordem);
+    Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
     ~Grafo();
 
     vector<char> fecho_transitivo_direto(char id_no); // a
@@ -22,7 +24,7 @@ public:
     vector<char> caminho_minimo_floyd(char id_no, char id_no_b); // d
     Grafo* arvore_geradora_minima_prim(vector<char> ids_nos); // e
     Grafo* arvore_geradora_minima_kruskal(vector<char> ids_nos); // f
-    Grafo* arvore_caminhamento_profundidade(int id_no); // g
+    Grafo* arvore_caminhamento_profundidade(char id_no); // g
     void imprimirGrafo(); // h
     int raio(); // h 1
     int diametro(); // h 2
@@ -36,6 +38,7 @@ public:
     bool in_ponderado_aresta;
     bool in_ponderado_vertice;
     vector<No*> lista_adj;
+    listaArestas* lista_arestas = nullptr;
 };
 
 
