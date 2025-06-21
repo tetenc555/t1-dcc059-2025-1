@@ -1,6 +1,7 @@
 #include "Grafo.h"
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
+    //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
     this->in_direcionado = direcionado;
     this->in_ponderado_aresta= ehPondAresta;
     this->in_ponderado_vertice= ehPondVertice;
