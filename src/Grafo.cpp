@@ -1,10 +1,11 @@
 #include "Grafo.h"
 
-Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
+Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     this->in_direcionado = direcionado;
     this->in_ponderado_aresta= paresta;
     this->in_ponderado_vertice= pvertice;
     this->ordem=ordem;
+
     //insercao de nos
     for (int i = 0; i < ordem; i++) {
         char idAddNo;
@@ -12,27 +13,31 @@ Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
         No* addNo = new No(idAddNo,pvertice);
         this->lista_adj.push_back(addNo);
     }
+
     //insercao de arestas
     for (int i = 0; i < ordem; i++) {
         char idNoOrigem;
-        cin>>idNoOrigem;
-        int indice=-1;
+        cin>>idNoOrigem; //define no de origem
+        int indice=-1; //valor inicial -1 p verificacao
         for (int j = 0; j < ordem; j++) {
             if (this->lista_adj[j]->id == idNoOrigem) {
-                indice=j; //define indice
+                indice=j; //encontra indice
                 break;
             }
         }
+
         if (indice==-1) { //verifica se indice eh valido
-            break; /// TROCAR ISSO PRA FICAR VALIDO! ADICIONAR VALIDACOES MAIS CORRETAS !
+            No* addNo = new No(idNoOrigem,pvertice); //se nao for, adiciona no novo
+            this->lista_adj.push_back(addNo);
         }
+
         char idAlvoAresta;
         cin>>idAlvoAresta;
-        this->lista_adj[indice]->criaAresta(idAlvoAresta);
+        this->lista_adj[indice]->criaAresta(idAlvoAresta); // define aresta nova "na ida"
 
-        int pesoAresta;
-        if (paresta) {
-            cin>>pesoAresta;
+        int pesoAresta; // declaracao anterior para nao causar erros
+        if (paresta) { // define peso da aresta caso seja ponderado
+            cin>>pesoAresta; // caso contrario, peso NAO E INSERIDO
             this->lista_adj[indice]->arestas.back()->peso=pesoAresta;
         }
 
@@ -44,13 +49,21 @@ Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
                     break;
                 }
             }
-            this->lista_adj[indiceVolta]->criaAresta(this->lista_adj[indice]->id);
-            if (paresta) {
+
+            if (indiceVolta==-1) { //verifica se indice eh valido
+                No* addNo = new No(idAlvoAresta,pvertice); //se nao for, adiciona no novo
+                this->lista_adj.push_back(addNo);
+            }
+
+            this->lista_adj[indiceVolta]->criaAresta(this->lista_adj[indice]->id); //cria aresta "de volta"
+
+            if (paresta) { // define o peso ja digitado caso seja ponderado
                 this->lista_adj[indiceVolta]->arestas.back()->peso=pesoAresta;
             }
 
         }
     }
+
     //criacao da lista de arestas
     this->lista_arestas = new listaArestas(this->lista_adj,direcionado);
 }
