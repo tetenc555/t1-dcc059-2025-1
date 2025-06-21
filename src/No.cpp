@@ -10,12 +10,8 @@ No::No(char id, bool ehPondVertice) {
     }
 }
 
-void No::criaAresta(char alvo, bool ehPondVertice) {
-    int peso=0;
-    if (ehPondVertice) {
-        cin>> peso;
-    }
-    Aresta* addAresta = new Aresta(alvo, peso);
+void No::criaAresta(char alvo) {
+    Aresta* addAresta = new Aresta(alvo, -1);
     arestas.push_back(addAresta);
 }
 
@@ -23,7 +19,7 @@ void No::imprimeConexoes(bool ehPondAresta) {
     cout << "Conexões do Nó " << this->id ;
     int tamanho = arestas.size();
     if (tamanho == 0) {
-        cout << "--" << endl;
+        cout << " -- " << endl;
         return;
     }
     for (int i = 0; i < tamanho; i++) {

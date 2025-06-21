@@ -24,11 +24,32 @@ Grafo::Grafo(bool direcionado, bool paresta, bool pvertice, int ordem) {
             }
         }
         if (indice==-1) { //verifica se indice eh valido
-            break;
+            break; /// TROCAR ISSO PRA FICAR VALIDO! ADICIONAR VALIDACOES MAIS CORRETAS !
         }
         char idAlvoAresta;
         cin>>idAlvoAresta;
-        this->lista_adj[indice]->criaAresta(idAlvoAresta,pvertice);
+        this->lista_adj[indice]->criaAresta(idAlvoAresta);
+
+        int pesoAresta;
+        if (paresta) {
+            cin>>pesoAresta;
+            this->lista_adj[indice]->arestas.back()->peso=pesoAresta;
+        }
+
+        if (!direcionado) { // faz processo contrario, pois no nao direcionado ambos terao a conexao
+            int indiceVolta=-1;
+            for (int k = 0; k < ordem; k++) {
+                if (this->lista_adj[k]->id == idAlvoAresta) {
+                    indiceVolta=k; //define indice
+                    break;
+                }
+            }
+            this->lista_adj[indiceVolta]->criaAresta(this->lista_adj[indice]->id);
+            if (paresta) {
+                this->lista_adj[indiceVolta]->arestas.back()->peso=pesoAresta;
+            }
+
+        }
     }
     //criacao da lista de arestas
     this->lista_arestas = new listaArestas(this->lista_adj,direcionado);
@@ -101,6 +122,7 @@ void Grafo::imprimirGrafo(){
     cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
     cout << this->ordem << endl;
     this->lista_arestas->imprimeArestas();
+    cout << "Lista de Adjacencias: " << endl;
     for (int i = 0; i < this->ordem; i++) {
         this->lista_adj[i]->imprimeConexoes(this->in_ponderado_aresta);
     }

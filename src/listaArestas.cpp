@@ -18,10 +18,11 @@ listaArestas::listaArestas(vector<No *> lista_adj, bool ehDir) {
             char volta = no->arestas[j]->id_no_alvo;
             tuple <char,char> conexao {ida,volta};
             conexoes.push_back(conexao);
+            /*
             if (!(ehDir)) {
                 tuple <char,char> conexaoVolta {volta,ida};
                 conexoes.push_back(conexaoVolta);
-            }
+            }*/
         }
     }
 }
