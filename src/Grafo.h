@@ -18,6 +18,16 @@ public:
     Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
     ~Grafo();
 
+    void inserirNos(int id);
+
+    void imprimirNos();
+
+    int encontraIndiceNo(char idNo);
+
+    int processarArestaIda(int indiceOrigem, char idAlvoAresta);
+
+    void processarArestaVolta(char idAlvo, char idOrigem, int peso);
+
     vector<char> fecho_transitivo_direto(char id_no); // a
     vector<char> fecho_transitivo_indireto(char id_no); // b
     vector<char> caminho_minimo_dijkstra(char id_no_a, char id_no_b); // c
