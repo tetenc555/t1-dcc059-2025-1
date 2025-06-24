@@ -79,8 +79,17 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
 }
 
 vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+    if (!this->in_direcionado) {
+        cout<<"Nao é direcionado!"<<endl;
+        return {};
+    }
+    vector<char> retorno; //cria vetor p retorno
+    for (int i=0; i< int (this->lista_adj.size()); i++) { //verifica para cada item
+        No* origem=this->lista_adj[i]; // define o no "origem" para verificacao e adicao caso seja verdadeiro
+        if (origem->id != id_no && verificaSeChega(origem->id,id_no)) // nao faz a verificao para o no em si, e faz processamento se o no tiver caminho para o id_no
+            retorno.push_back(origem->id); //adiciona no a lista de retorno
+    }
+    return retorno; //faz retorno do fecho transitivo indireto, apos processamento
 }
 
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
