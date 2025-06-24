@@ -24,7 +24,7 @@ public:
 
     int encontraIndiceNo(char idNo);
 
-    int processarArestaIda(int indiceOrigem, char idAlvoAresta);
+    void processarArestaIda(int idOrigem, char idAlvoAresta, int peso);
 
     void processarArestaVolta(char idAlvo, char idOrigem, int peso);
 

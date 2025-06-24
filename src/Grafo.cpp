@@ -10,31 +10,27 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
     this->ordem=ordem;
 
     //insercao de nos
-    for (int i = 0; i < ordem; i++) {
+    for (int i = 0; i < ordem; i++) { //ouve ordem vezes
         char id_add_no;
-        cin >> id_add_no;
-        inserirNos(id_add_no);
+        cin >> id_add_no; //escuta id do no
+        inserirNos(id_add_no); //adiciona no
     }
 
     //insercao de arestas
-    for (int i = 0; i < this->ordem; i++) {
+    for (int i = 0; i < this->ordem; i++) { //ouve ordem vezes
         char idNoOrigem;
         cin>>idNoOrigem; //define no de origem
-
-        int indice = encontraIndiceNo(idNoOrigem);
-
-        if (indice==-1) { //verifica se indice eh valido
-            inserirNos(idNoOrigem);
-            indice = lista_adj.size() -1; //TA DANDO LOOP QUANDO INSIRO NO NOVO
+        char idAlvoAresta;
+        cin>>idAlvoAresta; //define no alvo
+        int pesoAresta=0;
+        if (in_ponderado_aresta) {
+            cin >> pesoAresta; //define peso da aresta caso seja ponderado
         }
 
-        char idAlvoAresta;
-        cin>>idAlvoAresta;
-
-        int pesoAresta = processarArestaIda(indice, idAlvoAresta);
+        this->processarArestaIda(idNoOrigem,idAlvoAresta,pesoAresta); //adiciona aresta de ida
 
         if (!direcionado && (idNoOrigem != idAlvoAresta)){
-            processarArestaVolta(idAlvoAresta, idNoOrigem, pesoAresta);
+            this->processarArestaVolta(idAlvoAresta, idNoOrigem, pesoAresta); //adiciona aresta de volta caso nao seja loop e nao seja direcionado
         }
     }
 
@@ -46,15 +42,15 @@ Grafo::~Grafo() {
 }
 
 void Grafo::inserirNos(int id) {
-    No* addNo = new No(id, in_ponderado_vertice);
-    this->lista_adj.push_back(addNo);
+    No* addNo = new No(id, this->in_ponderado_vertice); //cria um novo no com id e peso (caso seja necessario)
+    this->lista_adj.push_back(addNo); //adiciona na lista de adjacencias
 }
 
 void Grafo::imprimirNos() {
     for (auto no : lista_adj) {
-        cout << "Nó " << no->id;
+        cout << "Nó " << no->id; //imprime id do no
         if (in_ponderado_vertice) {
-            cout << " (Peso: " << no->peso << ")";
+            cout << " (Peso: " << no->peso << ")"; //imprime seu peso caso seja ponderado vertice
         }
         cout << endl;
     }
@@ -68,28 +64,29 @@ int Grafo::encontraIndiceNo(char idNo) {
             break;
         }
     }
-    return indice;
+    return indice; //retorna indice valido ou -1 caso no nao exista !
 }
 
-int Grafo::processarArestaIda(int indiceOrigem, char idAlvoAresta) {
-    lista_adj[indiceOrigem]->criaAresta(idAlvoAresta);
+void Grafo::processarArestaIda(int idOrigem, char idAlvoAresta, int peso) {
+    int indice = encontraIndiceNo(idOrigem); //busca indice
 
-    int pesoAresta;
-    if (in_ponderado_aresta) {
-        cin >> pesoAresta;
-        lista_adj[indiceOrigem]->arestas.back()->peso = pesoAresta;
+    if (indice==-1) { // se o no for invalido, cria um novo no
+        this->inserirNos(idOrigem);
+        indice = lista_adj.size() - 1; // define indice do no inserido
     }
+    lista_adj[indice]->criaAresta(idAlvoAresta); //cria aresta
 
-    return pesoAresta;
+    if (this->in_ponderado_aresta) {
+        this->lista_adj[indice]->arestas.back()->peso=peso; //adiciona peso caso seja ponderado
+    }
 }
 
-void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) {
+void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //praticamente o contrario de processar Aresta Ida
     int indiceVolta = encontraIndiceNo(idAlvo); //busca indice
 
     if (indiceVolta == -1) { //se o no for invalido, cria um novo no
-        No* addNo = new No(idAlvo, in_ponderado_vertice);
-        this->lista_adj.push_back(addNo);
-        indiceVolta = lista_adj.size()-1;
+        this->inserirNos(idAlvo);
+        indiceVolta = lista_adj.size()-1; // define indice do no inserido
     }
 
     this->lista_adj[indiceVolta]->criaAresta(idOrigem); //cria aresta partindo do alvo pra origem
