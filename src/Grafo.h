@@ -30,6 +30,9 @@ public:
 
     bool verificaExistenciaNo(char idNo);
 
+    bool verificaSeChega(No* idOrigem, char idDestino, vector<No *>* NosPercorridos);
+
+
     vector<char> fecho_transitivo_direto(char id_no); // a
 
     vector<char> fecho_transitivo_indireto(char id_no); // b
@@ -45,7 +48,6 @@ public:
     vector<char> periferia(); // h 4
     vector<char> vertices_de_articulacao(); // i
 
-    bool verificaSeChega(No idOrigem, char idDestino, vector<No *> * vector);
 
 
     int ordem;
