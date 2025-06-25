@@ -115,6 +115,12 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
 }
 
 bool Grafo::verificaSeChega(No* origem, char idDestino, vector<No*>* NosPercorridos) { //funcao que verifica se um no Origem chega a um no de Destino
+    if (origem -> id == idDestino)
+        return false;
+
+    if (origem->arestas.empty())
+        return false;
+
     for (auto aresta:origem->arestas) {
         if (aresta->id_no_alvo == idDestino) {
             return true;
@@ -141,10 +147,14 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
         if (origem->id != id_no && verificaSeChega(origem,id_no,new vector<No*>)) // nao faz a verificao para o no em si, e faz processamento se o no tiver caminho para o id_no
             retorno.push_back(origem->id); //adiciona no a lista de retorno
     }
+
+
     // IMPRRESSAO PEA TESTES REMOVER DEPOIS
     for (int i=0; i<int(retorno.size()); i++) {
-        cout << retorno[i];
+        cout << retorno[i] << " ";
     }
+    cout << endl;
+    // apagar ate aqui
 
     return retorno; //faz retorno do fecho transitivo indireto, apos processamento
 }
