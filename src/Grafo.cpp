@@ -78,6 +78,21 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
     return {};
 }
 
+bool Grafo::verificaSeChega(No* origem, char idDestino, vector<No*> NosPercorridos) { //funcao que verifica se um no Origem chega a um no de Destino
+    for (auto aresta:origem->arestas) {
+        if (aresta->id_no_alvo == idDestino) {
+            return true;
+        }
+        if (find(NosPercorridos.begin,NosPercorridos.end,origem)==NosPercorridos.end()) {
+            int indiceProx = this->encontraIndiceNo(aresta->id_no_alvo);
+            No* proxOrigem = lista_adj[indiceProx];
+            NosPercorridos.push_back(origem);
+            verificaSeChega(proxOrigem ,idDestino,NosPercorridos;
+        }
+    }
+    return false;
+}
+
 vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     if (!this->in_direcionado) {
         cout<<"Nao é direcionado!"<<endl;
@@ -86,11 +101,12 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     vector<char> retorno; //cria vetor p retorno
     for (int i=0; i< int (this->lista_adj.size()); i++) { //verifica para cada item
         No* origem=this->lista_adj[i]; // define o no "origem" para verificacao e adicao caso seja verdadeiro
-        if (origem->id != id_no && verificaSeChega(origem->id,id_no)) // nao faz a verificao para o no em si, e faz processamento se o no tiver caminho para o id_no
+        if (origem->id != id_no && verificaSeChega(origem,id_no,new vector<No*>)) // nao faz a verificao para o no em si, e faz processamento se o no tiver caminho para o id_no
             retorno.push_back(origem->id); //adiciona no a lista de retorno
     }
     return retorno; //faz retorno do fecho transitivo indireto, apos processamento
 }
+
 
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
     cout<<"Metodo nao implementado"<<endl;

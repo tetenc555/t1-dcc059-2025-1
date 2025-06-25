@@ -19,6 +19,7 @@ public:
     ~Grafo();
 
     vector<char> fecho_transitivo_direto(char id_no); // a
+
     vector<char> fecho_transitivo_indireto(char id_no); // b
     vector<char> caminho_minimo_dijkstra(char id_no_a, char id_no_b); // c
     vector<char> caminho_minimo_floyd(char id_no, char id_no_b); // d
@@ -31,6 +32,8 @@ public:
     vector<char> centro(); // h 3
     vector<char> periferia(); // h 4
     vector<char> vertices_de_articulacao(); // i
+
+    bool verificaSeChega(No idOrigem, char idDestino, vector<No *> * vector);
 
 
     int ordem;
