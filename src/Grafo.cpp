@@ -50,7 +50,7 @@ void Grafo::imprimirNos() {
     for (auto no : lista_adj) {
         cout << "Nó " << no->id; //imprime id do no
         if (in_ponderado_vertice) {
-            cout << " (Peso: " << no->peso << ")"; //imprime seu peso caso seja ponderado vertice
+            cout << " (Peso do Nó: " << no->peso << ")"; //imprime seu peso caso seja ponderado vertice
         }
         cout << endl;
     }
@@ -58,7 +58,7 @@ void Grafo::imprimirNos() {
 
 int Grafo::encontraIndiceNo(char idNo) {
     int indice=-1; //valor inicial -1 p verificacao
-    for (int j = 0; j < lista_adj.size(); j++) {
+    for (int j = 0; j < int(lista_adj.size()); j++) {
         if (this->lista_adj[j]->id == idNo) {
             indice=j; //encontra indice
             break;
@@ -67,13 +67,21 @@ int Grafo::encontraIndiceNo(char idNo) {
     return indice; //retorna indice valido ou -1 caso no nao exista !
 }
 
-void Grafo::processarArestaIda(int idOrigem, char idAlvoAresta, int peso) {
-    int indice = encontraIndiceNo(idOrigem); //busca indice
-
-    if (indice==-1) { // se o no for invalido, cria um novo no
-        this->inserirNos(idOrigem);
-        indice = lista_adj.size() - 1; // define indice do no inserido
+bool Grafo::verificaExistenciaNo(char idNo) {
+    for (int i=0; i < int(lista_adj.size()); i++) { //percorre todos itens
+        if (this->lista_adj[i]->id == idNo) {
+            return true; //se achar no retorna true e para o for
+        }
     }
+    return false; //se nao achar ao fim do for retorna false
+}
+
+void Grafo::processarArestaIda(int idOrigem, char idAlvoAresta, int peso) {
+    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo((idAlvoAresta)))) { // se o no for invalido, quebra e nao processa a aresta
+        cout << "Erro! No invalido na aresta! Nao adicionada, tente novamente" << endl; //imprime mensagem de erro;
+        return; //retorna sem adicionar aresta
+    }
+    int indice = encontraIndiceNo(idOrigem); //busca indice
     lista_adj[indice]->criaAresta(idAlvoAresta); //cria aresta
 
     if (this->in_ponderado_aresta) {
@@ -82,13 +90,11 @@ void Grafo::processarArestaIda(int idOrigem, char idAlvoAresta, int peso) {
 }
 
 void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //praticamente o contrario de processar Aresta Ida
-    int indiceVolta = encontraIndiceNo(idAlvo); //busca indice
-
-    if (indiceVolta == -1) { //se o no for invalido, cria um novo no
-        this->inserirNos(idAlvo);
-        indiceVolta = lista_adj.size()-1; // define indice do no inserido
+    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo((idAlvo)))) { // se o no for invalido, quebra e nao processa a aresta
+        //nao imprime mensagem de erro pois o aviso sera emitido ja na aresta de ida, independente da aresta de volta ser chamada ou nao.
+        return; //retorna sem adicionar aresta
     }
-
+    int indiceVolta = encontraIndiceNo(idAlvo); //busca indice
     this->lista_adj[indiceVolta]->criaAresta(idOrigem); //cria aresta partindo do alvo pra origem
 
     //atribui peso se for ponderado
