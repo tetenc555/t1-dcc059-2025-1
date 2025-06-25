@@ -87,7 +87,7 @@ bool Grafo::verificaSeChega(No* origem, char idDestino, vector<No*> NosPercorrid
             int indiceProx = this->encontraIndiceNo(aresta->id_no_alvo);
             No* proxOrigem = lista_adj[indiceProx];
             NosPercorridos.push_back(origem);
-            verificaSeChega(proxOrigem ,idDestino,NosPercorridos;
+            verificaSeChega(proxOrigem ,idDestino,NosPercorridos);
         }
     }
     return false;
