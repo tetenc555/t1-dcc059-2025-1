@@ -17,9 +17,15 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
     }
 
     //insercao de arestas
-    for (int i = 0; i < this->ordem; i++) { //ouve ordem vezes
+    while (true) { //ouve ate o break acionado pelo espaco
         char idNoOrigem;
-        cin>>idNoOrigem; //define no de origem
+        cin.ignore();
+        cin.get(idNoOrigem); //define no de origem - necessario usar cin.get p ouvir espaco
+        while (idNoOrigem == ' ') {
+            cin.get(idNoOrigem); //verificacao para no caso de ouvir o caractere espaco, ouvir ate o proximo
+        }
+        if (idNoOrigem == '\n') //quebra quando ouve enter
+            break;
         char idAlvoAresta;
         cin>>idAlvoAresta; //define no alvo
         int pesoAresta=0;
