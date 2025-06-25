@@ -18,6 +18,18 @@ public:
     Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
     ~Grafo();
 
+    void inserirNos(int id);
+
+    void imprimirNos();
+
+    int encontraIndiceNo(char idNo);
+
+    void processarArestaIda(int idOrigem, char idAlvoAresta, int peso);
+
+    void processarArestaVolta(char idAlvo, char idOrigem, int peso);
+
+    bool verificaExistenciaNo(char idNo);
+
     vector<char> fecho_transitivo_direto(char id_no); // a
 
     vector<char> fecho_transitivo_indireto(char id_no); // b
