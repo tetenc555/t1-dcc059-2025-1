@@ -1,5 +1,3 @@
-# Makefile
-
 CXX := g++
 CXXFLAGS := -std=c++17 -Wall -Wextra -I src
 
@@ -12,23 +10,23 @@ OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
 .PHONY: all run clean
 
-all: $(BIN) run
+all: $(BIN)
+
+run: $(BIN)
+	$(BIN)
 
 # Link final
 $(BIN): $(OBJS)
-	@mkdir -p $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Compilar objetos
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Regras especiais para main.cpp caso precise
-$(BUILD_DIR)/main.o: $(SRC_DIR)/main.cpp
-	@mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Cria a pasta build se necessário
+$(BUILD_DIR):
+	mkdir $(BUILD_DIR)
 
 # Limpar arquivos
 clean:
-	rm -rf $(BUILD_DIR)
+	@if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
