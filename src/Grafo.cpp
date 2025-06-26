@@ -83,6 +83,10 @@ void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //prati
 }
 
 vector<char> Grafo::fecho_transitivo_direto(char id_no) {
+    if (!this->in_direcionado) { //se for nao direcionado, retorna vazio
+        cout<<"Nao é direcionado!"<<endl;
+        return {};
+    }
     vector <char> retorno;
     for (tuple conexao: this->lista_arestas->conexoes) {
         if (get<1>(conexao) == id_no)
