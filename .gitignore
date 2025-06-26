@@ -3,3 +3,4 @@ src/execGrupoX
 .idea/
 build/
 .DS_Store
+/src/main
