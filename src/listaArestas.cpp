@@ -31,3 +31,12 @@ void listaArestas::imprimeArestas() {
     cout << "}" << endl;
 }
 
+bool listaArestas::contemConexao(char idOrigem, char idAlvo) {
+    for (tuple conexao : this->conexoes) {
+        if (idOrigem == get<0>(conexao) && idAlvo == get<1>(conexao)) {
+            return true;
+        }
+    }
+    return false;
+}
+
