@@ -191,19 +191,29 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     queue<char> filaProcessamento; //cria fila em que sempre teremos o proximo item
     //ISSO E IMPORTANTE POIS FOI A MELHOR MANEIRA DE GARANTIR QUE ELE QUEBRE APENAS QUANDO NAO HOUVER MAIS CONEXOES A SEREM PROCESSADAS! (
 
+    // Inicia com o no final! Ele é o destino final, ou seja, o primeiro no caminhamento contrario.
+    filaProcessamento.push(id_no);
+
     while (!filaProcessamento.empty()){ // enquanto a fila nao tiver vazia, processa o proximo item
-        char processando=filaProcessamento.front();
+        char processando=filaProcessamento.front(); //define o destino a ser processado
         filaProcessamento.pop(); //remove ele da fila. Assim mantemos nenhum item na fila durante processamento, e salvamos apenas se encontrar outro a processar
         //Isto garante que o while quebre corretamente (caso nao ache mais vertices a serem processados)
         for (tuple conexao: this->lista_arestas->conexoes) {
-            char origem = get<0>(conexao);
-            char destino = get<1>(conexao);
+            char origemAresta = get<0>(conexao);
+            char destinoAresta = get<1>(conexao);
+
+            if (destinoAresta == processando) {
+                if (calculoRetorno.find(origemAresta) == calculoRetorno.end()) { //MOTIVO PRINCIPAL DE USAR UNORDERED SET! -> verificacao se a origem ja foi registrada
+                    //vi no stackoverflow que assim o processamento e menor, e resolve o problema de ter que usar +1 lista de arestas (jaPassou anterior) pra essa verificação
+                    calculoRetorno.insert(origemAresta); //insere origem como retorno valido
+                    filaProcessamento.push(origemAresta); //define origem como proximo destino valido p ser processsado
+                }
+            }
         }
     }
-
-
-    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
+    calculoRetorno.erase(id_no); //remove no em si - ele aparece em caso de loop ou ciclo.
     vector<char> retorno(calculoRetorno.begin(), calculoRetorno.end());
+    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
     for (int i=0; i<int(retorno.size()); i++) {
         cout << retorno[i] << " ";
     }
