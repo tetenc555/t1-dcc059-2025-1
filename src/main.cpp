@@ -4,7 +4,7 @@
 using namespace std;
 int main(int argc, char *argv[])
 {
-    Grafo* grafo = LeituraArquivos::lerGrafodoArquivo("./src/input/grafo100.txt");
+    Grafo* grafo = LeituraArquivos::lerGrafodoArquivo("./input/grafo100.txt");
 
     Gerenciador::comandos(grafo);
 

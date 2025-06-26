@@ -92,14 +92,6 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
         if (get<1>(conexao) == id_no)
             retorno.push_back(get<0>(conexao));
     }
-
-    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
-    for (int i=0; i<int(retorno.size()); i++) {
-        cout << retorno[i] << " ";
-    }
-    cout << endl;
-    // apagar ate aqui
-
     return retorno;
 }
 
@@ -137,16 +129,7 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     }
     calculoRetorno.erase(id_no); //remove no em si - ele aparece em caso de loop ou ciclo.
     vector<char> retorno(calculoRetorno.begin(), calculoRetorno.end()); //usa funcao nativa pra copiar pra vetor
-
-    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
-    for (int i=0; i<int(retorno.size()); i++) {
-        cout << retorno[i] << " ";
-    }
-    cout << endl;
-    // apagar ate aqui
-
     return retorno;
-
 }
 
 
