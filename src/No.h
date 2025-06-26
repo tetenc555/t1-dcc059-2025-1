@@ -16,9 +16,15 @@ public:
     int peso;
     vector<Aresta*> arestas;
     No(char id, int peso);
-
+    bool visitado;
     void criaAresta(char alvo);
     void imprimeConexoes(bool ehPondAresta);
+
+    void imprimeFormato(bool ehPondAresta);
+
+    void setVisitado(bool visitado);
+
+    bool getVisitado();
 };
 
 

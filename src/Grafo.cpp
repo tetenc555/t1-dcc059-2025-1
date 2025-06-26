@@ -111,8 +111,52 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos) {
 }
 
 Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
-    cout<<"Metodo nao implementado"<<endl;
-    return nullptr;
+    //Verifica se o no inicial existe
+    int indiceInicial = encontraIndiceNo(id_no);
+    if (indiceInicial == -1) {
+        cout << "No inicial nao encontrado!" << endl;
+        return nullptr;
+    }
+
+    //Cria grafo para arvore de busca por profundidade
+    Grafo* arvore = new Grafo(this->in_direcionado, this->in_ponderado_aresta, this->in_ponderado_vertice, this->ordem);
+
+    //Marca nós como não visitados (caso seja alterado por outro metodo)
+    for (auto no: lista_adj) {
+        no->setVisitado(false);
+    }
+
+    //Chama a função auxiliar recursiva para construir a arvore
+    buscaProfundidadeAux(lista_adj[indiceInicial], arvore);
+
+    arvore->imprimirFormato(); //coloquei a impressão aqui pq eu não consegui alterar o gerenciador por algum motivo
+
+    return arvore;
+}
+
+void Grafo::buscaProfundidadeAux(No* atual, Grafo* arvore) {
+    atual->setVisitado(true);
+
+    if (!arvore->verificaExistenciaNo(atual->id))
+        arvore->inserirNos(atual->id, atual->peso); //adiciona a arvore de busca
+
+    //Percorre arestas do no atual
+    for (auto aresta: atual->arestas) {
+        char idAlvo = aresta->id_no_alvo;
+        int indiceAlvo = encontraIndiceNo(idAlvo);
+
+        if (indiceAlvo != -1 && !lista_adj[indiceAlvo]->getVisitado()) {
+            if (!arvore->verificaExistenciaNo(idAlvo))
+                arvore->inserirNos(idAlvo, lista_adj[indiceAlvo]->peso);
+
+            //Adiciona aresta na arvore (só precisa de uma direção)
+            int peso = arvore->in_ponderado_aresta ? aresta->peso : -1;
+            arvore->processarArestaIda(atual->id, idAlvo, peso);
+
+            buscaProfundidadeAux(lista_adj[indiceAlvo], arvore);
+        }
+    }
+
 }
 
 int Grafo::raio() {
@@ -148,5 +192,14 @@ void Grafo::imprimirGrafo(){
     cout << "Lista de Adjacencias: " << endl;
     for (int i = 0; i < this->ordem; i++) {
         this->lista_adj[i]->imprimeConexoes(this->in_ponderado_aresta);
+    }
+}
+
+void Grafo::imprimirFormato(){
+    cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
+    cout << this->ordem << endl;
+    cout << "Lista de Adjacencias: " << endl;
+    for (int i = 0; i < this->ordem; i++) {
+        this->lista_adj[i]->imprimeFormato(this->in_ponderado_aresta);
     }
 }

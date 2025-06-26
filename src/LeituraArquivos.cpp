@@ -28,16 +28,12 @@ Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
         ponderadoAresta = (pa == 1);
         ponderadoVertice = (pv == 1);
     }
-    cout << " Direcionado: " << direcionado << endl;
-    cout << " Ponderado: " << ponderadoAresta << endl;
-    cout << " Ponderado Vertice: " << ponderadoVertice << endl;
 
     //lê a ordem
     int ordem = 0;
     if (getline(arquivo, linha)) {
         ordem = stoi(linha);
     }
-    cout << "Numero de vertices: " << ordem << endl;
 
     Grafo* grafo = new Grafo(direcionado, ponderadoAresta, ponderadoVertice, ordem);
 
