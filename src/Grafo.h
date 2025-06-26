@@ -7,6 +7,7 @@
 
 #include "No.h"
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 
 #include "listaArestas.h"
@@ -30,7 +31,7 @@ public:
 
     bool verificaExistenciaNo(char idNo);
 
-    bool verificaSeChega(No* idOrigem, char idDestino, vector<No *>* NosPercorridos);
+    bool verificaSeChega(No* idOrigem, char idDestino, unordered_set<char> NosPercorridos);
 
 
     vector<char> fecho_transitivo_direto(char id_no); // a

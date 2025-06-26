@@ -1,6 +1,7 @@
 #include "Grafo.h"
 
 #include <list>
+#include <unordered_set>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
@@ -114,7 +115,7 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
     return {};
 }
 
-bool Grafo::verificaSeChega(No* origem, char idDestino, vector<No*>* NosPercorridos) { //funcao que verifica se um no Origem chega a um no de Destino
+bool Grafo::verificaSeChega(No* origem, char idDestino, unordered_set<char> NosPercorridos) { //funcao que verifica se um no Origem chega a um no de Destino
     if (origem -> id == idDestino)
         return false;
 
@@ -125,10 +126,10 @@ bool Grafo::verificaSeChega(No* origem, char idDestino, vector<No*>* NosPercorri
         if (aresta->id_no_alvo == idDestino) {
             return true;
         }
-        if (find(NosPercorridos->begin(),NosPercorridos->end(),origem)==NosPercorridos->end()) {
+        if (!NosPercorridos.count(origem->id)) {
             int indiceProx = this->encontraIndiceNo(aresta->id_no_alvo);
             No* proxOrigem = lista_adj[indiceProx];
-            NosPercorridos->push_back(origem);
+            NosPercorridos.insert(origem->id);
             if (verificaSeChega(proxOrigem ,idDestino,NosPercorridos))
                 return true;
         }
@@ -144,7 +145,8 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     vector<char> retorno; //cria vetor p retorno
     for (int i=0; i< int (this->lista_adj.size()); i++) { //verifica para cada item
         No* origem=this->lista_adj[i]; // define o no "origem" para verificacao e adicao caso seja verdadeiro
-        if (origem->id != id_no && verificaSeChega(origem,id_no,new vector<No*>)) // nao faz a verificao para o no em si, e faz processamento se o no tiver caminho para o id_no
+        unordered_set<char> NosPercorridos;
+        if (origem->id != id_no && verificaSeChega(origem,id_no,NosPercorridos)) // nao faz a verificao para o no em si, e faz processamento se o no tiver caminho para o id_no
             retorno.push_back(origem->id); //adiciona no a lista de retorno
     }
 
