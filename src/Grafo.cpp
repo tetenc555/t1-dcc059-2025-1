@@ -111,11 +111,23 @@ void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //prati
 }
 
 vector<char> Grafo::fecho_transitivo_direto(char id_no) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+    vector <char> retorno;
+    for (tuple conexao: this->lista_arestas->conexoes) {
+        if (get<1>(conexao) == id_no)
+            retorno.push_back(get<0>(conexao));
+    }
+
+    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
+    for (int i=0; i<int(retorno.size()); i++) {
+        cout << retorno[i] << " ";
+    }
+    cout << endl;
+    // apagar ate aqui
+
+    return retorno;
 }
 
-bool Grafo::verificaSeChega(No* origem, char idDestino, unordered_set<char> NosPercorridos) { //funcao que verifica se um no Origem chega a um no de Destino
+/*bool Grafo::verificaSeChega(No* origem, char idDestino, unordered_set<char> NosPercorridos) { //funcao que verifica se um no Origem chega a um no de Destino
     if (origem -> id == idDestino)
         return false;
 
@@ -159,7 +171,16 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     // apagar ate aqui
 
     return retorno; //faz retorno do fecho transitivo indireto, apos processamento
+}*/
+
+vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
+    if (!this->in_direcionado) {
+        cout<<"Nao é direcionado!"<<endl;
+        return {};
+    }
+    vector<char> retorno; //cria vetor p retorno
 }
+
 
 
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
