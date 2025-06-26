@@ -77,3 +77,49 @@ Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
     arquivo.close();
     return grafo;
 }
+
+void Grafo::salvarGrafoEmArquivo(const string& caminhoArquivo) { //É O FORMATO DE LISTA DE ADJACENCIAS, SE FOR ALTERAR O FORMATO DA IMPRESSÃO TEM Q FAZER OUTRA FUNÇÃO
+    ofstream arquivo(caminhoArquivo);
+    if (!arquivo.is_open()) {
+        throw runtime_error("Erro ao criar arquivo " + caminhoArquivo);
+    }
+
+    // Escreve cabeçalho (direcionado, ponderado aresta, ponderado vértice)
+    arquivo << (this->in_direcionado ? 1 : 0) << " "
+            << (this->in_ponderado_aresta ? 1 : 0) << " "
+            << (this->in_ponderado_vertice ? 1 : 0) << "\n";
+
+    // Escreve a ordem do grafo
+    arquivo << this->ordem << "\n";
+
+    // Escreve cada nó e suas adjacências
+    for (int i = 0; i < this->ordem; i++) {
+        arquivo << lista_adj[i]->id;
+
+        // Adiciona peso do vértice se for ponderado
+        if (this->in_ponderado_vertice) {
+            arquivo << " (" << lista_adj[i]->peso << ")";
+        }
+
+        // Adiciona as arestas
+        if (!lista_adj[i]->arestas.empty()) {
+            arquivo << " -> ";
+            for (size_t j = 0; j < lista_adj[i]->arestas.size(); j++) {
+                arquivo << lista_adj[i]->arestas[j]->id_no_alvo;
+
+                // Adiciona peso da aresta se for ponderado
+                if (this->in_ponderado_aresta) {
+                    arquivo << "(" << lista_adj[i]->arestas[j]->peso << ")";
+                }
+
+                // Adiciona separador se não for a última aresta
+                if (j != lista_adj[i]->arestas.size() - 1) {
+                    arquivo << " ";
+                }
+            }
+        }
+        arquivo << endl;
+    }
+
+    arquivo.close();
+}

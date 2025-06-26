@@ -49,6 +49,7 @@ public:
     vector<char> centro(); // h 3
     vector<char> periferia(); // h 4
     vector<char> vertices_de_articulacao(); // i
+    void salvarGrafoEmArquivo(const std::string &caminhoArquivo);
 
 
     int ordem;
