@@ -1,6 +1,7 @@
 #include "Grafo.h"
 
 #include <list>
+#include <unordered_set>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
@@ -81,14 +82,69 @@ void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //prati
 }
 
 vector<char> Grafo::fecho_transitivo_direto(char id_no) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+    vector <char> retorno;
+    for (tuple conexao: this->lista_arestas->conexoes) {
+        if (get<1>(conexao) == id_no)
+            retorno.push_back(get<0>(conexao));
+    }
+
+    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
+    for (int i=0; i<int(retorno.size()); i++) {
+        cout << retorno[i] << " ";
+    }
+    cout << endl;
+    // apagar ate aqui
+
+    return retorno;
 }
 
 vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+    if (!this->in_direcionado) { //se for nao direcionado, retorna vazio
+        cout<<"Nao é direcionado!"<<endl;
+        return {};
+    }
+
+    unordered_set<char> calculoRetorno; //cria unorderedSet ao inves de retorno a fim de melhorar processamento
+    queue<char> filaProcessamento; //cria fila em que sempre teremos o proximo item
+    //A FILA E IMPORTANTE POIS FOI A MELHOR MANEIRA DE GARANTIR QUE ELE QUEBRE APENAS QUANDO NAO HOUVER MAIS CONEXOES A SEREM PROCESSADAS!
+
+
+    filaProcessamento.push(id_no); // Inicia com o no final! Ele é o destino final, ou seja, o primeiro no ""caminhamento contrario"".
+
+    while (!filaProcessamento.empty()){ // enquanto a fila nao tiver vazia, processa o proximo item
+
+        char processando=filaProcessamento.front(); //define o destino a ser processado (ele vai voltando)
+        filaProcessamento.pop(); //remove ele da fila. //Assim mantemos nenhum item na fila durante processamento, e salvamos apenas se encontrar outro a processar
+        //Isto garante que o while quebre corretamente (caso nao ache mais vertices a serem processados) -> ISSO TAVA SENDO O MAIOR PROBLEMA EM CICLOS! causado pela ordem formada pela lista de arestas.
+
+        for (tuple conexao: this->lista_arestas->conexoes) { //pra cada processamento olhamos todas as conexoes
+            char origemAresta = get<0>(conexao);
+            char destinoAresta = get<1>(conexao);
+
+            if (destinoAresta == processando) { //verifica se o destino desta conexao e o que estamos processando
+                if (calculoRetorno.find(origemAresta) == calculoRetorno.end()) { //MOTIVO PRINCIPAL DE USAR UNORDERED SET! -> verificacao se a origem ja foi registrada
+                    //vi no stackoverflow que assim o processamento e menor, e resolve o problema de ter que usar +1 lista de arestas (jaPassou anterior) pra essa verificação
+                    calculoRetorno.insert(origemAresta); //insere origem como retorno valido
+                    filaProcessamento.push(origemAresta); //define origem como proximo destino valido p ser processsado
+                }
+            }
+        }
+    }
+    calculoRetorno.erase(id_no); //remove no em si - ele aparece em caso de loop ou ciclo.
+    vector<char> retorno(calculoRetorno.begin(), calculoRetorno.end()); //usa funcao nativa pra copiar pra vetor
+
+    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
+    for (int i=0; i<int(retorno.size()); i++) {
+        cout << retorno[i] << " ";
+    }
+    cout << endl;
+    // apagar ate aqui
+
+    return retorno;
+
 }
+
+
 
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
     cout<<"Metodo nao implementado"<<endl;

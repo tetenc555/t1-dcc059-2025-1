@@ -7,6 +7,7 @@
 
 #include "No.h"
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 
 #include "listaArestas.h"
@@ -32,7 +33,11 @@ public:
 
     bool verificaExistenciaNo(char idNo);
 
+    bool verificaSeChega(No* idOrigem, char idDestino, unordered_set<char> NosPercorridos);
+
+
     vector<char> fecho_transitivo_direto(char id_no); // a
+
     vector<char> fecho_transitivo_indireto(char id_no); // b
     vector<char> caminho_minimo_dijkstra(char id_no_a, char id_no_b); // c
     vector<char> caminho_minimo_floyd(char id_no, char id_no_b); // d
@@ -50,6 +55,7 @@ public:
     vector<char> periferia(); // h 4
     vector<char> vertices_de_articulacao(); // i
     void salvarGrafoEmArquivo(const std::string &caminhoArquivo);
+
 
 
     int ordem;

@@ -14,6 +14,7 @@ public:
 
     vector<tuple<char,char>> conexoes;
     void imprimeArestas();
+    bool contemConexao(char idOrigem, char idAlvo);
 };
 
 
