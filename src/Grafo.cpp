@@ -9,47 +9,18 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
     this->in_ponderado_vertice= ehPondVertice;
     this->ordem=ordem;
 
-    //insercao de nos
-    for (int i = 0; i < ordem; i++) { //ouve ordem vezes
-        char id_add_no;
-        cin >> id_add_no; //escuta id do no
-        inserirNos(id_add_no); //adiciona no
-    }
-
-    //insercao de arestas
-    while (true) { //ouve ate o break acionado pelo espaco
-        char idNoOrigem;
-        cin.ignore();
-        cin.get(idNoOrigem); //define no de origem - necessario usar cin.get p ouvir espaco
-        while (idNoOrigem == ' ') {
-            cin.get(idNoOrigem); //verificacao para no caso de ouvir o caractere espaco, ouvir ate o proximo
-        }
-        if (idNoOrigem == '\n') //quebra quando ouve enter
-            break;
-        char idAlvoAresta;
-        cin>>idAlvoAresta; //define no alvo
-        int pesoAresta=0;
-        if (in_ponderado_aresta) {
-            cin >> pesoAresta; //define peso da aresta caso seja ponderado
-        }
-
-        this->processarArestaIda(idNoOrigem,idAlvoAresta,pesoAresta); //adiciona aresta de ida
-
-        if (!direcionado && (idNoOrigem != idAlvoAresta)){
-            this->processarArestaVolta(idAlvoAresta, idNoOrigem, pesoAresta); //adiciona aresta de volta caso nao seja loop e nao seja direcionado
-        }
-    }
-
-    //criacao da lista de arestas
-    this->lista_arestas = new listaArestas(this->lista_adj);
 }
 
 Grafo::~Grafo() {
 }
 
-void Grafo::inserirNos(int id) {
-    No* addNo = new No(id, this->in_ponderado_vertice); //cria um novo no com id e peso (caso seja necessario)
+void Grafo::inserirNos(char id, int pesoNo) {
+    No* addNo = new No(id, this->in_ponderado_vertice ? pesoNo : pesoNo = -1); //cria um novo no com id e peso (caso seja necessario)
     this->lista_adj.push_back(addNo); //adiciona na lista de adjacencias
+}
+
+void Grafo::criaListaArestas() {
+    this->lista_arestas = new listaArestas(this->lista_adj);
 }
 
 void Grafo::imprimirNos() {

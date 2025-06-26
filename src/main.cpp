@@ -1,14 +1,10 @@
 #include <iostream>
 #include "Gerenciador.h"
-
+#include "LeituraArquivos.h"
 using namespace std;
 int main(int argc, char *argv[])
 {
-    bool direcionado, paresta, pvertice;
-    int ordem;
-    cin >> direcionado >> paresta >> pvertice >> ordem;
-
-    Grafo* grafo = new Grafo(direcionado, paresta, pvertice, ordem);
+    Grafo* grafo = LeituraArquivos::lerGrafodoArquivo("../instancias/grafo02.txt");
 
     Gerenciador::comandos(grafo);
 

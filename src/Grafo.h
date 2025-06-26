@@ -18,7 +18,9 @@ public:
     Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
     ~Grafo();
 
-    void inserirNos(int id);
+    void inserirNos(char id, int pesoNo);
+
+    void criaListaArestas();
 
     void imprimirNos();
 
