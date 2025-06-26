@@ -129,8 +129,6 @@ Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
     //Chama a função auxiliar recursiva para construir a arvore
     buscaProfundidadeAux(lista_adj[indiceInicial], arvore);
 
-    arvore->imprimirFormato(); //coloquei a impressão aqui pq eu não consegui alterar o gerenciador por algum motivo
-
     return arvore;
 }
 
