@@ -173,12 +173,45 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     return retorno; //faz retorno do fecho transitivo indireto, apos processamento
 }*/
 
+bool vetorContemChar(vector<char> vetorChar,char item) {
+    for (int i=0; i < int(vetorChar.size()); i++) {
+        if (vetorChar[i] == item)
+            return true;
+    }
+    return false;
+}
+
 vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
     if (!this->in_direcionado) {
         cout<<"Nao é direcionado!"<<endl;
         return {};
     }
-    vector<char> retorno; //cria vetor p retorno
+
+    unordered_set<char> calculoRetorno; //cria unorderedSet ao inves de retorno a fim de melhorar processamento
+    queue<char> filaProcessamento; //cria fila em que sempre teremos o proximo item
+    //ISSO E IMPORTANTE POIS FOI A MELHOR MANEIRA DE GARANTIR QUE ELE QUEBRE APENAS QUANDO NAO HOUVER MAIS CONEXOES A SEREM PROCESSADAS! (
+
+    while (!filaProcessamento.empty()){ // enquanto a fila nao tiver vazia, processa o proximo item
+        char processando=filaProcessamento.front();
+        filaProcessamento.pop(); //remove ele da fila. Assim mantemos nenhum item na fila durante processamento, e salvamos apenas se encontrar outro a processar
+        //Isto garante que o while quebre corretamente (caso nao ache mais vertices a serem processados)
+        for (tuple conexao: this->lista_arestas->conexoes) {
+            char origem = get<0>(conexao);
+            char destino = get<1>(conexao);
+        }
+    }
+
+
+    // IMPRRESSAO PEA TESTES REMOVER DEPOIS
+    vector<char> retorno(calculoRetorno.begin(), calculoRetorno.end());
+    for (int i=0; i<int(retorno.size()); i++) {
+        cout << retorno[i] << " ";
+    }
+    cout << endl;
+    // apagar ate aqui
+
+    return retorno;
+
 }
 
 
