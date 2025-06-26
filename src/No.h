@@ -15,6 +15,8 @@ public:
     char id;
     int peso;
     vector<Aresta*> arestas;
+    No(char id, int peso);
+
     void criaAresta(char alvo);
     void imprimeConexoes(bool ehPondAresta);
 };
