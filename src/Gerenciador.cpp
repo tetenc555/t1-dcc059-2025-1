@@ -162,8 +162,10 @@ void Gerenciador::comandos(Grafo* grafo) {
 
     }
         case 'j': {
-        grafo->imprimirGrafo();
-    }
+            grafo->imprimirGrafo();
+            cout<<endl;
+            break;
+        }
         case '0': {
             exit(0);
         }
