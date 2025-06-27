@@ -142,7 +142,7 @@ void Gerenciador::comandos(Grafo* grafo) {
             arvore_caminhamento_profundidade->imprimirFormato();
 
             if(pergunta_imprimir_arquivo("arvore_caminhamento_profundidade.txt")) {
-                arvore_caminhamento_profundidade->salvarGrafoEmArquivo("arvore_caminhamento_profundidade.txt");
+                arvore_caminhamento_profundidade->salvarGrafoEmArquivo("./output/arvore_caminhamento_profundidade.txt");
             }
 
             delete arvore_caminhamento_profundidade;
