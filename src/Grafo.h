@@ -17,6 +17,9 @@ using namespace std;
 class Grafo {
 public:
     Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
+
+    Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice);
+
     ~Grafo();
 
     void inserirNos(char id, int pesoNo);
