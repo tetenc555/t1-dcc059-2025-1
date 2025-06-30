@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
     // Caminho padrão se nenhum argumento for passado
     string caminho = (argc > 1) ? argv[1] : "./input/grafo100.txt";
 
-    ifstream arquivoTeste(caminho);
+    ifstream arquivoTeste(caminho); //verificar se o caminho ta correto
     if (!arquivoTeste) {
         cerr << "Erro: Arquivo não encontrado!\n";
         cerr << "Tentando abrir: " << caminho << "\n";

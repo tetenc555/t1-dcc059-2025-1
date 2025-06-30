@@ -1,8 +1,13 @@
 #include "Gerenciador.h"
 #include <fstream>
 
+#include "LeituraArquivos.h"
+
+static Grafo* grafoAtual = nullptr;
 
 void Gerenciador::comandos(Grafo* grafo) {
+    grafoAtual = grafo;
+
     cout<<"Digite uma das opcoes abaixo e pressione enter:"<<endl<<endl;
     cout<<"(a) Fecho transitivo direto de um no;"<<endl;
     cout<<"(b) Fecho transitivo indireto de um no;"<<endl;
@@ -13,6 +18,7 @@ void Gerenciador::comandos(Grafo* grafo) {
     cout<<"(g) Arvore de caminhamento em profundidade;"<<endl;
     cout<<"(h) Raio, diametro, centro e periferia do grafo;"<<endl;
     cout<<"(j) Imprimir grafo;"<<endl;
+    cout <<"(m) Alterar Arquivo de teste;" <<endl;
     cout<<"(0) Sair;"<<endl<<endl;
 
     char resp;
@@ -176,6 +182,33 @@ void Gerenciador::comandos(Grafo* grafo) {
             cout<<endl;
             break;
         }
+        case 'm': {
+            string caminhoBase = "./input/";
+            cout << "\nDigite o nome do novo arquivo de teste: ";
+            string nomeArquivo;
+            cin >> nomeArquivo;
+
+            string caminhoCompleto = caminhoBase+nomeArquivo;
+
+            ifstream arquivo(caminhoCompleto); //Verifica se o caminho existe
+            if (!arquivo) {
+                cerr<<"Arquivo nao existe, caminho não encontrado"<<endl;
+                exit(1);
+            }
+            arquivo.close();
+
+            try {
+                cout << "Processando: " << caminhoCompleto << endl;
+                Grafo* novoGrafo = LeituraArquivos::lerGrafodoArquivo(caminhoCompleto);
+                delete grafoAtual;
+                Gerenciador::comandos(novoGrafo);
+            }catch (const exception& e) {
+                cerr << "Erro ao carregar o arquivo: " << e.what() << endl;
+                exit(1);
+            }
+
+            break;
+        }
         case '0': {
             exit(0);
         }
@@ -242,5 +275,31 @@ bool Gerenciador::pergunta_imprimir_arquivo(string nome_arquivo) {
         default:
             cout<<"Resposta invalida"<<endl;
             return pergunta_imprimir_arquivo(nome_arquivo);
+    }
+}
+
+void Gerenciador::mudarArquivoTeste() {
+    string caminhoBase = "./input/";
+    cout << "\nDigite o nome do novo arquivo de teste: ";
+    string nomeArquivo;
+    getline(cin, nomeArquivo);
+
+    string caminhoCompleto = caminhoBase+nomeArquivo;
+
+    ifstream arquivo(caminhoCompleto); //Verifica se o caminho existe
+    if (!arquivo) {
+        cerr<<"Arquivo nao existe, caminho não encontrado"<<endl;
+        exit(1);
+    }
+    arquivo.close();
+
+    try {
+        cout << "Processando: " << caminhoCompleto << endl;
+        Grafo* novoGrafo = LeituraArquivos::lerGrafodoArquivo(caminhoCompleto);
+        delete grafoAtual;
+        Gerenciador::comandos(novoGrafo);
+    }catch (const exception& e) {
+        cerr << "Erro ao carregar o arquivo: " << e.what() << endl;
+        exit(1);
     }
 }
