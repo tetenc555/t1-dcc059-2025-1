@@ -149,9 +149,27 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     return nullptr;
 }
 
-Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos) {
+Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
+{
+    //condicoes // verifica se eh conexo? //verificar return
+    if (!this->in_ponderado_aresta) { //se nao for ponderado vai de arrasta
+        cout<<"Nao eh ponderado!"<<endl;
+        return {};
+    }
+    if (this->in_direcionado){ // se eh direcionado vai de arrasta
+        cout<<"Eh direcionado!" << endl;
+        return nullptr;
+    }
+
+    //uma lista com ponderamento de arestas em ordem
+    //uma vazia para passar a ordem
+    //retornar essa "vazia"
+    for (int arestasArvoreGeradora=0; ordem-1 != 0; arestasArvoreGeradora++) //condicao de uma arvore geradora de kruskal
+    {
+        //verificar se a aresta (dois vertices que se ligam) tem algum vertice em comum
+    }
     cout<<"Metodo nao implementado"<<endl;
-    return nullptr;
+    return nullptr; //retorno a lista da arvore geradora
 }
 
 Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
