@@ -1,40 +1,40 @@
 1 1 0
 10
-j
-h
-c
-d
-a
-b
-f
 i
+b
+c
+h
+d
 g
+j
+a
 e
-e j 14
-j e 5
-j b 45
-j f 33
-d g 32
-g h 38
-e a 26
-j h 39
-d e 32
-g j 24
-g a 50
-b h 30
-i c 18
-j i 7
-f d 27
-b j 3
-f e 30
-i a 12
-f i 28
-g d 8
-f j 47
-j a 24
-g c 41
-d c 46
-c h 38
-j g 37
-i g 4
-a j 27
+f
+f i 2
+a j 7
+d c 3
+f j 14
+e h 29
+c f 14
+f d 44
+i f 41
+h e 41
+f h 5
+h c 45
+d a 10
+b g 18
+b a 8
+b c 35
+g b 44
+a a 22
+b f 50
+i g 20
+g d 24
+i d 19
+f e 48
+e a 29
+e b 13
+f g 18
+g h 9
+h i 22
+j d 39

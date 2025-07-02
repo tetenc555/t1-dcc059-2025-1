@@ -1,14 +1,14 @@
 1 1 0
 5
 d
-e
-b
-a
 c
-b e 19
-d e 24
-d c 49
-e c 23
-d a 15
-d b 41
-a e 31
+b
+e
+a
+b c 13
+e b 15
+d a 2
+c a 22
+a b 16
+c e 45
+a e 45

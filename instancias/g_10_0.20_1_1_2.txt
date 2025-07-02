@@ -1,21 +1,21 @@
 1 1 0
 10
-e
+d
 a
-f
-b
+i
 j
+e
 g
 h
-i
 c
-d
-i j 41
-i f 8
-d c 40
-i h 47
-e i 42
-j a 42
-d b 45
-d g 44
-e d 11
+b
+f
+b h 8
+b g 11
+b c 10
+d f 42
+e j 24
+f b 37
+c i 38
+d a 33
+c e 5
