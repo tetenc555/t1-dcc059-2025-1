@@ -147,8 +147,30 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
 
 
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
+    vector<char> retorno;
+    unordered_map<char, int> charParaInteiro;
+
+    //verificacao de existencia dos vertices
+    if ((encontraIndiceNo(id_no_a) == -1)|| (encontraIndiceNo(id_no_b) == -1)) {
+        cout << "Um dos vertices nao foi encontrado!" << endl;
+        return retorno;
+    }
+    if (id_no_a == id_no_b){
+        return 0;
+    }
+
+    int origem = id_no_a;
+    int destino = id_no_b;
+    int n = lista_adj.size();
+
+    vector<int> dist(n, numeric_limits<int>::max()); //define todos vertices como infinito
+    vector<int> pai(n, -1); //para refazer o caminho
+    vector<bool> visitado(n, false);//define todos vertices como nao visitados
+
+    dist[origem] = 0;//a origem eh 0
+
     cout<<"Metodo nao implementado"<<endl;
-    return {};
+    return retorno;
 }
 
 vector<char> Grafo::caminho_minimo_floyd(char id_no, char id_no_b) {
