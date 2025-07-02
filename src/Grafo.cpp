@@ -3,6 +3,16 @@
 #include <list>
 #include <unordered_set>
 #include <queue>
+#include <stack>
+#include <unordered_map>
+
+Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
+    //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
+    this->in_direcionado = direcionado;
+    this->in_ponderado_aresta= ehPondAresta;
+    this->in_ponderado_vertice= ehPondVertice;
+    this->ordem = 0;
+}
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
@@ -10,15 +20,17 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
     this->in_ponderado_aresta= ehPondAresta;
     this->in_ponderado_vertice= ehPondVertice;
     this->ordem=ordem;
-
 }
 
 Grafo::~Grafo() {
 }
 
 void Grafo::inserirNos(char id, int pesoNo) {
-    No* addNo = new No(id, this->in_ponderado_vertice ? pesoNo : pesoNo = -1); //cria um novo no com id e peso (caso seja necessario)
-    this->lista_adj.push_back(addNo); //adiciona na lista de adjacencias
+    if (!verificaExistenciaNo(id)) {
+        No* addNo = new No(id, this->in_ponderado_vertice ? pesoNo : -1);
+        this->lista_adj.push_back(addNo);
+        this->ordem++;
+    }
 }
 
 void Grafo::criaListaArestas() {
@@ -144,9 +156,34 @@ vector<char> Grafo::caminho_minimo_floyd(char id_no, char id_no_b) {
     return {};
 }
 
+Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
+    Grafo* subGrafo = new Grafo(this->in_direcionado, this->in_ponderado_aresta, this->in_ponderado_vertice); // gera grafo inical
+    for (char id : ids_nos) { // percorre cada id para copiar nos
+        int indice = this->encontraIndiceNo(id); // encontra indice
+        if (indice == -1) { //verifica se achou
+            cout << "No de ID:" << id << " nao encontrado! Pulamos este." << endl;
+        }
+        else
+            subGrafo->lista_adj.push_back(this->lista_adj[indice]); // adiciona no com sua arestas na lista
+    }
+    for (No* no : subGrafo->lista_adj) { //deletaremos agor aarestas com alvos que nao existem
+        for (int i=(int(no->arestas.size()) - 1); i>=0 ; i--) {  //para evitar erros com erase, que encurta o vetor e quebra a deletacao correta, iteramos ao contrario
+            if (!subGrafo->verificaExistenciaNo(no->arestas[i]->id_no_alvo)) { // se id alvo nao existir no grafo, deleta!
+                no->arestas.erase(no->arestas.begin() + i); //remove aresta
+            }
+        }
+    }
+    subGrafo->criaListaArestas(); //cria lista de arestas
+    subGrafo->ordem = subGrafo->lista_adj.size(); //define ordem
+    //assim o subgrafo esta completo.
+    return subGrafo;
+}
+
 Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
-    cout<<"Metodo nao implementado"<<endl;
-    return nullptr;
+    //Primeiro passo: gerar subgrafo
+    Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
+    Inicial->imprimirGrafo();
+    return nullptr; //retorna nulo pois nao implementado
 }
 
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
@@ -181,42 +218,49 @@ Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
     }
 
     //Cria grafo para arvore de busca por profundidade
-    Grafo* arvore = new Grafo(this->in_direcionado, this->in_ponderado_aresta, this->in_ponderado_vertice, this->ordem);
+    Grafo* arvore = new Grafo(true, this->in_ponderado_aresta, this->in_ponderado_vertice);
 
     //Marca nós como não visitados (caso seja alterado por outro metodo)
     for (auto no: lista_adj) {
         no->setVisitado(false);
     }
 
-    //Chama a função auxiliar recursiva para construir a arvore
+    //Chama a função auxiliar iterativa para construir a arvore
     buscaProfundidadeAux(lista_adj[indiceInicial], arvore);
-
+    arvore->ordem = lista_adj.size(); //altera a ordem da arvore
     return arvore;
 }
 
-void Grafo::buscaProfundidadeAux(No* atual, Grafo* arvore) {
-    atual->setVisitado(true);
+void Grafo::buscaProfundidadeAux(No* inicio, Grafo* arvore) {
+    if (!inicio) return;
 
-    if (!arvore->verificaExistenciaNo(atual->id))
-        arvore->inserirNos(atual->id, atual->peso); //adiciona a arvore de busca
+    stack<No*> pilha;
+    unordered_map<char, bool> visitados;
 
-    //Percorre arestas do no atual
-    for (auto aresta: atual->arestas) {
-        char idAlvo = aresta->id_no_alvo;
-        int indiceAlvo = encontraIndiceNo(idAlvo);
+    pilha.push(inicio);
+    visitados[inicio->id] = true;
+    arvore->inserirNos(inicio->id, inicio->peso);
 
-        if (indiceAlvo != -1 && !lista_adj[indiceAlvo]->getVisitado()) {
-            if (!arvore->verificaExistenciaNo(idAlvo))
-                arvore->inserirNos(idAlvo, lista_adj[indiceAlvo]->peso);
+    while (!pilha.empty()) {
+        No* atual = pilha.top();
+        pilha.pop();
 
-            //Adiciona aresta na arvore (só precisa de uma direção)
-            int peso = arvore->in_ponderado_aresta ? aresta->peso : -1;
-            arvore->processarArestaIda(atual->id, idAlvo, peso);
-
-            buscaProfundidadeAux(lista_adj[indiceAlvo], arvore);
+        // Processa arestas em ordem inversa para manter ordem correta
+        for (auto it = atual->arestas.rbegin(); it != atual->arestas.rend(); ++it) {
+            auto aresta = *it;
+            if(!visitados[aresta->id_no_alvo]) {
+                int vizinhoIdx = encontraIndiceNo(aresta->id_no_alvo);
+                if (vizinhoIdx != -1) {
+                    No* vizinho = lista_adj[vizinhoIdx];
+                    visitados[vizinho->id] = true;
+                    arvore->inserirNos(vizinho->id, vizinho->peso);
+                    arvore->processarArestaIda(atual->id, vizinho->id,
+                        arvore->in_ponderado_aresta ? aresta->peso : -1);
+                    pilha.push(vizinho);
+                }
+            }
         }
     }
-
 }
 
 int Grafo::raio() {
@@ -255,11 +299,12 @@ void Grafo::imprimirGrafo(){
     }
 }
 
-void Grafo::imprimirFormato(){
-    cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
-    cout << this->ordem << endl;
+void Grafo::imprimirFormato() {
+    cout << this->in_direcionado << " " << this->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
+    cout << this->lista_adj.size() << endl; //arruma impressão
     cout << "Lista de Adjacencias: " << endl;
-    for (int i = 0; i < this->ordem; i++) {
-        this->lista_adj[i]->imprimeFormato(this->in_ponderado_aresta);
+    for (int i = 0; i < lista_adj.size(); i++) {
+        if (lista_adj[i] != nullptr)
+            this->lista_adj[i]->imprimeFormato(this->in_ponderado_aresta);
     }
 }

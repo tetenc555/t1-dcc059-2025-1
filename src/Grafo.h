@@ -17,6 +17,9 @@ using namespace std;
 class Grafo {
 public:
     Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
+
+    Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice);
+
     ~Grafo();
 
     void inserirNos(char id, int pesoNo);
@@ -44,6 +47,7 @@ public:
     Grafo* arvore_geradora_minima_prim(vector<char> ids_nos); // e
     Grafo* arvore_geradora_minima_kruskal(vector<char> ids_nos); // f
     Grafo* arvore_caminhamento_profundidade(char id_no); // g
+    Grafo* criaSubGrafoVerticeInduzido(vector <char> ids_nos);
     void buscaProfundidadeAux(No *atual, Grafo *arvore);
 
     void imprimirGrafo(); // h

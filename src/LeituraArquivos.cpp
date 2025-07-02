@@ -1,15 +1,11 @@
-//
-// Created by Isabela on 25/06/2025.
-//
-
 #include "LeituraArquivos.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <unordered_map>
 
 using namespace std;
-
 Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
     ifstream arquivo(caminhoArquivo);
     if (!arquivo.is_open()) {
@@ -17,7 +13,6 @@ Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
     }
 
     string linha;
-
     //lê se o grafo é direcionado, ponderado na aresta ou no vertice
     bool direcionado, ponderadoAresta, ponderadoVertice;
     if (getline(arquivo, linha)) {
@@ -35,14 +30,18 @@ Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
         ordem = stoi(linha);
     }
 
-    Grafo* grafo = new Grafo(direcionado, ponderadoAresta, ponderadoVertice, ordem);
+    Grafo* grafo = new Grafo(direcionado, ponderadoAresta, ponderadoVertice);
+    grafo->lista_adj.reserve(ordem); //pré-alocação para a lista de adjacencias
 
-    //lê os vertices
+    // Pré-alocação de memória para vértices
+    unordered_map<char, int> mapaVertices;
+    mapaVertices.reserve(ordem);
+
+    // Lê vértices
     for (int i = 0; i < ordem; i++) {
         if (getline(arquivo, linha)) {
             istringstream iss(linha);
             char id;
-
             int peso = -1;
             if (ponderadoVertice) {
                 iss >> id >> peso;
@@ -51,9 +50,11 @@ Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
                 iss >> id;
             }
             grafo->inserirNos(id, peso);
+            mapaVertices[id] = i;  // Mapeia ID para índice
         }
     }
 
+    // Lê arestas
     while (getline(arquivo, linha)) {
         istringstream iss(linha);
         char idA, idB;
@@ -66,8 +67,10 @@ Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
             iss >> idA >> idB;
         }
 
+        // Processa aresta
         grafo->processarArestaIda(idA, idB, peso);
 
+        // Se não direcionado e não for loop, processa volta
         if (!direcionado && idA != idB) {
             grafo->processarArestaVolta(idB, idA, peso);
         }
@@ -90,10 +93,10 @@ void Grafo::salvarGrafoEmArquivo(const string& caminhoArquivo) { //É O FORMATO 
             << (this->in_ponderado_vertice ? 1 : 0) << "\n";
 
     // Escreve a ordem do grafo
-    arquivo << this->ordem << "\n";
+    arquivo << lista_adj.size() << "\n";
 
     // Escreve cada nó e suas adjacências
-    for (int i = 0; i < this->ordem; i++) {
+    for (int i = 0; i < lista_adj.size(); i++) {
         arquivo << lista_adj[i]->id;
 
         // Adiciona peso do vértice se for ponderado
