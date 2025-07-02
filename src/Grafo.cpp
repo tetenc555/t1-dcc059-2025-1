@@ -185,22 +185,47 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
         return nullptr;
     }
 
+    if (!this->in_ponderado_aresta) {
+        cout << "Erro! Grafo nao eh ponderado." << endl;
+        return nullptr;
+    }
+
     //Primeiro passo: gerar subgrafo
     Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
 
     //Segundo passo: inicializa fila com o primeiro no e grafo de retorno
     queue<tuple<No*,int>> conexoesProcessar;
     conexoesProcessar.push({Inicial->lista_adj[0],0});
-    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, Inicial->in_ponderado_vertice);
+    vector<tuple<char,char,int>> nosProcessados;
 
     //Terceiro passo: Processamento de nós
-    while (!conexoesProcessar.empty()) {
-
+    while (!conexoesProcessar.empty()) {  /// eu nem sei mais a complexidade disso. Jesus amado. Acho que o n ta a 5. Deus me ajude.
+        No* noPaiAtual = get<0>(conexoesProcessar.front());
+        int pesoAtual = get<1>(conexoesProcessar.front());
+        for (Aresta* a : noPaiAtual->arestas) {
+            int indice =-1;
+            for (int i=0; i<int(nosProcessados.size()); i++) {
+                if (get<1> == a->id_no_alvo) {
+                    indice = i;
+                    break;
+                }
+            }
+            if (indice == -1) {
+                nosProcessados.push_back({noPaiAtual->id, a->id_no_alvo, (a->peso+pesoAtual)});
+                conexoesProcessar.push({Inicial->lista_adj[encontraIndiceNo(a->id_no_alvo)], pesoAtual});
+            }
+            else if ((pesoAtual+ a->peso) < get<2>(nosProcessados[indice]){//tomar cyuidado com a quebra na fila! veirifica depois
+                nosProcessados[indice] = {noPaiAtual->id, a->id_no_alvo, (a->peso+pesoAtual)}; //troca pai pelo novo, peso pelo novo e processa no novo!
+                conexoesProcessar.push({Inicial->lista_adj[encontraIndiceNo(a->id_no_alvo)], pesoAtual}); //acho q tem q verificar a fila pra deletar outros com esse...
+            }
+        }
     }
 
 
+    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, Inicial->in_ponderado_vertice);
+    //gerar retorno a partir de vector d eocnexoes aqyuui
     delete Inicial;
-    return nullptr; //retorna nulo pois nao implementado
+    return retorno; //retorna nulo pois nao implementado
 }
 
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos) {
