@@ -3,33 +3,33 @@
 j
 d
 f
-h
-c
-e
-a
 g
 b
 i
-f g 33
-e f 42
-c i 3
-h i 24
-d i 37
-c g 38
-j h 4
-a e 45
-j b 32
-c a 1
-b g 34
-h b 4
-e b 46
-d f 2
-e d 5
-e i 16
-d c 43
-e c 39
-j i 45
-e g 15
-b a 28
-g i 2
-b i 3
+a
+e
+h
+c
+g h 18
+h i 31
+c h 11
+g c 17
+d e 23
+i e 30
+i a 35
+a g 12
+a f 27
+j d 35
+b h 8
+f b 31
+c e 43
+f i 26
+f h 11
+b e 22
+j f 38
+i b 1
+j c 22
+i c 33
+h d 12
+j a 7
+g e 16

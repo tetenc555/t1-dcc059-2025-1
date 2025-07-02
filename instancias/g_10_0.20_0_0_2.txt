@@ -1,21 +1,21 @@
 0 0 0
 10
-i
-c
-f
-h
 g
+j
+f
+b
+c
+i
+e
+h
 d
 a
-b
-j
-e
-i j
-a g
-j b
-i a
-i e
-b f
-i d
-j h
-e c
+g c
+a b
+h i
+h f
+g a
+h e
+c j
+g d
+d h

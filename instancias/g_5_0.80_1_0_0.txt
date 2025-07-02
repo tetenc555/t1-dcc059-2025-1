@@ -1,15 +1,15 @@
 1 0 0
 5
-d
 a
+d
 b
-e
 c
-c a
+e
+a d
+a c
 c d
+a b
 a e
-d e
-d c
-c e
-d d
-e b
+b d
+e d
+b e

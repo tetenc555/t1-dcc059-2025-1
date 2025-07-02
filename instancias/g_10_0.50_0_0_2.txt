@@ -1,35 +1,35 @@
 0 0 0
 10
-b
-g
-e
-d
-i
-f
 h
-a
 j
 c
-b e
+e
+i
+b
+d
+g
+a
+f
+e g
+e i
+h g
+h d
+i b
+i d
+i a
+f e
+j f
+c a
+e a
+d g
+b g
+j c
 h i
+d j
+h a
+d b
+f c
+h j
 i f
 d a
-g a
-d g
-h c
-f e
-b c
-j c
-i d
-b g
-f h
-j f
-e j
-j h
-b a
-j a
-g e
-b j
-b d
-f a
-i j
+h f

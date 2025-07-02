@@ -1,26 +1,26 @@
 1 1 0
 10
-e
-b
-f
+j
 a
+i
+f
+h
 d
 g
-i
-h
+e
+b
 c
-j
-e j 43
-i g 5
-a c 19
-e d 39
-c c 25
+j b 32
+c i 1
 e f 32
-e c 30
-c b 39
-j h 15
-b c 37
-a h 50
-j i 34
-i e 13
-i a 26
+j c 22
+e h 21
+b j 28
+e a 9
+c g 36
+d e 8
+d a 38
+g d 45
+j e 10
+i j 18
+b f 5

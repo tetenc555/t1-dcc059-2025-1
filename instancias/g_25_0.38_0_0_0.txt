@@ -1,142 +1,142 @@
 0 0 0
 25
+u
+g
+q
+y
+j
+b
+e
 c
+o
+w
+d
+f
+n
+v
+p
+i
+a
+l
+h
+m
+s
+r
 k
 t
-h
-o
-r
-v
-a
-s
 x
-f
-w
-q
-p
-l
-i
-j
-g
-e
-d
-y
-u
-m
-n
-b
-j t
-v g
-g m
-t v
-k y
-r b
-e m
-i b
-c h
-c j
-v x
-w g
-a e
-y n
-g q
-d u
-d e
-t b
-k f
-v l
-a f
-f e
-v e
-r n
-g b
-v j
-n m
-f g
-x q
-o r
-x l
-o d
-w i
-l g
-b n
-n a
-t n
-s y
-p m
-w y
-w m
-d n
-o n
-u x
+f i
+o l
+c d
+w r
+c k
+f k
+j r
+j v
+f j
+b x
+g t
+y k
+h c
+b r
 o s
-r j
-b y
-m b
-q m
-h o
-a g
-i g
-v q
-x o
-a y
-v d
-l s
-a x
-r y
-w v
-w q
-x y
-r k
-d i
-l j
-a w
-k w
-w j
-r e
-j b
-r w
-d y
-d b
-t o
-g e
-c f
-f p
-w e
-j n
-n p
-t x
-j e
-m d
-h w
-i l
-g d
-t p
-r x
+x k
+j h
+y d
+u i
+k p
+u a
+n a
 s f
-h m
-k l
-p d
-i m
-u n
-x n
-a p
-w d
-s n
-j g
-u g
-x e
-q i
-c r
-k m
+y v
+i a
+y w
+i e
+w p
+y p
+q m
+f m
+n o
+o q
+w m
+g o
+u w
+q j
+u q
+e p
+f x
 c l
-e h
-u f
-u b
-c b
-c u
+l t
+p a
+h t
+g y
+a l
+b e
+u x
+w a
+y i
+d n
+b i
+h k
+f n
+m t
+b t
+m s
+b v
+g l
+w l
+r n
+o b
+y o
+g e
+y h
+q p
+n h
+j i
+e d
+o m
+v g
+f t
+w h
+c x
+d s
+b d
+w d
 m r
-p w
-t s
-x p
-x b
+b s
+f p
+p i
+y r
+c o
+b f
+h a
+e v
+s k
+u k
+v m
+m h
+q c
+e y
+e t
+u c
+b m
+x i
+f v
+r s
+t x
+f a
+h l
+v h
+u r
+g d
+u m
+o i
+u t
+o k
+c r
+s v
+g r
+p m
+h d
+h r
+q a
