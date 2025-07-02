@@ -180,9 +180,26 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
 }
 
 Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
+    if (this->in_direcionado) {
+        cout << "Erro! Grafo Direcionado." << endl;
+        return nullptr;
+    }
+
     //Primeiro passo: gerar subgrafo
     Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
-    Inicial->imprimirGrafo();
+
+    //Segundo passo: inicializa fila com o primeiro no e grafo de retorno
+    queue<tuple<No*,int>> conexoesProcessar;
+    conexoesProcessar.push({Inicial->lista_adj[0],0});
+    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, Inicial->in_ponderado_vertice);
+
+    //Terceiro passo: Processamento de nós
+    while (!conexoesProcessar.empty()) {
+
+    }
+
+
+    delete Inicial;
     return nullptr; //retorna nulo pois nao implementado
 }
 
