@@ -156,9 +156,34 @@ vector<char> Grafo::caminho_minimo_floyd(char id_no, char id_no_b) {
     return {};
 }
 
+Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
+    Grafo* subGrafo = new Grafo(this->in_direcionado, this->in_ponderado_aresta, this->in_ponderado_vertice); // gera grafo inical
+    for (char id : ids_nos) { // percorre cada id para copiar nos
+        int indice = this->encontraIndiceNo(id); // encontra indice
+        if (indice == -1) { //verifica se achou
+            cout << "No de ID:" << id << " nao encontrado! Pulamos este." << endl;
+        }
+        else
+            subGrafo->lista_adj.push_back(this->lista_adj[indice]); // adiciona no com sua arestas na lista
+    }
+    for (No* no : subGrafo->lista_adj) { //deletaremos agor aarestas com alvos que nao existem
+        for (int i=(int(no->arestas.size()) - 1); i>=0 ; i--) {  //para evitar erros com erase, que encurta o vetor e quebra a deletacao correta, iteramos ao contrario
+            if (!subGrafo->verificaExistenciaNo(no->arestas[i]->id_no_alvo)) { // se id alvo nao existir no grafo, deleta!
+                no->arestas.erase(no->arestas.begin() + i); //remove aresta
+            }
+        }
+    }
+    subGrafo->criaListaArestas(); //cria lista de arestas
+    subGrafo->ordem = subGrafo->lista_adj.size(); //define ordem
+    //assim o subgrafo esta completo.
+    return subGrafo;
+}
+
 Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
-    cout<<"Metodo nao implementado"<<endl;
-    return nullptr;
+    //Primeiro passo: gerar subgrafo
+    Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
+    Inicial->imprimirGrafo();
+    return nullptr; //retorna nulo pois nao implementado
 }
 
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos) {
