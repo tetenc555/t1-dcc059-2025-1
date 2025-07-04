@@ -145,7 +145,7 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
 }
 
 
-
+//tentar otimizar usando queue e o peso na lista_adj
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
     vector<char> retorno;
     unordered_map<char, int> charParaInteiro;
@@ -169,7 +169,45 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 
     dist[origem] = 0;//a origem eh 0
 
-    cout<<"Metodo nao implementado"<<endl;
+    //encontrar o menor peso
+    for (int i = 0; i < n; ++i) { //a partir do segundo vertice ->
+        int u = -1;
+        for (int j = 0; j < n; ++j) {//-> tenta encontrar o menor peso em relacao aos outros vertices
+            if (!visitado[j] && (u == -1 || dist[j] < dist[u])) {
+                u = j;
+            }
+        }
+
+        if (u == -1 || dist[u] == numeric_limits<int>::max()) //se nao achar segue pro proximo vertice
+            break;
+
+        //se achar
+        visitado[u] = true; // marca como visitado
+
+        for (auto [v, peso] : lista_adj[u]) {
+            if (!visitado[v] && dist[u] + peso < dist[v]) {
+                dist[v] = dist[u] + peso;
+                pai[v] = u;
+            }
+        }
+    }
+
+    // Reconstruir caminho: destino → origem
+    if (dist[destino] == numeric_limits<int>::max()) {
+        // Não existe caminho
+        return retorno;
+    }
+
+    stack<char> caminho;
+    for (int v = destino; v != -1; v = pai[v]) {
+        caminho.push(index_to_id[v]);
+    }
+
+    while (!caminho.empty()) {
+        retorno.push_back(caminho.top());
+        caminho.pop();
+    }
+
     return retorno;
 }
 
