@@ -163,8 +163,10 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
         if (indice == -1) { //verifica se achou
             cout << "No de ID:" << id << " nao encontrado! Pulamos este." << endl;
         }
-        else
-            subGrafo->lista_adj.push_back(this->lista_adj[indice]); // adiciona no com sua arestas na lista
+        else {
+            No* noCopiar= new No(*this->lista_adj[indice]);
+            subGrafo->lista_adj.push_back(noCopiar); // adiciona no com sua arestas na lista
+        }
     }
     for (No* no : subGrafo->lista_adj) { //deletaremos agor aarestas com alvos que nao existem
         for (int i=(int(no->arestas.size()) - 1); i>=0 ; i--) {  //para evitar erros com erase, que encurta o vetor e quebra a deletacao correta, iteramos ao contrario
@@ -205,7 +207,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
         for (Aresta* a : noPaiAtual->arestas) {
             int indice =-1;
             for (int i=0; i<int(nosProcessados.size()); i++) {
-                if (get<1> == a->id_no_alvo) {
+                if (get<1>(nosProcessados[i]) == a->id_no_alvo) {
                     indice = i;
                     break;
                 }
@@ -214,7 +216,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
                 nosProcessados.push_back({noPaiAtual->id, a->id_no_alvo, (a->peso+pesoAtual)});
                 conexoesProcessar.push({Inicial->lista_adj[encontraIndiceNo(a->id_no_alvo)], pesoAtual});
             }
-            else if ((pesoAtual+ a->peso) < get<2>(nosProcessados[indice]){//tomar cyuidado com a quebra na fila! veirifica depois
+            else if ((pesoAtual+ a->peso) < get<2>(nosProcessados[indice])){//tomar cyuidado com a quebra na fila! veirifica depois
                 nosProcessados[indice] = {noPaiAtual->id, a->id_no_alvo, (a->peso+pesoAtual)}; //troca pai pelo novo, peso pelo novo e processa no novo!
                 conexoesProcessar.push({Inicial->lista_adj[encontraIndiceNo(a->id_no_alvo)], pesoAtual}); //acho q tem q verificar a fila pra deletar outros com esse...
             }
@@ -223,7 +225,16 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
 
 
     Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, Inicial->in_ponderado_vertice);
-    //gerar retorno a partir de vector d eocnexoes aqyuui
+    for (auto item : nosProcessados) {
+        char idOrigem = get<0>(item);
+        char idAlvo = get<1>(item);
+        int indice = retorno->encontraIndiceNo(get<0>(item));
+        if (indice == -1) {
+            retorno->lista_adj.push_back(new No(idOrigem,false));
+            indice=retorno->lista_adj.size()-1;
+        }
+        retorno->lista_adj[indice]->arestas.push_back(new Aresta(idAlvo,get<2>(item)));
+    }
     delete Inicial;
     return retorno; //retorna nulo pois nao implementado
 }
