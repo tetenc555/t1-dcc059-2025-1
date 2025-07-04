@@ -13,6 +13,7 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
         cin >> id_add_no;
         No* addNo = new No(id_add_no,ehPondVertice);
         this->lista_adj.push_back(addNo);
+//lalal
     }
 
     //insercao de arestas
@@ -88,9 +89,54 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
     return {};
 }
 
-vector<char> Grafo::caminho_minimo_floyd(char id_no, char id_no_b) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
+    // verifica se os nós existem
+    bool existeA = false, existeB = false;
+    for (No* no : lista_adj) {
+        if (no->id == id_no_a) existeA = true;
+        if (no->id == id_no_b) existeB = true;
+    }
+    if (!existeA || !existeB) return {};
+
+    // repara as estruturas na primeira execução
+    if (!floydPronto) {
+        // acha os IDs para índices
+        for (int i = 0; i < ordem; i++) {
+            indiceNos[lista_adj[i]->id] = i;
+        }
+
+        // inicializa matriz de distâncias
+        distFloyd.resize(ordem, vector<int>(ordem, INT_MAX));
+        for (int i = 0; i < ordem; i++) {
+            distFloyd[i][i] = 0;
+            for (Aresta* ar : lista_adj[i]->arestas) {
+                int j = indiceNos[ar->id_no_alvo];
+                distFloyd[i][j] = ar->peso;
+                if (!in_direcionado) distFloyd[j][i] = ar->peso;
+            }
+        }
+
+        // algoritmo principal
+        for (int k = 0; k < ordem; k++) {
+            for (int i = 0; i < ordem; i++) {
+                for (int j = 0; j < ordem; j++) {
+                    if (distFloyd[i][k] != INT_MAX && distFloyd[k][j] != INT_MAX) {
+                        distFloyd[i][j] = min(distFloyd[i][j], distFloyd[i][k] + distFloyd[k][j]);
+                    }
+                }
+            }
+        }
+        floydPronto = true;
+    }
+
+    // retorna o resultado
+    int a = indiceNos[id_no_a];
+    int b = indiceNos[id_no_b];
+
+    if (distFloyd[a][b] == INT_MAX) return {};
+
+
+    return {id_no_a, id_no_b};
 }
 
 Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
