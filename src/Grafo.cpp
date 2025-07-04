@@ -196,33 +196,42 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
 
     //Segundo passo: inicializa fila com o primeiro no e grafo de retorno
-    queue<tuple<No*,int>> conexoesProcessar;
-    conexoesProcessar.push({Inicial->lista_adj[0],0});
+    priority_queue<tuple<int, char, char>, vector<tuple<int, char, char>>, greater<>> fila;
+    unordered_set<char> visitados;
+
+    char idInicial = Inicial->lista_adj[0]->id;
+    visitados.insert(idInicial);
+
+    // empurra todas as arestas do nó inicial
+    for (Aresta* a : Inicial->lista_adj[0]->arestas) {
+        fila.push({a->peso, idInicial, a->id_no_alvo});
+    }
     vector<tuple<char,char,int>> nosProcessados;
 
     //Terceiro passo: Processamento de nós
-    while (!conexoesProcessar.empty()) {  /// eu nem sei mais a complexidade disso. Jesus amado. Acho que o n ta a 5. Deus me ajude.
-        No* noPaiAtual = get<0>(conexoesProcessar.front());
-        int pesoAtual = get<1>(conexoesProcessar.front());
-        for (Aresta* a : noPaiAtual->arestas) {
-            int indice =-1;
-            for (int i=0; i<int(nosProcessados.size()); i++) {
-                if (get<1>(nosProcessados[i]) == a->id_no_alvo) {
-                    indice = i;
-                    break;
-                }
-            }
-            if (indice == -1) {
-                nosProcessados.push_back({noPaiAtual->id, a->id_no_alvo, (a->peso+pesoAtual)});
-                conexoesProcessar.push({Inicial->lista_adj[encontraIndiceNo(a->id_no_alvo)], pesoAtual});
-            }
-            else if ((pesoAtual+ a->peso) < get<2>(nosProcessados[indice])){//tomar cyuidado com a quebra na fila! veirifica depois
-                nosProcessados[indice] = {noPaiAtual->id, a->id_no_alvo, (a->peso+pesoAtual)}; //troca pai pelo novo, peso pelo novo e processa no novo!
-                conexoesProcessar.push({Inicial->lista_adj[encontraIndiceNo(a->id_no_alvo)], pesoAtual}); //acho q tem q verificar a fila pra deletar outros com esse...
+    while (!fila.empty()) {
+        auto [peso, origem, destino] = fila.top();
+        fila.pop();
+
+        // verifica se ja esta no MST
+        if (visitados.count(destino))
+            continue;
+
+        visitados.insert(destino);
+        nosProcessados.push_back({origem, destino, peso});
+
+        int indice = Inicial->encontraIndiceNo(destino);
+        //verifica se encontrou indice na arvore inicial
+        if (indice == -1)
+            continue;
+
+        No* noAtual = Inicial->lista_adj[indice];
+        for (Aresta* a : noAtual->arestas) {
+            if (!visitados.count(a->id_no_alvo)) {
+                fila.push({a->peso, destino, a->id_no_alvo});
             }
         }
     }
-
 
     Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, Inicial->in_ponderado_vertice);
     for (auto item : nosProcessados) {
@@ -230,7 +239,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
         char idAlvo = get<1>(item);
         int indice = retorno->encontraIndiceNo(get<0>(item));
         if (indice == -1) {
-            retorno->lista_adj.push_back(new No(idOrigem,false));
+            retorno->lista_adj.push_back(new No(idOrigem,-1));
             indice=retorno->lista_adj.size()-1;
         }
         retorno->lista_adj[indice]->arestas.push_back(new Aresta(idAlvo,get<2>(item)));
