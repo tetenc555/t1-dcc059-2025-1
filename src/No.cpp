@@ -2,11 +2,14 @@
 
 #include <iostream>
 
-No::No(char id, bool ehPondVertice) {
-    this->id=id;
-    this->peso=0;
-    if (ehPondVertice) {
-        cin>> this->peso;
+No::No(char id, int peso) {
+    if (peso == -1) {
+        this->id=id;
+        this->peso=0;
+    }
+    else {
+        this->id=id;
+        this->peso=peso;
     }
 }
 

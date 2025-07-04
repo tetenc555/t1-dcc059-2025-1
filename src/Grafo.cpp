@@ -1,5 +1,7 @@
 #include "Grafo.h"
 
+#include <list>
+
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
     this->in_direcionado = direcionado;
@@ -7,71 +9,75 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
     this->in_ponderado_vertice= ehPondVertice;
     this->ordem=ordem;
 
-    //insercao de nos
-    for (int i = 0; i < ordem; i++) {
-        char id_add_no;
-        cin >> id_add_no;
-        No* addNo = new No(id_add_no,ehPondVertice);
-        this->lista_adj.push_back(addNo);
-//lalal
-    }
-
-    //insercao de arestas
-    for (int i = 0; i < ordem; i++) {
-        char idNoOrigem;
-        cin>>idNoOrigem; //define no de origem
-        int indice=-1; //valor inicial -1 p verificacao
-        for (int j = 0; j < ordem; j++) {
-            if (this->lista_adj[j]->id == idNoOrigem) {
-                indice=j; //encontra indice
-                break;
-            }
-        }
-
-        if (indice==-1) { //verifica se indice eh valido
-            No* addNo = new No(idNoOrigem,ehPondVertice); //se nao for, adiciona no novo
-            this->lista_adj.push_back(addNo);
-        }
-
-        char idAlvoAresta;
-        cin>>idAlvoAresta;
-        this->lista_adj[indice]->criaAresta(idAlvoAresta); // define aresta nova "na ida"
-
-        int pesoAresta; // declaracao anterior para nao causar erros
-        if (ehPondAresta) { // define peso da aresta caso seja ponderado
-            cin>>pesoAresta; // caso contrario, peso NAO E INSERIDO
-            this->lista_adj[indice]->arestas.back()->peso=pesoAresta;
-        }
-
-        if (!direcionado && (idNoOrigem!=idAlvoAresta)) { // faz processo contrario, pois no não direcionado ambos terao a conexao
-            //PROCESSO NÃO E FEITO CASO SEJA LACO, pois isto causa duplicatas! (pois não e preciso registrar "a volta", tendo em vista que eh identica à ida)
-            int indiceVolta=-1;
-            for (int k = 0; k < ordem; k++) {
-                if (this->lista_adj[k]->id == idAlvoAresta) {
-                    indiceVolta=k; //define indice
-                    break;
-                }
-            }
-
-            if (indiceVolta==-1) { //verifica se indice eh valido
-                No* addNo = new No(idAlvoAresta,ehPondVertice); //se nao for, adiciona no novo
-                this->lista_adj.push_back(addNo);
-            }
-
-            this->lista_adj[indiceVolta]->criaAresta(this->lista_adj[indice]->id); //cria aresta "de volta"
-
-            if (ehPondAresta) { // define o peso ja digitado caso seja ponderado
-                this->lista_adj[indiceVolta]->arestas.back()->peso=pesoAresta;
-            }
-
-        }
-    }
-
-    //criacao da lista de arestas
-    this->lista_arestas = new listaArestas(this->lista_adj);
 }
 
 Grafo::~Grafo() {
+}
+
+void Grafo::inserirNos(char id, int pesoNo) {
+    No* addNo = new No(id, this->in_ponderado_vertice ? pesoNo : pesoNo = -1); //cria um novo no com id e peso (caso seja necessario)
+    this->lista_adj.push_back(addNo); //adiciona na lista de adjacencias
+}
+
+void Grafo::criaListaArestas() {
+    this->lista_arestas = new listaArestas(this->lista_adj);
+}
+
+void Grafo::imprimirNos() {
+    for (auto no : lista_adj) {
+        cout << "Nó " << no->id; //imprime id do no
+        if (in_ponderado_vertice) {
+            cout << " (Peso do Nó: " << no->peso << ")"; //imprime seu peso caso seja ponderado vertice
+        }
+        cout << endl;
+    }
+}
+
+int Grafo::encontraIndiceNo(char idNo) {
+    int indice=-1; //valor inicial -1 p verificacao
+    for (int j = 0; j < int(lista_adj.size()); j++) {
+        if (this->lista_adj[j]->id == idNo) {
+            indice=j; //encontra indice
+            break;
+        }
+    }
+    return indice; //retorna indice valido ou -1 caso no nao exista !
+}
+
+bool Grafo::verificaExistenciaNo(char idNo) {
+    for (int i=0; i < int(lista_adj.size()); i++) { //percorre todos itens
+        if (this->lista_adj[i]->id == idNo) {
+            return true; //se achar no retorna true e para o for
+        }
+    }
+    return false; //se nao achar ao fim do for retorna false
+}
+
+void Grafo::processarArestaIda(int idOrigem, char idAlvoAresta, int peso) {
+    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo((idAlvoAresta)))) { // se o no for invalido, quebra e nao processa a aresta
+        cout << "Erro! No invalido na aresta! Nao adicionada, tente novamente" << endl; //imprime mensagem de erro;
+        return; //retorna sem adicionar aresta
+    }
+    int indice = encontraIndiceNo(idOrigem); //busca indice
+    lista_adj[indice]->criaAresta(idAlvoAresta); //cria aresta
+
+    if (this->in_ponderado_aresta) {
+        this->lista_adj[indice]->arestas.back()->peso=peso; //adiciona peso caso seja ponderado
+    }
+}
+
+void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //praticamente o contrario de processar Aresta Ida
+    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo((idAlvo)))) { // se o no for invalido, quebra e nao processa a aresta
+        //nao imprime mensagem de erro pois o aviso sera emitido ja na aresta de ida, independente da aresta de volta ser chamada ou nao.
+        return; //retorna sem adicionar aresta
+    }
+    int indiceVolta = encontraIndiceNo(idAlvo); //busca indice
+    this->lista_adj[indiceVolta]->criaAresta(idOrigem); //cria aresta partindo do alvo pra origem
+
+    //atribui peso se for ponderado
+    if (in_ponderado_aresta) {
+        lista_adj[indiceVolta]->arestas.back()->peso = peso;
+    }
 }
 
 vector<char> Grafo::fecho_transitivo_direto(char id_no) {
@@ -182,6 +188,7 @@ vector<char> Grafo::vertices_de_articulacao() {
 void Grafo::imprimirGrafo(){
     cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
     cout << this->ordem << endl;
+    imprimirNos();
     this->lista_arestas->imprimeArestas();
     cout << "Lista de Adjacencias: " << endl;
     for (int i = 0; i < this->ordem; i++) {
