@@ -6,3 +6,4 @@ build/
 .vscode/
 src/main
 src/main.exe
+/.vscode/
