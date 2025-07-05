@@ -374,25 +374,56 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
 
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
 {
-    //condicoes // verifica se eh conexo? //verificar return
+    //Primeiro passo: gerar subgrafo
+    Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
+
+    //condicoes pra fazer o algoritmo (alem de ser conexo
     if (!this->in_ponderado_aresta) { //se nao for ponderado vai de arrasta
         cout<<"Nao eh ponderado!"<<endl;
-        return {};
+        return nullptr;
     }
     if (this->in_direcionado){ // se eh direcionado vai de arrasta
         cout<<"Eh direcionado!" << endl;
         return nullptr;
     }
 
+    //Segundo passo: inicializa fila com o primeiro no e grafo de retorno
+    priority_queue<tuple<int, char, char>, vector<tuple<int, char, char>>, greater<>> fila;
+    unordered_set<char> visitados;
+
+    char idInicial = Inicial->lista_adj[0]->id; //define no inicial como o primeiro da lista (provalvemnte alterar p cin de4pois)
+    visitados.insert(idInicial); //insere raiz como visitado
+    for (Aresta* a : Inicial->lista_adj[0]->arestas) {
+        fila.push({a->peso, idInicial, a->id_no_alvo}); //define primeiros processamentos como arestas da raiz
+    }
+    vector<tuple<char,char,int>> nosProcessados; //salvar arestas que serao usadas para ser copiadas depois
+
     //uma lista com ponderamento de arestas em ordem
-    //uma vazia para passar a ordem
-    //retornar essa "vazia"
+
     for (int arestasArvoreGeradora=0; ordem-1 != 0; arestasArvoreGeradora++) //condicao de uma arvore geradora de kruskal
     {
         //verificar se a aresta (dois vertices que se ligam) tem algum vertice em comum
     }
-    cout<<"Metodo nao implementado"<<endl;
-    return nullptr; //retorno a lista da arvore geradora
+
+
+    //copia arestas definidas como certas para o grafo retorno
+    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
+    for (auto item : nosProcessados) {
+        char idOrigem = get<0>(item);
+        char idAlvo = get<1>(item);
+        int peso = get<2>(item);
+        //cria nos se nao existirem
+        if (!retorno->verificaExistenciaNo(idOrigem))
+            retorno->inserirNos(idOrigem,-1);
+        if (!retorno->verificaExistenciaNo(idAlvo))
+            retorno->inserirNos(idAlvo,-1);
+        //salva aresta
+        retorno->processarArestaIda(idOrigem,idAlvo,peso);
+        retorno->processarArestaVolta(idAlvo,idOrigem,peso);
+    }
+    //cria lista de arestas apos processamento
+    retorno->criaListaArestas();
+    return retorno; //retorna arvore gerada
 }
 
 Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
