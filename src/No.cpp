@@ -26,6 +26,9 @@ No::No(No* noOriginal) {
         this->peso=noOriginal->peso;
         this->visitado=false;
     }
+    for (Aresta* a : noOriginal->arestas) {
+        this->arestas.push_back(new Aresta(a));
+    }
 }
 
 void No::criaAresta(char alvo) {
