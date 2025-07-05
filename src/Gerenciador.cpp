@@ -5,6 +5,23 @@
 
 static Grafo* grafoAtual = nullptr;
 
+void salvaVetorCharArquivo(const string& caminhoArquivo, const string& nomeImpressao, const vector<char> vetorImprimir) {
+    ofstream arquivo(caminhoArquivo);
+    if (!arquivo.is_open()) {
+        throw runtime_error("Erro ao criar arquivo " + caminhoArquivo);
+    }
+
+    // Escreve cabeçalho (direcionado, ponderado aresta, ponderado vértice)
+    arquivo << nomeImpressao << ": \n";
+
+    // Escreve cada nó e suas adjacências
+    for (char c: vetorImprimir) {
+        arquivo << c << " ";
+    }
+    arquivo << endl;
+    arquivo.close();
+}
+
 void Gerenciador::comandos(Grafo* grafo) {
     grafoAtual = grafo;
 
@@ -55,7 +72,7 @@ void Gerenciador::comandos(Grafo* grafo) {
             cout << endl;
 
             if(pergunta_imprimir_arquivo("fecho_trans_indir.txt")) {
-                cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
+                salvaVetorCharArquivo("./output/fecho_trans_indir.txt","Fecho transitivo indireto",fecho_transitivo_indireto);
             }
 
 ;
