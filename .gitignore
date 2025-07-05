@@ -4,3 +4,6 @@ src/execGrupoX
 build/
 .DS_Store
 /src/main
+.vscode/
+src/main
+src/main.exe
