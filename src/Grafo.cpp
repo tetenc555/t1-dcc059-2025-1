@@ -181,6 +181,7 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
 }
 
 Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
+    //Verificacoes 
     if (this->in_direcionado) {
         cout << "Erro! Grafo Direcionado." << endl;
         return nullptr;
@@ -198,55 +199,58 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     priority_queue<tuple<int, char, char>, vector<tuple<int, char, char>>, greater<>> fila;
     unordered_set<char> visitados;
 
-    char idInicial = Inicial->lista_adj[0]->id;
-    visitados.insert(idInicial);
-
-    // empurra todas as arestas do nó inicial
+    char idInicial = Inicial->lista_adj[0]->id; //define no inicial como o primeiro da lista (provalvemnte alterar p cin de4pois)
+    visitados.insert(idInicial); //insere raiz como visitado
     for (Aresta* a : Inicial->lista_adj[0]->arestas) {
-        fila.push({a->peso, idInicial, a->id_no_alvo});
+        fila.push({a->peso, idInicial, a->id_no_alvo}); //define primeiros processamentos como arestas da raiz
     }
-    vector<tuple<char,char,int>> nosProcessados;
+    vector<tuple<char,char,int>> nosProcessados; //salvar arestas que serao usadas para ser copiadas depois
 
     //Terceiro passo: Processamento de nós
-    while (!fila.empty()) {
-        auto [peso, origem, destino] = fila.top();
-        fila.pop();
+    while (!fila.empty()) { //processamento enquanto nao tiver vazio
+        auto [peso, origem, destino] = fila.top(); //salva cada variavel a ser usada baseada no item de menor peso
+        fila.pop(); //e depois o remove da fila
 
         // verifica se ja esta no MST
         if (visitados.count(destino))
-            continue;
+            continue; //caso esteja, pula pra prox interacao
 
-        visitados.insert(destino);
-        nosProcessados.push_back({origem, destino, peso});
+        //processamento em si    
+        visitados.insert(destino); //salva que foi visitado
+        nosProcessados.push_back({origem, destino, peso}); //salva aresta como valida
 
+        //acha indice no inicial para que possamos achar proximos vertices
         int indice = Inicial->encontraIndiceNo(destino);
         //verifica se encontrou indice na arvore inicial
         if (indice == -1)
-            continue;
+            continue; //caso nao esteja e erro e pula prqa prox interacao. apenas uma medida de segurança
 
-        No* noAtual = Inicial->lista_adj[indice];
+        No* noAtual = Inicial->lista_adj[indice]; //define o no atual como o destino determinado
         for (Aresta* a : noAtual->arestas) {
-            if (!visitados.count(a->id_no_alvo)) {
-                fila.emplace(a->peso, destino, a->id_no_alvo);
+            if (!visitados.count(a->id_no_alvo)) { //garante que so salva se nao tiver sido visitado
+                fila.emplace(a->peso, destino, a->id_no_alvo); //salva cada aresta dele para proximo processamento, a fila fica encarregada de organizar os pesos
             }
         }
     }
 
-    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false);
+    //copia arestas definidas como certas para o grafo retorno
+    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
     for (auto item : nosProcessados) {
         char idOrigem = get<0>(item);
         char idAlvo = get<1>(item);
         int peso = get<2>(item);
+        //cria nos se nao existirem
         if (!retorno->verificaExistenciaNo(idOrigem))
             retorno->inserirNos(idOrigem,-1);
         if (!retorno->verificaExistenciaNo(idAlvo))
             retorno->inserirNos(idAlvo,-1);
+        //salva aresta
         retorno->processarArestaIda(idOrigem,idAlvo,peso);
         retorno->processarArestaVolta(idAlvo,idOrigem,peso);
-        retorno->criaListaArestas();
-
     }
-    return retorno; //retorna nulo pois nao implementado
+    //cria lista de arestas apos processamento
+    retorno->criaListaArestas();
+    return retorno; //retorna arvore gerada
 }
 
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos) {
