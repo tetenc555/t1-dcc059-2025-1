@@ -204,6 +204,7 @@ void Gerenciador::comandos(Grafo* grafo) {
             break;
         }
         case '0': {
+            delete grafo;
             exit(0);
         }
         default: {
