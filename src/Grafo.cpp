@@ -365,27 +365,31 @@ void Grafo::buscaProfundidadeAux(No* atual, Grafo* arvore) {
     }
 }
 
-int Grafo::raio() {
+vector<int> Grafo::calculaExcentricidades() {
+    return {};
+}
+
+int Grafo::raio(vector <int> excentricidade) {
     cout<<"Metodo nao implementado"<<endl;
     return 0;
 }
 
-int Grafo::diametro() {
+int Grafo::diametro(vector <int> excentricidade) {
     cout<<"Metodo nao implementado"<<endl;
     return 0;
 }
 
-vector<char> Grafo::centro() {
+vector<char> Grafo::centro(vector <int> excentricidade) {
     cout<<"Metodo nao implementado"<<endl;
     return {};
 }
 
-vector<char> Grafo::periferia() {
+vector<char> Grafo::periferia(vector <int> excentricidade) {
     cout<<"Metodo nao implementado"<<endl;
     return {};
 }
 
-vector<char> Grafo::vertices_de_articulacao() {
+vector<char> Grafo::vertices_de_articulacao(vector <int> excentricidade) {
     cout<<"Metodo nao implementado"<<endl;
     return {};
 }

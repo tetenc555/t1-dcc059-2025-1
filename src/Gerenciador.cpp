@@ -200,10 +200,11 @@ void Gerenciador::comandos(Grafo* grafo) {
 
         case 'h': {
 
-            int raio = grafo->raio();
-            int diametro = grafo->diametro();
-            vector<char> centro = grafo->centro();
-            vector<char> periferia = grafo->periferia();
+            vector<int> excentricidades = grafo->calculaExcentricidades();
+            int raio = grafo->raio(excentricidades);
+            int diametro = grafo->diametro(excentricidades);
+            vector<char> centro = grafo->centro(excentricidades);
+            vector<char> periferia = grafo->periferia(excentricidades);
 
             cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
 
