@@ -104,7 +104,7 @@ void Gerenciador::comandos(Grafo* grafo) {
                 arvore_geradora_minima_prim->imprimirGrafo();
 
                 if(pergunta_imprimir_arquivo("agm_prim.txt")) {
-                    arvore_geradora_minima_prim->salvarGrafoEmArquivo("./output/arvore_geradora_minima_prim.txt");
+                    arvore_geradora_minima_prim->salvarGrafoEmArquivo("./output/agm_prim.txt");
                 }
 
                 delete arvore_geradora_minima_prim;
@@ -126,10 +126,10 @@ void Gerenciador::comandos(Grafo* grafo) {
 
                 vector<char> ids = get_conjunto_ids(grafo,tam);
                 Grafo* arvore_geradora_minima_kruskal = grafo->arvore_geradora_minima_kruskal(ids);
-                cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
+                arvore_geradora_minima_kruskal->imprimirGrafo();
 
                 if(pergunta_imprimir_arquivo("agm_kruskal.txt")) {
-                    cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
+                    arvore_geradora_minima_kruskal->salvarGrafoEmArquivo("./output/agm_kruskal.txt");
                 }
 
                 delete arvore_geradora_minima_kruskal;
