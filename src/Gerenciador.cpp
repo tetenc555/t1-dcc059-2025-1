@@ -104,7 +104,7 @@ void Gerenciador::comandos(Grafo* grafo) {
                 arvore_geradora_minima_prim->imprimirGrafo();
 
                 if(pergunta_imprimir_arquivo("agm_prim.txt")) {
-                    cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
+                    arvore_geradora_minima_prim->salvarGrafoEmArquivo("./output/arvore_geradora_minima_prim.txt");
                 }
 
                 delete arvore_geradora_minima_prim;
