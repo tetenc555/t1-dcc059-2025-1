@@ -208,7 +208,10 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
 
     //Terceiro passo: Processamento de nós
     while (!fila.empty()) { //processamento enquanto nao tiver vazio
-        auto [peso, origem, destino] = fila.top(); //salva cada variavel a ser usada baseada no item de menor peso
+        //salva cada variavel a ser usada baseada no item de menor peso
+        int peso = get<0>(fila.top()); 
+        char origem = get<1>(fila.top()); 
+        char destino = get<2>(fila.top()); 
         fila.pop(); //e depois o remove da fila
 
         // verifica se ja esta no MST
