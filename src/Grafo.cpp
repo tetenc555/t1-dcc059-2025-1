@@ -152,38 +152,57 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 }
 
 vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
-    // verifica se os nós existem
-    bool existeA = false, existeB = false;
-    for (No* no : lista_adj) {
-        if (no->id == id_no_a) existeA = true;
-        if (no->id == id_no_b) existeB = true;
+    // verifica se o grafo é ponderado nas arestas
+    if (!in_ponderado_aresta) {
+        cerr << "Erro: Floyd-Warshall requer arestas ponderadas" << endl;
+        return {};
     }
-    if (!existeA || !existeB) return {};
 
-    // repara as estruturas na primeira execução
+    // verifica se exite nó
+    if (!verificaExistenciaNo(id_no_a)) {
+        cerr << "Vértice " << id_no_a << " não encontrado!" << endl;
+        return {};
+    }
+    if (!verificaExistenciaNo(id_no_b)) {
+        cerr << "Vértice " << id_no_b << " não encontrado!" << endl;
+        return {};
+    }
+
+    // execução 1x
     if (!floydPronto) {
-        // acha os IDs para índices
+        // Inicializa estruturas
         for (int i = 0; i < ordem; i++) {
             indiceNos[lista_adj[i]->id] = i;
         }
 
-        // inicializa matriz de distâncias
         distFloyd.resize(ordem, vector<int>(ordem, INT_MAX));
+        proxNo.resize(ordem, vector<int>(ordem, -1));
+
+        // preenche matrizes iniciais
         for (int i = 0; i < ordem; i++) {
             distFloyd[i][i] = 0;
             for (Aresta* ar : lista_adj[i]->arestas) {
                 int j = indiceNos[ar->id_no_alvo];
                 distFloyd[i][j] = ar->peso;
-                if (!in_direcionado) distFloyd[j][i] = ar->peso;
+                proxNo[i][j] = j;
+
+                if (!in_direcionado) {
+                    distFloyd[j][i] = ar->peso;
+                    proxNo[j][i] = i;
+                }
             }
         }
 
-        // algoritmo principal
+        // cmf
         for (int k = 0; k < ordem; k++) {
             for (int i = 0; i < ordem; i++) {
                 for (int j = 0; j < ordem; j++) {
-                    if (distFloyd[i][k] != INT_MAX && distFloyd[k][j] != INT_MAX) {
-                        distFloyd[i][j] = min(distFloyd[i][j], distFloyd[i][k] + distFloyd[k][j]);
+                    if (distFloyd[i][k] != INT_MAX &&
+                        distFloyd[k][j] != INT_MAX &&
+                        distFloyd[i][j] > distFloyd[i][k] + distFloyd[k][j]) {
+
+                        distFloyd[i][j] = distFloyd[i][k] + distFloyd[k][j];
+                        proxNo[i][j] = proxNo[i][k];
                     }
                 }
             }
@@ -191,14 +210,25 @@ vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
         floydPronto = true;
     }
 
-    // retorna o resultado
-    int a = indiceNos[id_no_a];
-    int b = indiceNos[id_no_b];
+    // reconstrução do caminho
+    int origem = indiceNos[id_no_a];
+    int destino = indiceNos[id_no_b];
 
-    if (distFloyd[a][b] == INT_MAX) return {};
+    if (proxNo[origem][destino] == -1) {
+        cout << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
+        return {};
+    }
 
+    vector<char> caminho;
+    caminho.push_back(id_no_a);
 
-    return {id_no_a, id_no_b};
+    int atual = origem;
+    while (atual != destino) {
+        atual = proxNo[atual][destino];
+        caminho.push_back(lista_adj[atual]->id);
+    }
+
+    return caminho;
 }
 
 Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
