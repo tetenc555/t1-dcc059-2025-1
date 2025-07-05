@@ -164,8 +164,7 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
             cout << "No de ID:" << id << " nao encontrado! Pulamos este." << endl;
         }
         else {
-            No* noCopiar= new No(*this->lista_adj[indice]);
-            subGrafo->lista_adj.push_back(noCopiar); // adiciona no com sua arestas na lista
+            subGrafo->lista_adj.push_back(new No(this->lista_adj[indice])); // adiciona no com sua arestas na lista
         }
     }
     for (No* no : subGrafo->lista_adj) { //deletaremos agor aarestas com alvos que nao existem

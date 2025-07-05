@@ -15,6 +15,19 @@ No::No(char id, int peso) {
     }
 }
 
+No::No(No* noOriginal) {
+    if (noOriginal->peso == -1) {
+        this->id=noOriginal->id;
+        this->peso=0;
+        this->visitado=false;
+    }
+    else {
+        this->id=noOriginal->id;
+        this->peso=noOriginal->peso;
+        this->visitado=false;
+    }
+}
+
 void No::criaAresta(char alvo) {
     Aresta* addAresta = new Aresta(alvo, -1);
     arestas.push_back(addAresta);
