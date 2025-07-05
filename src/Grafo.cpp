@@ -222,9 +222,54 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
     return caminhoFinal;
 }
 
-vector<char> Grafo::caminho_minimo_floyd(char id_no, char id_no_b) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
+    // verifica se os nós existem
+    bool existeA = false, existeB = false;
+    for (No* no : lista_adj) {
+        if (no->id == id_no_a) existeA = true;
+        if (no->id == id_no_b) existeB = true;
+    }
+    if (!existeA || !existeB) return {};
+
+    // repara as estruturas na primeira execução
+    if (!floydPronto) {
+        // acha os IDs para índices
+        for (int i = 0; i < ordem; i++) {
+            indiceNos[lista_adj[i]->id] = i;
+        }
+
+        // inicializa matriz de distâncias
+        distFloyd.resize(ordem, vector<int>(ordem, INT_MAX));
+        for (int i = 0; i < ordem; i++) {
+            distFloyd[i][i] = 0;
+            for (Aresta* ar : lista_adj[i]->arestas) {
+                int j = indiceNos[ar->id_no_alvo];
+                distFloyd[i][j] = ar->peso;
+                if (!in_direcionado) distFloyd[j][i] = ar->peso;
+            }
+        }
+
+        // algoritmo principal
+        for (int k = 0; k < ordem; k++) {
+            for (int i = 0; i < ordem; i++) {
+                for (int j = 0; j < ordem; j++) {
+                    if (distFloyd[i][k] != INT_MAX && distFloyd[k][j] != INT_MAX) {
+                        distFloyd[i][j] = min(distFloyd[i][j], distFloyd[i][k] + distFloyd[k][j]);
+                    }
+                }
+            }
+        }
+        floydPronto = true;
+    }
+
+    // retorna o resultado
+    int a = indiceNos[id_no_a];
+    int b = indiceNos[id_no_b];
+
+    if (distFloyd[a][b] == INT_MAX) return {};
+
+
+    return {id_no_a, id_no_b};
 }
 
 Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
@@ -234,8 +279,9 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
         if (indice == -1) { //verifica se achou
             cout << "No de ID:" << id << " nao encontrado! Pulamos este." << endl;
         }
-        else
-            subGrafo->lista_adj.push_back(this->lista_adj[indice]); // adiciona no com sua arestas na lista
+        else {
+            subGrafo->lista_adj.push_back(new No(this->lista_adj[indice])); // adiciona no com sua arestas na lista
+        }
     }
     for (No* no : subGrafo->lista_adj) { //deletaremos agor aarestas com alvos que nao existem
         for (int i=(int(no->arestas.size()) - 1); i>=0 ; i--) {  //para evitar erros com erase, que encurta o vetor e quebra a deletacao correta, iteramos ao contrario
@@ -251,10 +297,79 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
 }
 
 Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
+    //Verificacoes 
+    if (this->in_direcionado) {
+        cout << "Erro! Grafo Direcionado." << endl;
+        return nullptr;
+    }
+
+    if (!this->in_ponderado_aresta) {
+        cout << "Erro! Grafo nao eh ponderado." << endl;
+        return nullptr;
+    }
+
     //Primeiro passo: gerar subgrafo
     Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
-    Inicial->imprimirGrafo();
-    return nullptr; //retorna nulo pois nao implementado
+
+    //Segundo passo: inicializa fila com o primeiro no e grafo de retorno
+    priority_queue<tuple<int, char, char>, vector<tuple<int, char, char>>, greater<>> fila;
+    unordered_set<char> visitados;
+
+    char idInicial = Inicial->lista_adj[0]->id; //define no inicial como o primeiro da lista (provalvemnte alterar p cin de4pois)
+    visitados.insert(idInicial); //insere raiz como visitado
+    for (Aresta* a : Inicial->lista_adj[0]->arestas) {
+        fila.push({a->peso, idInicial, a->id_no_alvo}); //define primeiros processamentos como arestas da raiz
+    }
+    vector<tuple<char,char,int>> nosProcessados; //salvar arestas que serao usadas para ser copiadas depois
+
+    //Terceiro passo: Processamento de nós
+    while (!fila.empty()) { //processamento enquanto nao tiver vazio
+        //salva cada variavel a ser usada baseada no item de menor peso
+        int peso = get<0>(fila.top()); 
+        char origem = get<1>(fila.top()); 
+        char destino = get<2>(fila.top()); 
+        fila.pop(); //e depois o remove da fila
+
+        // verifica se ja esta no MST
+        if (visitados.count(destino))
+            continue; //caso esteja, pula pra prox interacao
+
+        //processamento em si    
+        visitados.insert(destino); //salva que foi visitado
+        nosProcessados.push_back({origem, destino, peso}); //salva aresta como valida
+
+        //acha indice no inicial para que possamos achar proximos vertices
+        int indice = Inicial->encontraIndiceNo(destino);
+        //verifica se encontrou indice na arvore inicial
+        if (indice == -1)
+            continue; //caso nao esteja e erro e pula prqa prox interacao. apenas uma medida de segurança
+
+        No* noAtual = Inicial->lista_adj[indice]; //define o no atual como o destino determinado
+        for (Aresta* a : noAtual->arestas) {
+            if (!visitados.count(a->id_no_alvo)) { //garante que so salva se nao tiver sido visitado
+                fila.emplace(a->peso, destino, a->id_no_alvo); //salva cada aresta dele para proximo processamento, a fila fica encarregada de organizar os pesos
+            }
+        }
+    }
+
+    //copia arestas definidas como certas para o grafo retorno
+    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
+    for (auto item : nosProcessados) {
+        char idOrigem = get<0>(item);
+        char idAlvo = get<1>(item);
+        int peso = get<2>(item);
+        //cria nos se nao existirem
+        if (!retorno->verificaExistenciaNo(idOrigem))
+            retorno->inserirNos(idOrigem,-1);
+        if (!retorno->verificaExistenciaNo(idAlvo))
+            retorno->inserirNos(idAlvo,-1);
+        //salva aresta
+        retorno->processarArestaIda(idOrigem,idAlvo,peso);
+        retorno->processarArestaVolta(idAlvo,idOrigem,peso);
+    }
+    //cria lista de arestas apos processamento
+    retorno->criaListaArestas();
+    return retorno; //retorna arvore gerada
 }
 
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)

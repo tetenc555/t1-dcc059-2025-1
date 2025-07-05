@@ -9,12 +9,19 @@
 #include <iostream>
 #include <unordered_set>
 #include <vector>
-
+#include <unordered_map>
+#include <climits>
 #include "listaArestas.h"
 
 
 using namespace std;
 class Grafo {
+
+private:
+    unordered_map<char, int> indiceNos;
+    vector<vector<int>> distFloyd;
+    bool floydPronto = false;
+
 public:
     Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
 
