@@ -227,23 +227,25 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
         No* noAtual = Inicial->lista_adj[indice];
         for (Aresta* a : noAtual->arestas) {
             if (!visitados.count(a->id_no_alvo)) {
-                fila.push({a->peso, destino, a->id_no_alvo});
+                fila.emplace(a->peso, destino, a->id_no_alvo);
             }
         }
     }
 
-    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, Inicial->in_ponderado_vertice);
+    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false);
     for (auto item : nosProcessados) {
         char idOrigem = get<0>(item);
         char idAlvo = get<1>(item);
-        int indice = retorno->encontraIndiceNo(get<0>(item));
-        if (indice == -1) {
-            retorno->lista_adj.push_back(new No(idOrigem,-1));
-            indice=retorno->lista_adj.size()-1;
-        }
-        retorno->lista_adj[indice]->arestas.push_back(new Aresta(idAlvo,get<2>(item)));
+        int peso = get<2>(item);
+        if (!retorno->verificaExistenciaNo(idOrigem))
+            retorno->inserirNos(idOrigem,-1);
+        if (!retorno->verificaExistenciaNo(idAlvo))
+            retorno->inserirNos(idAlvo,-1);
+        retorno->processarArestaIda(idOrigem,idAlvo,peso);
+        retorno->processarArestaVolta(idAlvo,idOrigem,peso);
+        retorno->criaListaArestas();
+
     }
-    delete Inicial;
     return retorno; //retorna nulo pois nao implementado
 }
 
