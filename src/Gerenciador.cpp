@@ -1,8 +1,13 @@
 #include "Gerenciador.h"
 #include <fstream>
 
+#include "LeituraArquivos.h"
+
+static Grafo* grafoAtual = nullptr;
 
 void Gerenciador::comandos(Grafo* grafo) {
+    grafoAtual = grafo;
+
     cout<<"Digite uma das opcoes abaixo e pressione enter:"<<endl<<endl;
     cout<<"(a) Fecho transitivo direto de um no;"<<endl;
     cout<<"(b) Fecho transitivo indireto de um no;"<<endl;
@@ -13,6 +18,7 @@ void Gerenciador::comandos(Grafo* grafo) {
     cout<<"(g) Arvore de caminhamento em profundidade;"<<endl;
     cout<<"(h) Raio, diametro, centro e periferia do grafo;"<<endl;
     cout<<"(j) Imprimir grafo;"<<endl;
+    cout <<"(m) Alterar Arquivo de teste;" <<endl;
     cout<<"(0) Sair;"<<endl<<endl;
 
     char resp;
@@ -22,7 +28,12 @@ void Gerenciador::comandos(Grafo* grafo) {
 
             char id_no = get_id_entrada();
             vector<char> fecho_transitivo_direto = grafo->fecho_transitivo_direto(id_no);
-            cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
+            //metodo de impressao em tela
+            cout << "Fecho transitivo direto do Nó " << id_no << ": " ;
+            for (char item : fecho_transitivo_direto) {
+                cout << item << " ";
+            }
+            cout << endl;
 
             if(pergunta_imprimir_arquivo("fecho_trans_dir.txt")) {
                 cout<<"Metodo de impressao em arquivo nao implementado"<<endl<<endl;
@@ -36,7 +47,12 @@ void Gerenciador::comandos(Grafo* grafo) {
 
             char id_no = get_id_entrada();
             vector<char> fecho_transitivo_indireto = grafo->fecho_transitivo_indireto(id_no);
-            cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
+            //metodo de impressao em tela
+            cout << "Fecho transitivo indireto do Nó " << id_no << ": " ;
+            for (char item : fecho_transitivo_indireto) {
+                cout << item << " ";
+            }
+            cout << endl;
 
             if(pergunta_imprimir_arquivo("fecho_trans_indir.txt")) {
                 cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
@@ -85,7 +101,7 @@ void Gerenciador::comandos(Grafo* grafo) {
 
                 vector<char> ids = get_conjunto_ids(grafo,tam);
                 Grafo* arvore_geradora_minima_prim = grafo->arvore_geradora_minima_prim(ids);
-                cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
+                arvore_geradora_minima_prim->imprimirGrafo();
 
                 if(pergunta_imprimir_arquivo("agm_prim.txt")) {
                     cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
@@ -129,10 +145,10 @@ void Gerenciador::comandos(Grafo* grafo) {
 
             char id_no = get_id_entrada();
             Grafo* arvore_caminhamento_profundidade = grafo->arvore_caminhamento_profundidade(id_no);
-            cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
+            arvore_caminhamento_profundidade->imprimirFormato();
 
             if(pergunta_imprimir_arquivo("arvore_caminhamento_profundidade.txt")) {
-                cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
+                arvore_caminhamento_profundidade->salvarGrafoEmArquivo("./output/arvore_caminhamento_profundidade.txt");
             }
 
             delete arvore_caminhamento_profundidade;
@@ -162,8 +178,37 @@ void Gerenciador::comandos(Grafo* grafo) {
 
     }
         case 'j': {
-        grafo->imprimirGrafo();
-    }
+            grafo->imprimirGrafo();
+            cout<<endl;
+            break;
+        }
+        case 'm': {
+            string caminhoBase = "./input/";
+            cout << "\nDigite o nome do novo arquivo de teste: ";
+            string nomeArquivo;
+            cin >> nomeArquivo;
+
+            string caminhoCompleto = caminhoBase+nomeArquivo;
+
+            ifstream arquivo(caminhoCompleto); //Verifica se o caminho existe
+            if (!arquivo) {
+                cerr<<"Arquivo nao existe, caminho não encontrado"<<endl;
+                exit(1);
+            }
+            arquivo.close();
+
+            try {
+                cout << "Processando: " << caminhoCompleto << endl;
+                Grafo* novoGrafo = LeituraArquivos::lerGrafodoArquivo(caminhoCompleto);
+                delete grafoAtual;
+                Gerenciador::comandos(novoGrafo);
+            }catch (const exception& e) {
+                cerr << "Erro ao carregar o arquivo: " << e.what() << endl;
+                exit(1);
+            }
+
+            break;
+        }
         case '0': {
             exit(0);
         }
@@ -230,5 +275,31 @@ bool Gerenciador::pergunta_imprimir_arquivo(string nome_arquivo) {
         default:
             cout<<"Resposta invalida"<<endl;
             return pergunta_imprimir_arquivo(nome_arquivo);
+    }
+}
+
+void Gerenciador::mudarArquivoTeste() {
+    string caminhoBase = "./input/";
+    cout << "\nDigite o nome do novo arquivo de teste: ";
+    string nomeArquivo;
+    getline(cin, nomeArquivo);
+
+    string caminhoCompleto = caminhoBase+nomeArquivo;
+
+    ifstream arquivo(caminhoCompleto); //Verifica se o caminho existe
+    if (!arquivo) {
+        cerr<<"Arquivo nao existe, caminho não encontrado"<<endl;
+        exit(1);
+    }
+    arquivo.close();
+
+    try {
+        cout << "Processando: " << caminhoCompleto << endl;
+        Grafo* novoGrafo = LeituraArquivos::lerGrafodoArquivo(caminhoCompleto);
+        delete grafoAtual;
+        Gerenciador::comandos(novoGrafo);
+    }catch (const exception& e) {
+        cerr << "Erro ao carregar o arquivo: " << e.what() << endl;
+        exit(1);
     }
 }

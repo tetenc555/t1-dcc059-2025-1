@@ -3,7 +3,7 @@ CXXFLAGS := -std=c++17 -Wall -Wextra -I src
 
 SRC_DIR := src
 BUILD_DIR := build
-BIN := $(BUILD_DIR)/main
+BIN := src/main
 
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
