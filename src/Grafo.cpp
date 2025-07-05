@@ -147,70 +147,79 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
 
 
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
-    vector<char> caminho_resultado;
+    vector<char> caminhoFinal; //vector p armazenar os vertices do caminho minimo
 
+    //se o vertice inicial ou o final nao existe, retorna vazio
     if (!verificaExistenciaNo(id_no_a) || !verificaExistenciaNo(id_no_b)) {
         cout << "Um dos vertices nao foi encontrado!" << endl;
-        return caminho_resultado;
+        return caminhoFinal;
     }
 
-    unordered_map<char, int> id_para_indice;
-    unordered_map<int, char> indice_para_id;
 
-    for (int i = 0; i < lista_adj.size(); ++i) {
-        id_para_indice[lista_adj[i]->id] = i;
-        indice_para_id[i] = lista_adj[i]->id;
+    unordered_map<char, int> verticeIndice;
+    unordered_map<int, char> indiceVertice;
+    for (int i = 0; i < lista_adj.size(); ++i){
+        verticeIndice[lista_adj[i]->id] = i; //com unordered relaciona vertice c id
+        indiceVertice[i] = lista_adj[i]->id; //com unordered realciona indice c vertice
     }
 
-    int origem = id_para_indice[id_no_a];
-    int destino = id_para_indice[id_no_b];
+    //declara os vertices dos parametros como inteiros
+    int origem = verticeIndice[id_no_a];
+    int destino = verticeIndice[id_no_b];
 
     int n = lista_adj.size();
-    vector<int> dist(n, numeric_limits<int>::max());
-    vector<int> pai(n, -1);
-    vector<bool> visitado(n, false);
 
-    dist[origem] = 0;
+    vector<int> pesoCaminho(n, numeric_limits<int>::max()); //marca os pesos do caminho
+    vector<int> pai(n, -1); //marca o caminho de volta
+    vector<bool> visitado(n, false); // marca os nós visitados
+    pesoCaminho[origem] = 0;
 
+    //uma queue com priority de minima
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> fila;
     fila.push({0, origem});
 
-    while (!fila.empty()) {
-        int u = fila.top().second;
-        fila.pop();
+    //algoritmo
+    while (!fila.empty()){
+        int u = fila.top().second; //pega o menor nó
+        fila.pop();//tira da fila
 
+        //marca como visitado
         if (visitado[u]) continue;
         visitado[u] = true;
 
-        No* no_atual = lista_adj[u];
+        //declraçao do nó atual para rodar a partir dele(o menor atual da fila
+        No* noAtual = lista_adj[u];
 
-        for (Aresta* aresta : no_atual->arestas) {
-            int v = id_para_indice[aresta->id_no_alvo];
-            int peso = (in_ponderado_aresta ? aresta->peso : 1); // se não for ponderado, peso = 1
+        //itera por arestas reproduzindo a tabela feita em sala
+        for (Aresta* aresta : noAtual->arestas) {
+            int v = verticeIndice[aresta->id_no_alvo]; //indice do vertice alvo
+            int peso = (in_ponderado_aresta ? aresta->peso : 1); //se não for ponderado, peso = 1
 
-            if (dist[u] + peso < dist[v]) {
-                dist[v] = dist[u] + peso;
+            if ((pesoCaminho[u]+peso) < pesoCaminho[v]) {
+                pesoCaminho[v] = pesoCaminho[u] + peso;
                 pai[v] = u;
-                fila.push({dist[v], v});
+                fila.push({pesoCaminho[v], v});
             }
         }
     }
 
-    if (dist[destino] == numeric_limits<int>::max()) {
-        return caminho_resultado;
+    //se nao achar retorna o q tem
+    if (pesoCaminho[destino] == numeric_limits<int>::max()) {
+        return caminhoFinal;
     }
 
+    //armazena o caminho numa stack
     stack<char> pilha_caminho;
     for (int v = destino; v != -1; v = pai[v]) {
-        pilha_caminho.push(indice_para_id[v]);
+        pilha_caminho.push(indiceVertice[v]);
     }
-
+    //passa a stack pra vector caminhoFinal
     while (!pilha_caminho.empty()) {
-        caminho_resultado.push_back(pilha_caminho.top());
+        caminhoFinal.push_back(pilha_caminho.top());
         pilha_caminho.pop();
     }
 
-    return caminho_resultado;
+    return caminhoFinal;
 }
 
 vector<char> Grafo::caminho_minimo_floyd(char id_no, char id_no_b) {
