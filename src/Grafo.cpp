@@ -23,6 +23,10 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
 }
 
 Grafo::~Grafo() {
+    delete this->lista_arestas;
+    for (No* n : this->lista_adj) {
+        delete n;
+    }
 }
 
 void Grafo::inserirNos(char id, int pesoNo) {
@@ -405,3 +409,4 @@ void Grafo::imprimirFormato() {
             this->lista_adj[i]->imprimeFormato(this->in_ponderado_aresta);
     }
 }
+

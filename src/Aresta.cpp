@@ -5,6 +5,8 @@ Aresta::Aresta(char alvo, int peso) {
     this->peso = peso;
 }
 
+Aresta::~Aresta() = default;
+
 Aresta::Aresta(Aresta *arestaOriginal) {
     this->id_no_alvo = arestaOriginal->id_no_alvo;
     this->peso = arestaOriginal->peso;
