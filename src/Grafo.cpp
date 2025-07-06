@@ -155,10 +155,20 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
     vector<char> caminhoFinal; //vector p armazenar os vertices do caminho minimo
 
-    //se o vertice inicial ou o final nao existe, retorna vazio
-    if (!verificaExistenciaNo(id_no_a) || !verificaExistenciaNo(id_no_b)) {
-        cout << "Um dos vertices nao foi encontrado!" << endl;
-        return caminhoFinal;
+    // verifica se o grafo é ponderado nas arestas
+    if (!in_ponderado_aresta) {
+        cerr << "Erro: Floyd-Warshall requer arestas ponderadas" << endl;
+        return {};
+    }
+
+    // verifica se exite nó
+    if (!verificaExistenciaNo(id_no_a)) {
+        cerr << "Vértice " << id_no_a << " não encontrado!" << endl;
+        return {};
+    }
+    if (!verificaExistenciaNo(id_no_b)) {
+        cerr << "Vértice " << id_no_b << " não encontrado!" << endl;
+        return {};
     }
 
 
@@ -211,6 +221,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 
     //se nao achar retorna o q tem
     if (pesoCaminho[destino] == numeric_limits<int>::max()) {
+        cout << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
         return caminhoFinal;
     }
 
