@@ -5,6 +5,7 @@
 #include <queue>
 #include <stack>
 #include <unordered_map>
+#include <limits>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE.
@@ -149,10 +150,80 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
 }
 
 
-
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+    vector<char> caminhoFinal; //vector p armazenar os vertices do caminho minimo
+
+    //se o vertice inicial ou o final nao existe, retorna vazio
+    if (!verificaExistenciaNo(id_no_a) || !verificaExistenciaNo(id_no_b)) {
+        cout << "Um dos vertices nao foi encontrado!" << endl;
+        return caminhoFinal;
+    }
+
+
+    unordered_map<char, int> verticeIndice;
+    unordered_map<int, char> indiceVertice;
+    for (int i = 0; i < lista_adj.size(); ++i){
+        verticeIndice[lista_adj[i]->id] = i; //com unordered relaciona vertice c id
+        indiceVertice[i] = lista_adj[i]->id; //com unordered realciona indice c vertice
+    }
+
+    //declara os vertices dos parametros como inteiros
+    int origem = verticeIndice[id_no_a];
+    int destino = verticeIndice[id_no_b];
+
+    int n = lista_adj.size();
+
+    vector<int> pesoCaminho(n, numeric_limits<int>::max()); //marca os pesos do caminho
+    vector<int> pai(n, -1); //marca o caminho de volta
+    vector<bool> visitado(n, false); // marca os nós visitados
+    pesoCaminho[origem] = 0;
+
+    //uma queue com priority de minima
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> fila;
+    fila.push({0, origem});
+
+    //algoritmo
+    while (!fila.empty()){
+        int u = fila.top().second; //pega o menor nó
+        fila.pop();//tira da fila
+
+        //marca como visitado
+        if (visitado[u]) continue;
+        visitado[u] = true;
+
+        //declraçao do nó atual para rodar a partir dele(o menor atual da fila
+        No* noAtual = lista_adj[u];
+
+        //itera por arestas reproduzindo a tabela feita em sala
+        for (Aresta* aresta : noAtual->arestas) {
+            int v = verticeIndice[aresta->id_no_alvo]; //indice do vertice alvo
+            int peso = (in_ponderado_aresta ? aresta->peso : 1); //se não for ponderado, peso = 1
+
+            if ((pesoCaminho[u]+peso) < pesoCaminho[v]) {
+                pesoCaminho[v] = pesoCaminho[u] + peso;
+                pai[v] = u;
+                fila.push({pesoCaminho[v], v});
+            }
+        }
+    }
+
+    //se nao achar retorna o q tem
+    if (pesoCaminho[destino] == numeric_limits<int>::max()) {
+        return caminhoFinal;
+    }
+
+    //armazena o caminho numa stack
+    stack<char> pilha_caminho;
+    for (int v = destino; v != -1; v = pai[v]) {
+        pilha_caminho.push(indiceVertice[v]);
+    }
+    //passa a stack pra vector caminhoFinal
+    while (!pilha_caminho.empty()) {
+        caminhoFinal.push_back(pilha_caminho.top());
+        pilha_caminho.pop();
+    }
+
+    return caminhoFinal;
 }
 
 vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
@@ -306,9 +377,27 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     return retorno; //retorna arvore gerada
 }
 
-Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos) {
+Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
+{
+    //condicoes // verifica se eh conexo? //verificar return
+    if (!this->in_ponderado_aresta) { //se nao for ponderado vai de arrasta
+        cout<<"Nao eh ponderado!"<<endl;
+        return {};
+    }
+    if (this->in_direcionado){ // se eh direcionado vai de arrasta
+        cout<<"Eh direcionado!" << endl;
+        return nullptr;
+    }
+
+    //uma lista com ponderamento de arestas em ordem
+    //uma vazia para passar a ordem
+    //retornar essa "vazia"
+    for (int arestasArvoreGeradora=0; ordem-1 != 0; arestasArvoreGeradora++) //condicao de uma arvore geradora de kruskal
+    {
+        //verificar se a aresta (dois vertices que se ligam) tem algum vertice em comum
+    }
     cout<<"Metodo nao implementado"<<endl;
-    return nullptr;
+    return nullptr; //retorno a lista da arvore geradora
 }
 
 Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
