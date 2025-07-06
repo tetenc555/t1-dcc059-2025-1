@@ -5,6 +5,18 @@
 **Semestre 2025/1 - Profa Luciana Brugiolo - Tutor Rafael Freesz**
 **Data entrega: 30/06**
 
+# Grupo
+Estêvão Barbosa Fiorilo da Rocha
+Isabela Coelho Oliveira
+Vitor Hugo Coradini Fares
+Yan Dias Ferreira
+
+# Compilacão
+
+Foi configurado o cmake baseado nos arquivos oferecidos para compilação facilitada. Os membros usaram CLion nas plataformas Ubuntu (WSL) e macOS, afim de melhor otimização de erro e perfomance. 
+
+## Especificações dos tutores:
+
 Este documento traz a especificação do Trabalho 1, atividade avaliativa do tipo “Trabalho Prático”, e serve de base para todas as atividades de implementação cobradas ao longo do curso da disciplina DCC059 - Teoria dos Grafos no semestre letivo 2025-1.
 
 Desenvolver um Tipo Abstrato de Dados - TAD ou uma Classe que represente grafos simples, que podem ser:
