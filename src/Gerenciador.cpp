@@ -225,10 +225,10 @@ void Gerenciador::comandos(Grafo* grafo) {
             }
             cout << endl;
 
-            //int raio = grafo->raio(excentricidades);
-            //int diametro = grafo->diametro(excentricidades);
-            //vector<char> centro = grafo->centro(excentricidades);
-            //vector<char> periferia = grafo->periferia(excentricidades);
+            int raio = grafo->raio(excentricidades);
+            int diametro = grafo->diametro(excentricidades);
+            vector<char> centro = grafo->centro(excentricidades,raio);
+            vector<char> periferia = grafo->periferia(excentricidades,diametro);
 
             cout << raio << endl;
             cout << diametro << endl;

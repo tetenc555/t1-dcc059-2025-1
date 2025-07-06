@@ -69,8 +69,8 @@ public:
     vector<int> calculaExcentricidades(); //h 0
     int raio(vector <int> excentricidade); // h 1
     int diametro(vector <int> excentricidade); // h 2
-    vector<char> centro(vector <int> excentricidade); // h 3
-    vector<char> periferia(vector <int> excentricidade); // h 4
+    vector<char> centro(vector <int> excentricidade,int raio); // h 3
+    vector<char> periferia(vector <int> excentricidade, int diametro); // h 4
     vector<char> vertices_de_articulacao(vector <int> excentricidade); // i
     void salvarGrafoEmArquivo(const std::string &caminhoArquivo);
 

@@ -630,12 +630,12 @@ int Grafo::diametro(vector <int> excentricidade) {
     return maior;
 }
 
-vector<char> Grafo::centro(vector <int> excentricidade) {
+vector<char> Grafo::centro(vector <int> excentricidade, int raio) {
     cout<<"Metodo nao implementado"<<endl;
     return {};
 }
 
-vector<char> Grafo::periferia(vector <int> excentricidade) {
+vector<char> Grafo::periferia(vector <int> excentricidade, int diametro) {
     cout<<"Metodo nao implementado"<<endl;
     return {};
 }
