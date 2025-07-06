@@ -106,7 +106,7 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
         return {};
     }
     vector <char> retorno;
-    for (tuple conexao: this->lista_arestas->conexoes) {
+    for (auto conexao: this->lista_arestas->conexoes) {
         if (get<1>(conexao) == id_no)
             retorno.push_back(get<0>(conexao));
     }
@@ -132,7 +132,7 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
         filaProcessamento.pop(); //remove ele da fila. //Assim mantemos nenhum item na fila durante processamento, e salvamos apenas se encontrar outro a processar
         //Isto garante que o while quebre corretamente (caso nao ache mais vertices a serem processados) -> ISSO TAVA SENDO O MAIOR PROBLEMA EM CICLOS! causado pela ordem formada pela lista de arestas.
 
-        for (tuple conexao: this->lista_arestas->conexoes) { //pra cada processamento olhamos todas as conexoes
+        for (auto conexao: this->lista_arestas->conexoes) { //pra cada processamento olhamos todas as conexoes
             char origemAresta = get<0>(conexao);
             char destinoAresta = get<1>(conexao);
 
