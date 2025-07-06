@@ -99,27 +99,19 @@ void Grafo::salvarGrafoEmArquivo(const string& caminhoArquivo) { //É O FORMATO 
     for (int i = 0; i < lista_adj.size(); i++) {
         arquivo << lista_adj[i]->id;
 
-        // Adiciona peso do vértice se for ponderado
-        if (this->in_ponderado_vertice) {
-            arquivo << " (" << lista_adj[i]->peso << ")";
-        }
-
         // Adiciona as arestas
         if (!lista_adj[i]->arestas.empty()) {
             arquivo << ": ";
             for (size_t j = 0; j < lista_adj[i]->arestas.size(); j++) {
                 arquivo << lista_adj[i]->arestas[j]->id_no_alvo;
 
-                // Adiciona peso da aresta se for ponderado
-                if (this->in_ponderado_aresta) {
-                    arquivo << "(" << lista_adj[i]->arestas[j]->peso << ")";
-                }
-
                 // Adiciona separador se não for a última aresta
                 if (j != lista_adj[i]->arestas.size() - 1) {
                     arquivo << " -> ";
                 }
             }
+        }else {
+            arquivo << ": --";
         }
         arquivo << endl;
     }
