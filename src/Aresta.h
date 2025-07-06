@@ -6,7 +6,7 @@ using namespace std;
 class Aresta {
 public:
     Aresta(char alvo, int peso);
-    Aresta(Aresta* arestaOriginal);
+    Aresta(const Aresta* arestaOriginal);
     ~Aresta();
 
     char id_no_alvo;

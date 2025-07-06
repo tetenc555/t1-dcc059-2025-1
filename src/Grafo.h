@@ -58,8 +58,8 @@ public:
     void imprimirFormato();
 
     vector<int> calcularExcentricidades(); //h 0
-    static int raio(const vector <int> &excentricidade); // h 1
-    static int diametro(const vector <int> &excentricidade); // h 2
+    int raio(const vector <int> &excentricidade); // h 1
+    int diametro(const vector <int> &excentricidade); // h 2
     vector<char> calculoCentroPeriferia(const vector <int> &excentricidade,int valorComparar); // h 3 e 4
     //vector<char> vertices_de_articulacao(vector <int> excentricidade); // i
     void salvarGrafoEmArquivo(const std::string &caminhoArquivo);
