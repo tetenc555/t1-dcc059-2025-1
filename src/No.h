@@ -10,7 +10,7 @@ using namespace std;
 class No {
 public:
     No(char id, bool ehPondVertice);
-    No(No* noOriginal);
+    No(const No* noOriginal);
     ~No();
 
     char id;

@@ -1,11 +1,12 @@
 #include "Gerenciador.h"
 #include <fstream>
+#include <algorithm>
 
 #include "LeituraArquivos.h"
 
 static Grafo* grafoAtual = nullptr;
 
-void salvaFechoArquivo(const string& caminhoArquivo, const string& tipo, const char& id_no, const vector<char> vetorImprimir) {
+void salvaFechoArquivo(const string& caminhoArquivo, const string& tipo, const char& id_no, const vector<char>& vetorImprimir) {
     ofstream arquivo(caminhoArquivo);
     if (!arquivo.is_open()) {
         throw runtime_error("Erro ao criar arquivo " + caminhoArquivo);
@@ -24,7 +25,7 @@ void salvaFechoArquivo(const string& caminhoArquivo, const string& tipo, const c
     arquivo.close();
 }
 
-void salvaCaminhoMinimoArquivo(const string& caminhoArquivo, const string& tipo, const char& id_no_1, const char& id_no_2, const vector<char> vetorImprimir) {
+void salvaCaminhoMinimoArquivo(const string& caminhoArquivo, const string& tipo, const char& id_no_1, const char& id_no_2, const vector<char>& vetorImprimir) {
     ofstream arquivo(caminhoArquivo);
     if (!arquivo.is_open()) {
         throw runtime_error("Erro ao criar arquivo " + caminhoArquivo);
@@ -43,7 +44,7 @@ void salvaCaminhoMinimoArquivo(const string& caminhoArquivo, const string& tipo,
     arquivo.close();
 }
 
-void imprimeFuncoesExcentricidadeTela(int raio, int diametro, vector<char> centro, vector<char> periferia) {
+void imprimeFuncoesExcentricidadeTela(const int& raio, const int& diametro, const vector<char>& centro, const vector<char>& periferia) {
     cout << raio << endl;
     cout << diametro << endl;
     for (char a : centro) {
@@ -60,7 +61,7 @@ void imprimeFuncoesExcentricidadeTela(int raio, int diametro, vector<char> centr
     cout << endl;
 }
 
-void salvaFuncoesExcentricidadeArquivo(int raio, int diametro, vector<char> centro, vector<char> periferia) {
+void salvaFuncoesExcentricidadeArquivo(const int& raio, const int& diametro, const vector<char>& centro, const vector<char>& periferia) {
     ofstream arqExcentricidade("./output/raio_diametro_centro_periferia.txt");
     if (!arqExcentricidade.is_open()) {
         throw runtime_error("Erro ao criar arquivo ./output/raio_diametro_centro_periferia.txt");
@@ -314,9 +315,9 @@ char Gerenciador::get_id_entrada() {
     return id;
 }
 
-vector<char> Gerenciador::get_conjunto_ids(Grafo *grafo, int tam) {
+vector<char> Gerenciador::get_conjunto_ids(const Grafo *grafo, const int& tam) {
     vector<char> ids = {};
-    while((int)ids.size() < tam) {
+    while(static_cast<int>(ids.size()) < tam) {
         char id_no =get_id_entrada();
         bool existe = false;
         for(No* no: grafo->lista_adj){
@@ -329,8 +330,7 @@ vector<char> Gerenciador::get_conjunto_ids(Grafo *grafo, int tam) {
         if(!existe){
             cout<<"Vertice nao existe"<<endl;
         }else{
-            bool repetido = find(ids.begin(), ids.end(),id_no) != ids.end();
-            if(repetido) {
+            if(find(ids.begin(), ids.end(),id_no) != ids.end()) {
                     cout<<"Valor repetido"<<endl;
             }else {
                 ids.push_back(id_no);
@@ -343,7 +343,7 @@ vector<char> Gerenciador::get_conjunto_ids(Grafo *grafo, int tam) {
 }
 
 
-bool Gerenciador::pergunta_imprimir_arquivo(string nome_arquivo) {
+bool Gerenciador::pergunta_imprimir_arquivo(const string& nome_arquivo) {
 
     cout<<"Imprimir em arquivo externo? ("<<nome_arquivo<<")"<<endl;
     cout<<"(1) Sim;"<<endl;

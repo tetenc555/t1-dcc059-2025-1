@@ -15,7 +15,7 @@ No::No(char id, int peso) {
     }
 }
 
-No::No(No* noOriginal) {
+No::No(const No* noOriginal) {
     if (noOriginal->peso == -1) {
         this->id=noOriginal->id;
         this->peso=0;
@@ -39,13 +39,13 @@ No::~No() {
 
 
 void No::criaAresta(char alvo) {
-    Aresta* addAresta = new Aresta(alvo, -1);
+    auto* addAresta = new Aresta(alvo, -1);
     arestas.push_back(addAresta);
 }
 
 void No::imprimeConexoes(bool ehPondAresta) {
     cout << "Conexões do Nó " << this->id ;
-    int tamanho = arestas.size();
+    int tamanho = int(arestas.size());
     if (ehPondAresta) {
         cout << " (Peso: " << this->peso << ")";
     }
@@ -64,7 +64,7 @@ void No::imprimeConexoes(bool ehPondAresta) {
 
 void No::imprimeFormato(bool ehPondAresta) {
     cout << this->id;
-    int tamanho = arestas.size();
+    int tamanho = int(arestas.size());
     if (ehPondAresta) {
         cout << " (" << this->peso << ")";
     }
@@ -103,5 +103,8 @@ void No::setVisitado(bool visitado) {
 
 bool No::getVisitado() {
     return this->visitado;
+    cout << "hello world" << endl;
+
 }
+
 

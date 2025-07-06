@@ -30,7 +30,7 @@ Grafo* LeituraArquivos::lerGrafodoArquivo(const string &caminhoArquivo) {
         ordem = stoi(linha);
     }
 
-    Grafo* grafo = new Grafo(direcionado, ponderadoAresta, ponderadoVertice);
+    auto* grafo = new Grafo(direcionado, ponderadoAresta, ponderadoVertice);
     grafo->lista_adj.reserve(ordem); //pré-alocação para a lista de adjacencias
 
     // Pré-alocação de memória para vértices
@@ -96,17 +96,27 @@ void Grafo::salvarGrafoEmArquivo(const string& caminhoArquivo) { //É O FORMATO 
     arquivo << lista_adj.size() << "\n";
 
     // Escreve cada nó e suas adjacências
-    for (int i = 0; i < lista_adj.size(); i++) {
-        arquivo << lista_adj[i]->id;
+    for (auto & i : lista_adj) {
+        arquivo << i->id;
+
+        // Adiciona peso do vértice se for ponderado
+        if (this->in_ponderado_vertice) {
+            arquivo << " (" << i->peso << ")";
+        }
 
         // Adiciona as arestas
-        if (!lista_adj[i]->arestas.empty()) {
+        if (!i->arestas.empty()) {
             arquivo << ": ";
-            for (size_t j = 0; j < lista_adj[i]->arestas.size(); j++) {
-                arquivo << lista_adj[i]->arestas[j]->id_no_alvo;
+            for (size_t j = 0; j < i->arestas.size(); j++) {
+                arquivo << i->arestas[j]->id_no_alvo;
+
+                // Adiciona peso da aresta se for ponderado
+                if (this->in_ponderado_aresta) {
+                    arquivo << "(" << i->arestas[j]->peso << ")";
+                }
 
                 // Adiciona separador se não for a última aresta
-                if (j != lista_adj[i]->arestas.size() - 1) {
+                if (j != i->arestas.size() - 1) {
                     arquivo << " -> ";
                 }
             }

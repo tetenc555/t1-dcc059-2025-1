@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <limits>
 #include <algorithm>
+#include <climits>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE.
@@ -53,7 +54,7 @@ void Grafo::imprimirNos() {
     }
 }
 
-int Grafo::encontraIndiceNo(char idNo) {
+int Grafo::encontraIndiceNo(const char idNo) {
     int indice=-1; //valor inicial -1 p verificacao
     for (int j = 0; j < int(lista_adj.size()); j++) {
         if (this->lista_adj[j]->id == idNo) {
@@ -64,7 +65,7 @@ int Grafo::encontraIndiceNo(char idNo) {
     return indice; //retorna indice valido ou -1 caso no nao exista !
 }
 
-bool Grafo::verificaExistenciaNo(char idNo) {
+bool Grafo::verificaExistenciaNo(const char idNo) {
     for (int i=0; i < int(lista_adj.size()); i++) { //percorre todos itens
         if (this->lista_adj[i]->id == idNo) {
             return true; //se achar no retorna true e para o for
@@ -73,12 +74,12 @@ bool Grafo::verificaExistenciaNo(char idNo) {
     return false; //se nao achar ao fim do for retorna false
 }
 
-void Grafo::processarArestaIda(int idOrigem, char idAlvoAresta, int peso) {
-    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo((idAlvoAresta)))) { // se o no for invalido, quebra e nao processa a aresta
+void Grafo::processarArestaIda(const char idOrigem, const char idAlvoAresta,const int peso) {
+    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo(idAlvoAresta))) { // se o no for invalido, quebra e nao processa a aresta
         cout << "Erro! No invalido na aresta! Nao adicionada, tente novamente" << endl; //imprime mensagem de erro;
         return; //retorna sem adicionar aresta
     }
-    int indice = encontraIndiceNo(idOrigem); //busca indice
+    const int indice = encontraIndiceNo(idOrigem); //busca indice
     lista_adj[indice]->criaAresta(idAlvoAresta); //cria aresta
 
     if (this->in_ponderado_aresta) {
@@ -87,7 +88,7 @@ void Grafo::processarArestaIda(int idOrigem, char idAlvoAresta, int peso) {
 }
 
 void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //praticamente o contrario de processar Aresta Ida
-    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo((idAlvo)))) { // se o no for invalido, quebra e nao processa a aresta
+    if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo(idAlvo))) { // se o no for invalido, quebra e nao processa a aresta
         //nao imprime mensagem de erro pois o aviso sera emitido ja na aresta de ida, independente da aresta de volta ser chamada ou nao.
         return; //retorna sem adicionar aresta
     }
@@ -106,7 +107,7 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
         return {};
     }
     vector <char> retorno;
-    for (tuple conexao: this->lista_arestas->conexoes) {
+    for (auto conexao: this->lista_arestas->conexoes) {
         if (get<1>(conexao) == id_no)
             retorno.push_back(get<0>(conexao));
     }
@@ -132,7 +133,7 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
         filaProcessamento.pop(); //remove ele da fila. //Assim mantemos nenhum item na fila durante processamento, e salvamos apenas se encontrar outro a processar
         //Isto garante que o while quebre corretamente (caso nao ache mais vertices a serem processados) -> ISSO TAVA SENDO O MAIOR PROBLEMA EM CICLOS! causado pela ordem formada pela lista de arestas.
 
-        for (tuple conexao: this->lista_arestas->conexoes) { //pra cada processamento olhamos todas as conexoes
+        for (auto conexao: this->lista_arestas->conexoes) { //pra cada processamento olhamos todas as conexoes
             char origemAresta = get<0>(conexao);
             char destinoAresta = get<1>(conexao);
 
@@ -163,7 +164,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 
     unordered_map<char, int> verticeIndice;
     unordered_map<int, char> indiceVertice;
-    for (int i = 0; i < lista_adj.size(); ++i){
+    for (int i = 0; i < (int)lista_adj.size(); ++i){
         verticeIndice[lista_adj[i]->id] = i; //com unordered relaciona vertice c id
         indiceVertice[i] = lista_adj[i]->id; //com unordered realciona indice c vertice
     }
@@ -172,7 +173,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
     int origem = verticeIndice[id_no_a];
     int destino = verticeIndice[id_no_b];
 
-    int n = lista_adj.size();
+    int n = int(lista_adj.size());
 
     vector<int> pesoCaminho(n, numeric_limits<int>::max()); //marca os pesos do caminho
     vector<int> pai(n, -1); //marca o caminho de volta
@@ -181,7 +182,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 
     //uma queue com priority de minima
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> fila;
-    fila.push({0, origem});
+    fila.emplace(0, origem);
 
     //algoritmo
     while (!fila.empty()){
@@ -203,7 +204,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
             if ((pesoCaminho[u]+peso) < pesoCaminho[v]) {
                 pesoCaminho[v] = pesoCaminho[u] + peso;
                 pai[v] = u;
-                fila.push({pesoCaminho[v], v});
+                fila.emplace(pesoCaminho[v], v);
             }
         }
     }
@@ -307,8 +308,8 @@ vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
     return caminho;
 }
 
-Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
-    Grafo* subGrafo = new Grafo(this->in_direcionado, this->in_ponderado_aresta, this->in_ponderado_vertice); // gera grafo inical
+Grafo * Grafo::criaSubGrafoVerticeInduzido(const vector <char>& ids_nos) {
+    auto* subGrafo = new Grafo(this->in_direcionado, this->in_ponderado_aresta, this->in_ponderado_vertice); // gera grafo inical
     for (char id : ids_nos) { // percorre cada id para copiar nos
         int indice = this->encontraIndiceNo(id); // encontra indice
         if (indice == -1) { //verifica se achou
@@ -331,7 +332,7 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
     return subGrafo;
 }
 
-Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
+Grafo * Grafo::arvore_geradora_minima_prim(const vector<char>& ids_nos) {
     //Verificacoes 
     if (this->in_direcionado) {
         cout << "Erro! Grafo Direcionado." << endl;
@@ -353,7 +354,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     char idInicial = Inicial->lista_adj[0]->id; //define no inicial como o primeiro da lista (provalvemnte alterar p cin de4pois)
     visitados.insert(idInicial); //insere raiz como visitado
     for (Aresta* a : Inicial->lista_adj[0]->arestas) {
-        fila.push({a->peso, idInicial, a->id_no_alvo}); //define primeiros processamentos como arestas da raiz
+        fila.emplace(a->peso, idInicial, a->id_no_alvo); //define primeiros processamentos como arestas da raiz
     }
     vector<tuple<char,char,int>> nosProcessados; //salvar arestas que serao usadas para ser copiadas depois
 
@@ -371,7 +372,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
 
         //processamento em si    
         visitados.insert(destino); //salva que foi visitado
-        nosProcessados.push_back({origem, destino, peso}); //salva aresta como valida
+        nosProcessados.emplace_back(origem, destino, peso); //salva aresta como valida
 
         //acha indice no inicial para que possamos achar proximos vertices
         int indice = Inicial->encontraIndiceNo(destino);
@@ -388,7 +389,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     }
 
     //copia arestas definidas como certas para o grafo retorno
-    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
+    auto * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
     for (auto item : nosProcessados) {
         char idOrigem = get<0>(item);
         char idAlvo = get<1>(item);
@@ -421,7 +422,7 @@ void Grafo::union_sets(char a, char b) {
         pais[b] = a;
 }
 
-Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
+Grafo * Grafo::arvore_geradora_minima_kruskal(const vector<char>& ids_nos)
 {
     //Primeiro passo: gerar subgrafo e fazer condicoes
     Grafo* grafoInicial = criaSubGrafoVerticeInduzido(ids_nos);
@@ -455,7 +456,7 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
             //evitar duplicata
             string chave = u < v ? string{u, v} : string{v, u};
             if (arestasInseridas.find(chave) == arestasInseridas.end()) {
-                arestasOrdenadas.push_back({peso, u, v});
+                arestasOrdenadas.emplace_back(peso, u, v);
                 arestasInseridas.insert(chave);
             }
         }
@@ -464,7 +465,7 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
     sort(arestasOrdenadas.begin(), arestasOrdenadas.end());
 
     //Ultimo passo: crIar grafo de retonro
-    Grafo * retorno = new Grafo(false, grafoInicial->in_ponderado_aresta, false); //define sem peso nos vertices
+    auto * retorno = new Grafo(false, grafoInicial->in_ponderado_aresta, false); //define sem peso nos vertices
 
     for (No* no : grafoInicial->lista_adj) {
         retorno->inserirNos(no->id, -1);
@@ -495,7 +496,7 @@ Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
     }
 
     //Cria grafo para arvore de busca por profundidade
-    Grafo* arvore = new Grafo(true, this->in_ponderado_aresta, this->in_ponderado_vertice);
+    auto* arvore = new Grafo(true, this->in_ponderado_aresta, this->in_ponderado_vertice);
 
     //Marca nós como não visitados (caso seja alterado por outro metodo)
     for (auto no: lista_adj) {
@@ -519,7 +520,7 @@ void Grafo::buscaProfundidadeAux(No* atual, Grafo* arvore) {
     arvore->inserirNos(atual->id, atual->peso);
 
     while (!pilha.empty()) {
-        No* atual = pilha.top();
+        atual = pilha.top();
         pilha.pop();
 
         // Processa arestas em ordem inversa para manter ordem correta
@@ -565,7 +566,7 @@ vector<vector<int>> Grafo::calcularMatrizDistancias() {
             if (!caminho.empty()) { // Se existe caminho entre os vértices
                 // Calcula a distância total somando os pesos das arestas do caminho
                 int distancia = 0;
-                for (int k = 0; k < caminho.size() - 1; k++) {
+                for (int k = 0; k < (int)caminho.size() - 1; k++) {
                     int idxAtual = encontraIndiceNo(caminho[k]);
 
                     // Procura a aresta que leva ao próximo vértice no caminho
@@ -612,7 +613,7 @@ vector<int> Grafo::calcularExcentricidades() {
     return excentricidades; // Retorna o vetor de excentricidades
 }
 
-int Grafo::raio(vector <int> excentricidade) {
+int Grafo::raio(const vector <int> &excentricidade) {
     int menor = excentricidade[0];
     for (int e : excentricidade) {
         if (e < menor)
@@ -621,7 +622,7 @@ int Grafo::raio(vector <int> excentricidade) {
     return menor;
 }
 
-int Grafo::diametro(vector <int> excentricidade) {
+int Grafo::diametro(const vector <int> &excentricidade) {
     int maior = excentricidade[0];
     for (int e : excentricidade) {
         if (e > maior)
@@ -630,7 +631,7 @@ int Grafo::diametro(vector <int> excentricidade) {
     return maior;
 }
 
-vector<char> Grafo::calculoCentroPeriferia(vector <int> excentricidade, int valorComparar) { //juntei as duas funcoes pois o processamento e o mesmo, mudando o parametro jogado
+vector<char> Grafo::calculoCentroPeriferia(const vector <int>& excentricidade, int valorComparar) { //juntei as duas funcoes pois o processamento e o mesmo, mudando o parametro jogado
     vector<char> retorno;
     for (int i=0; i<(int(excentricidade.size()));i++) {
         if (excentricidade[i]==valorComparar)
@@ -639,11 +640,12 @@ vector<char> Grafo::calculoCentroPeriferia(vector <int> excentricidade, int valo
     return retorno;
 }
 
-
+/*
 vector<char> Grafo::vertices_de_articulacao(vector <int> excentricidade) {
     cout<<"Metodo nao implementado"<<endl;
     return {};
 }
+*/
 
 void Grafo::imprimirGrafo(){
     cout << this->in_direcionado << " " << this ->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;

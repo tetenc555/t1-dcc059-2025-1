@@ -3,17 +3,16 @@
 
 #include <iostream>
 #include "Grafo.h"
-#include <algorithm>
 
 using namespace std;
 class Gerenciador {
 public:
     static void comandos(Grafo* grafo);
     static char get_id_entrada();
-    static vector<char> get_conjunto_ids(Grafo* grafo, int tam);
-    static bool pergunta_imprimir_arquivo(string nome_arquivo);
+    static vector<char> get_conjunto_ids(const Grafo* grafo, const int& tam);
+    static bool pergunta_imprimir_arquivo(const string& nome_arquivo);
 
-    void mudarArquivoTeste();
+    static void mudarArquivoTeste();
 };
 
 
