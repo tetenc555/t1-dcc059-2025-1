@@ -7,3 +7,4 @@ build/
 src/main
 src/main.exe
 /.vscode/
+src/output/

@@ -20,6 +20,7 @@ class Grafo {
 private:
     unordered_map<char, int> indiceNos;
     vector<vector<int>> distFloyd;
+    vector<vector<int>> proxNo;
     bool floydPronto = false;
     unordered_map<char, char> pais;
 
