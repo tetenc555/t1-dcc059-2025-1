@@ -102,10 +102,6 @@ void Grafo::processarArestaVolta(char idAlvo, char idOrigem, int peso) { //prati
 }
 
 vector<char> Grafo::fecho_transitivo_direto(char id_no) {
-    if (!this->in_direcionado) { //se for nao direcionado, retorna vazio
-        cout<<"Nao é direcionado!"<<endl;
-        return {};
-    }
     vector <char> retorno;
     for (auto conexao: this->lista_arestas->conexoes) {
         if (get<1>(conexao) == id_no)
@@ -115,11 +111,6 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
 }
 
 vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
-    if (!this->in_direcionado) { //se for nao direcionado, retorna vazio
-        cout<<"Nao é direcionado!"<<endl;
-        return {};
-    }
-
     unordered_set<char> calculoRetorno; //cria unorderedSet ao inves de retorno a fim de melhorar processamento
     queue<char> filaProcessamento; //cria fila em que sempre teremos o proximo item
     //A FILA E IMPORTANTE POIS FOI A MELHOR MANEIRA DE GARANTIR QUE ELE QUEBRE APENAS QUANDO NAO HOUVER MAIS CONEXOES A SEREM PROCESSADAS!
@@ -153,25 +144,7 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
 
 
 vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
-    vector<char> caminhoFinal; //vector p armazenar os vertices do caminho minimo
-
-    // verifica se o grafo é ponderado nas arestas
-    if (!in_ponderado_aresta) {
-        cerr << "Erro: Floyd-Warshall requer arestas ponderadas" << endl;
-        return {};
-    }
-
-    // verifica se exite nó
-    if (!verificaExistenciaNo(id_no_a)) {
-        cerr << "Vértice " << id_no_a << " não encontrado!" << endl;
-        return {};
-    }
-    if (!verificaExistenciaNo(id_no_b)) {
-        cerr << "Vértice " << id_no_b << " não encontrado!" << endl;
-        return {};
-    }
-
-
+    vector<char> caminhoFinal; //vector p armazenar os vertices do caminho min
     unordered_map<char, int> verticeIndice;
     unordered_map<int, char> indiceVertice;
     for (int i = 0; i < (int)lista_adj.size(); ++i){
@@ -240,21 +213,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 }
 
 vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
-    // verifica se o grafo é ponderado nas arestas
-    if (!in_ponderado_aresta) {
-        cerr << "Erro: Floyd-Warshall requer arestas ponderadas" << endl;
-        return {};
-    }
 
-    // verifica se exite nó
-    if (!verificaExistenciaNo(id_no_a)) {
-        cerr << "Vértice " << id_no_a << " não encontrado!" << endl;
-        return {};
-    }
-    if (!verificaExistenciaNo(id_no_b)) {
-        cerr << "Vértice " << id_no_b << " não encontrado!" << endl;
-        return {};
-    }
 
     // execução 1x
     if (!floydPronto) {
@@ -344,17 +303,6 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(const vector <char>& ids_nos) {
 }
 
 Grafo * Grafo::arvore_geradora_minima_prim(const vector<char>& ids_nos) {
-    //Verificacoes 
-    if (this->in_direcionado) {
-        cout << "Erro! Grafo Direcionado." << endl;
-        return nullptr;
-    }
-
-    if (!this->in_ponderado_aresta) {
-        cout << "Erro! Grafo nao eh ponderado." << endl;
-        return nullptr;
-    }
-
     //Primeiro passo: gerar subgrafo
     Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
 
@@ -437,16 +385,6 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(const vector<char>& ids_nos)
 {
     //Primeiro passo: gerar subgrafo e fazer condicoes
     Grafo* grafoInicial = criaSubGrafoVerticeInduzido(ids_nos);
-
-    //condicoes pra fazer o algoritmo (alem de ser conexo
-    if (!this->in_ponderado_aresta) { //se nao for ponderado vai de arrasta
-        cout<<"Nao eh ponderado!"<<endl;
-        return nullptr;
-    }
-    if (this->in_direcionado){ // se eh direcionado vai de arrasta
-        cout<<"Eh direcionado!" << endl;
-        return nullptr;
-    }
 
     //Segundo passo: armazenar todas as arestas
     grafoInicial->pais.clear();

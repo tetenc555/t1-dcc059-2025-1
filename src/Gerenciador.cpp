@@ -1,7 +1,8 @@
 #include "Gerenciador.h"
 #include <fstream>
 #include <algorithm>
-
+#include <thread>
+#include <chrono>
 #include "LeituraArquivos.h"
 
 static Grafo* grafoAtual = nullptr;
@@ -103,7 +104,11 @@ void Gerenciador::comandos(Grafo* grafo) {
     cin >> resp;
     switch (resp) {
         case 'a': {
-
+            if (!grafo->in_direcionado) { //se for nao direcionado, retorna vazio
+                cerr <<"Nao é direcionado!"<<endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             char id_no = get_id_entrada();
             vector<char> fecho_transitivo_direto = grafo->fecho_transitivo_direto(id_no);
             //metodo de impressao em tela
@@ -124,7 +129,11 @@ void Gerenciador::comandos(Grafo* grafo) {
         }
 
         case 'b':{
-
+            if (!grafo->in_direcionado) { //se for nao direcionado, retorna vazio
+                cerr <<"Nao é direcionado!"<<endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             char id_no = get_id_entrada();
             vector<char> fecho_transitivo_indireto = grafo->fecho_transitivo_indireto(id_no);
             //metodo de impressao em tela
@@ -145,9 +154,23 @@ void Gerenciador::comandos(Grafo* grafo) {
         }
 
         case 'c': {
-
+            if (!grafo->in_ponderado_aresta) {
+                cerr << "Erro: Dijkstra requer arestas ponderadas" << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             char id_no_1 = get_id_entrada();
             char id_no_2 = get_id_entrada();
+            if (!grafo->verificaExistenciaNo(id_no_1)) {
+                cerr << "Vértice " << id_no_1 << " não encontrado!" << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
+            if (!grafo->verificaExistenciaNo(id_no_2)) {
+                cerr << "Vértice " << id_no_2 << " não encontrado!" << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             vector<char> caminho_minimo_dijkstra = grafo->caminho_minimo_dijkstra(id_no_1,id_no_2);
             cout << "Caminho minimo de Dijkstra do " << id_no_1 << " a " << id_no_2 << ": "  << endl;
             for (char no: caminho_minimo_dijkstra) {
@@ -165,9 +188,23 @@ void Gerenciador::comandos(Grafo* grafo) {
         }
 
         case 'd': {
-
+            if (!grafo->in_ponderado_aresta) {
+                cerr << "Erro: Floyd-Warshall requer arestas ponderadas" << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             char id_no_1 = get_id_entrada();
             char id_no_2 = get_id_entrada();
+            if (!grafo->verificaExistenciaNo(id_no_1)) {
+                cerr << "Vértice " << id_no_1 << " não encontrado!" << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
+            if (!grafo->verificaExistenciaNo(id_no_2)) {
+                cerr << "Vértice " << id_no_2 << " não encontrado!" << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             vector<char> caminho_minimo_floyd = grafo->caminho_minimo_floyd(id_no_1,id_no_2);
             cout << "Caminho minimo de Floyd do " << id_no_1 << " a " << id_no_2 << ": "  << endl;
             for (char no: caminho_minimo_floyd) {
@@ -185,7 +222,15 @@ void Gerenciador::comandos(Grafo* grafo) {
             break;
         }
         case 'e': {
+            if (grafo->in_direcionado) {
+                cerr << "Erro! Grafo Direcionado." << endl;
+                break;
+            }
 
+            if (!grafo->in_ponderado_aresta) {
+                cerr << "Erro! Grafo nao eh ponderado." << endl;
+                break;
+            }
             int tam;
             cout<<"Digite o tamanho do subconjunto: ";
             cin>>tam;
@@ -210,7 +255,15 @@ void Gerenciador::comandos(Grafo* grafo) {
         }
 
         case 'f': {
+            if (grafo->in_direcionado) {
+                cerr << "Erro! Grafo Direcionado." << endl;
+                break;
+            }
 
+            if (!grafo->in_ponderado_aresta) {
+                cerr << "Erro! Grafo nao eh ponderado." << endl;
+                break;
+            }
             int tam;
             cout<<"Digite o tamanho do subconjunto: ";
             cin>>tam;
