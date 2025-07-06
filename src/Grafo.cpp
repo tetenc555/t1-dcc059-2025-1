@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <limits>
 #include <algorithm>
+#include <climits>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE.
@@ -163,7 +164,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 
     unordered_map<char, int> verticeIndice;
     unordered_map<int, char> indiceVertice;
-    for (int i = 0; i < lista_adj.size(); ++i){
+    for (int i = 0; i < (int)lista_adj.size(); ++i){
         verticeIndice[lista_adj[i]->id] = i; //com unordered relaciona vertice c id
         indiceVertice[i] = lista_adj[i]->id; //com unordered realciona indice c vertice
     }
@@ -565,7 +566,7 @@ vector<vector<int>> Grafo::calcularMatrizDistancias() {
             if (!caminho.empty()) { // Se existe caminho entre os vértices
                 // Calcula a distância total somando os pesos das arestas do caminho
                 int distancia = 0;
-                for (int k = 0; k < caminho.size() - 1; k++) {
+                for (int k = 0; k < (int)caminho.size() - 1; k++) {
                     int idxAtual = encontraIndiceNo(caminho[k]);
 
                     // Procura a aresta que leva ao próximo vértice no caminho
