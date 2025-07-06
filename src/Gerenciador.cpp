@@ -1,5 +1,6 @@
 #include "Gerenciador.h"
 #include <fstream>
+#include <algorithm>
 
 #include "LeituraArquivos.h"
 

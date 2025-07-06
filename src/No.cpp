@@ -87,5 +87,8 @@ void No::setVisitado(bool visitado) {
 
 bool No::getVisitado() {
     return this->visitado;
+    cout << "hello world" << endl;
+
 }
+
 
