@@ -374,7 +374,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
 
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
 {
-    //Primeiro passo: gerar subgrafo
+    //Primeiro passo: gerar subgrafo e fazer condicoes
     Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
 
     //condicoes pra fazer o algoritmo (alem de ser conexo
@@ -387,25 +387,31 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
         return nullptr;
     }
 
-    //Segundo passo: inicializa fila com o primeiro no e grafo de retorno
-    priority_queue<tuple<int, char, char>, vector<tuple<int, char, char>>, greater<>> fila;
-    unordered_set<char> visitados;
+    //Segundo passo: armazenar todas as arestas
+    vector<tuple<char, char, int>> arestas;
 
-    char idInicial = Inicial->lista_adj[0]->id; //define no inicial como o primeiro da lista (provalvemnte alterar p cin de4pois)
-    visitados.insert(idInicial); //insere raiz como visitado
-    for (Aresta* a : Inicial->lista_adj[0]->arestas) {
-        fila.push({a->peso, idInicial, a->id_no_alvo}); //define primeiros processamentos como arestas da raiz
+    //adicionar as arestas e peso com condição de duplicata
+    for (No *no : Inicial->lista_adj) {
+        for (Aresta* a : no->arestas) {
+            if (no->id < a->id_no_alvo) { //verifica duplicata
+                arestas.push_back({no->id, a->id_no_alvo, a->peso});
+            }
+        }
     }
-    vector<tuple<char,char,int>> nosProcessados; //salvar arestas que serao usadas para ser copiadas depois
 
+    //Terceiro: ordenar as arestas
+
+    //Quarto: union find
     //uma lista com ponderamento de arestas em ordem
+    //algoritmo principal
 
-    for (int arestasArvoreGeradora=0; ordem-1 != 0; arestasArvoreGeradora++) //condicao de uma arvore geradora de kruskal
+    for (auto no : Inicial->lista_adj)
     {
-        //verificar se a aresta (dois vertices que se ligam) tem algum vertice em comum
+        //verificar se a aresta (dois vertices que se ligam) tem algum vertice em comum//usa union n sei o q la
     }
 
 
+    //Ultimo passo: criar grafo de retonro
     //copia arestas definidas como certas para o grafo retorno
     Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
     for (auto item : nosProcessados) {
