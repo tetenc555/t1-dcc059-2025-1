@@ -31,6 +31,13 @@ No::No(No* noOriginal) {
     }
 }
 
+No::~No() {
+    for (Aresta* a : arestas) {
+        delete a;
+    }
+}
+
+
 void No::criaAresta(char alvo) {
     Aresta* addAresta = new Aresta(alvo, -1);
     arestas.push_back(addAresta);

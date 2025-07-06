@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
-    //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
+    //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE.
     this->in_direcionado = direcionado;
     this->in_ponderado_aresta= ehPondAresta;
     this->in_ponderado_vertice= ehPondVertice;
@@ -15,7 +15,7 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLE
 }
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
-    //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
+    //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE.
     this->in_direcionado = direcionado;
     this->in_ponderado_aresta= ehPondAresta;
     this->in_ponderado_vertice= ehPondVertice;
@@ -23,6 +23,10 @@ Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem)
 }
 
 Grafo::~Grafo() {
+    delete this->lista_arestas;
+    for (No* n : this->lista_adj) {
+        delete n;
+    }
 }
 
 void Grafo::inserirNos(char id, int pesoNo) {
@@ -250,7 +254,7 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(vector <char> ids_nos) {
         }
     }
     subGrafo->criaListaArestas(); //cria lista de arestas
-    subGrafo->ordem = subGrafo->lista_adj.size(); //define ordem
+    subGrafo->ordem = int(subGrafo->lista_adj.size()); //define ordem
     //assim o subgrafo esta completo.
     return subGrafo;
 }
@@ -328,6 +332,7 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     }
     //cria lista de arestas apos processamento
     retorno->criaListaArestas();
+    delete Inicial;
     return retorno; //retorna arvore gerada
 }
 
@@ -354,19 +359,19 @@ Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
 
     //Chama a função auxiliar iterativa para construir a arvore
     buscaProfundidadeAux(lista_adj[indiceInicial], arvore);
-    arvore->ordem = lista_adj.size(); //altera a ordem da arvore
+    arvore->ordem = int(lista_adj.size()); //altera a ordem da arvore
     return arvore;
 }
 
-void Grafo::buscaProfundidadeAux(No* inicio, Grafo* arvore) {
-    if (!inicio) return;
+void Grafo::buscaProfundidadeAux(No* atual, Grafo* arvore) {
+    if (!atual) return;
 
     stack<No*> pilha;
     unordered_map<char, bool> visitados;
 
-    pilha.push(inicio);
-    visitados[inicio->id] = true;
-    arvore->inserirNos(inicio->id, inicio->peso);
+    pilha.push(atual);
+    visitados[atual->id] = true;
+    arvore->inserirNos(atual->id, atual->peso);
 
     while (!pilha.empty()) {
         No* atual = pilha.top();
@@ -430,8 +435,9 @@ void Grafo::imprimirFormato() {
     cout << this->in_direcionado << " " << this->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
     cout << this->lista_adj.size() << endl; //arruma impressão
     cout << "Lista de Adjacencias: " << endl;
-    for (int i = 0; i < lista_adj.size(); i++) {
+    for (int i = 0; i < int(lista_adj.size()); i++) {
         if (lista_adj[i] != nullptr)
             this->lista_adj[i]->imprimeFormato(this->in_ponderado_aresta);
     }
 }
+

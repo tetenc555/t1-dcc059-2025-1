@@ -22,6 +22,9 @@ listaArestas::listaArestas(vector<No *> lista_adj) {
     }
 }
 
+listaArestas::~listaArestas() = default;
+
+
 void listaArestas::imprimeArestas() {
     cout << "Lista de Arestas: {";
     int tamanho = conexoes.size();

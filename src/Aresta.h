@@ -1,7 +1,8 @@
 #ifndef ARESTA_H
 #define ARESTA_H
-
+#include <iostream>
 using namespace std;
+
 class Aresta {
 public:
     Aresta(char alvo, int peso);
