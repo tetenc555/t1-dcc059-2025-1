@@ -6,11 +6,9 @@
 #define GRAFO_H
 
 #include "No.h"
-#include <iostream>
 #include <unordered_set>
 #include <vector>
 #include <unordered_map>
-#include <climits>
 #include "listaArestas.h"
 
 
@@ -39,38 +37,31 @@ public:
 
     int encontraIndiceNo(char idNo);
 
-    void processarArestaIda(int idOrigem, char idAlvoAresta, int peso);
+    void processarArestaIda(char idOrigem, char idAlvoAresta, int peso);
 
     void processarArestaVolta(char idAlvo, char idOrigem, int peso);
 
     bool verificaExistenciaNo(char idNo);
 
-    bool verificaSeChega(No* idOrigem, char idDestino, unordered_set<char> NosPercorridos);
-
-
     vector<char> fecho_transitivo_direto(char id_no); // a
-
     vector<char> fecho_transitivo_indireto(char id_no); // b
     vector<char> caminho_minimo_dijkstra(char id_no_a, char id_no_b); // c
     vector<char> caminho_minimo_floyd(char id_no, char id_no_b); // d
-    Grafo* arvore_geradora_minima_prim(vector<char> ids_nos); // e
-    Grafo* arvore_geradora_minima_kruskal(vector<char> ids_nos); // f
+    Grafo* arvore_geradora_minima_prim(const vector<char>& ids_nos); // e
+    Grafo* arvore_geradora_minima_kruskal(const vector<char>& ids_nos); // f
     Grafo* arvore_caminhamento_profundidade(char id_no); // g
-    Grafo* criaSubGrafoVerticeInduzido(vector <char> ids_nos);
+    Grafo* criaSubGrafoVerticeInduzido(const vector <char>& ids_nos);
     void buscaProfundidadeAux(No *atual, Grafo *arvore);
-
-    vector<int> calcularExcentricidades();
-
     vector<vector<int>> calcularMatrizDistancias();
 
     void imprimirGrafo(); // h
     void imprimirFormato();
 
-    vector<int> calculaExcentricidades(); //h 0
-    int raio(vector <int> excentricidade); // h 1
-    int diametro(vector <int> excentricidade); // h 2
-    vector<char> calculoCentroPeriferia(vector <int> excentricidade,int valorComparar); // h 3 e 4
-    vector<char> vertices_de_articulacao(vector <int> excentricidade); // i
+    vector<int> calcularExcentricidades(); //h 0
+    static int raio(const vector <int> &excentricidade); // h 1
+    static int diametro(const vector <int> &excentricidade); // h 2
+    vector<char> calculoCentroPeriferia(const vector <int> &excentricidade,int valorComparar); // h 3 e 4
+    //vector<char> vertices_de_articulacao(vector <int> excentricidade); // i
     void salvarGrafoEmArquivo(const std::string &caminhoArquivo);
 
 
