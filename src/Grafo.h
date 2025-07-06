@@ -57,6 +57,10 @@ public:
     Grafo* criaSubGrafoVerticeInduzido(vector <char> ids_nos);
     void buscaProfundidadeAux(No *atual, Grafo *arvore);
 
+    vector<int> calcularExcentricidades();
+
+    vector<vector<int>> calcularMatrizDistancias();
+
     void imprimirGrafo(); // h
     void imprimirFormato();
 

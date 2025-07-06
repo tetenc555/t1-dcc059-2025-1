@@ -210,12 +210,25 @@ void Gerenciador::comandos(Grafo* grafo) {
         }
 
         case 'h': {
+            vector<int> excentricidades = grafo->calcularExcentricidades();
 
-            vector<int> excentricidades = grafo->calculaExcentricidades();
-            int raio = grafo->raio(excentricidades);
-            int diametro = grafo->diametro(excentricidades);
-            vector<char> centro = grafo->centro(excentricidades);
-            vector<char> periferia = grafo->periferia(excentricidades);
+            // Imprime as excentricidades para teste
+            cout << "Excentricidades dos vertices:" << endl;
+            for (int i = 0; i < grafo->ordem; i++) {
+                cout << "Vertice " << grafo->lista_adj[i]->id << ": ";
+                if (excentricidades[i] == INT_MAX) {
+                    cout << "INF (inalcancavel)";
+                } else {
+                    cout << excentricidades[i];
+                }
+                cout << endl;
+            }
+            cout << endl;
+
+            //int raio = grafo->raio(excentricidades);
+            //int diametro = grafo->diametro(excentricidades);
+            //vector<char> centro = grafo->centro(excentricidades);
+            //vector<char> periferia = grafo->periferia(excentricidades);
 
             cout << raio << endl;
             cout << diametro << endl;
@@ -253,8 +266,7 @@ void Gerenciador::comandos(Grafo* grafo) {
             }
 
             break;
-
-    }
+        }
         case 'j': {
             grafo->imprimirGrafo();
             cout<<endl;
