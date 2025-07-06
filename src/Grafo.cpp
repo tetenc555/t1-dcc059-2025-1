@@ -454,8 +454,76 @@ void Grafo::buscaProfundidadeAux(No* atual, Grafo* arvore) {
     }
 }
 
-vector<int> Grafo::calculaExcentricidades() {
-    return {};
+// Calcula a matriz de distâncias mínimas entre todos os pares de vértices do grafo
+vector<vector<int>> Grafo::calcularMatrizDistancias() {
+    // Inicializa matriz de distâncias com valores infinitos (INT_MAX)
+    vector<vector<int>> distancias(ordem, vector<int>(ordem, INT_MAX));
+
+    // A distância de um vértice para ele mesmo é sempre 0
+    for (int i = 0; i < ordem; i++) {
+        distancias[i][i] = 0;
+    }
+
+    // Calcula distâncias mínimas entre todos os pares de vértices
+    for (int i = 0; i < ordem; i++) {
+        char origem = lista_adj[i]->id; // Vértice de origem
+
+        for (int j = 0; j < ordem; j++) {
+            if (i == j) continue; // Pula a diagonal principal (já definida como 0)
+
+            char destino = lista_adj[j]->id; // Vértice de destino
+
+            // Obtém o caminho mínimo entre origem e destino usando Dijkstra
+            vector<char> caminho = caminho_minimo_dijkstra(origem, destino);
+
+            if (!caminho.empty()) { // Se existe caminho entre os vértices
+                // Calcula a distância total somando os pesos das arestas do caminho
+                int distancia = 0;
+                for (int k = 0; k < caminho.size() - 1; k++) {
+                    int idxAtual = encontraIndiceNo(caminho[k]);
+
+                    // Procura a aresta que leva ao próximo vértice no caminho
+                    for (Aresta* ar : lista_adj[idxAtual]->arestas) {
+                        if (ar->id_no_alvo == caminho[k+1]) {
+                            // Soma o peso da aresta (1 se grafo não ponderado)
+                            distancia += (in_ponderado_aresta ? ar->peso : 1);
+                            break;
+                        }
+                    }
+                }
+                distancias[i][j] = distancia; // Armazena a distância calculada
+            }
+            // Se não houver caminho, mantém INT_MAX (infinito)
+        }
+    }
+
+    return distancias; // Retorna a matriz de distâncias completas
+}
+
+// Calcula a excentricidade de cada vértice do grafo
+vector<int> Grafo::calcularExcentricidades() {
+    // Obtém a matriz de distâncias mínimas entre todos os pares de vértices
+    const vector<vector<int>> distancias = calcularMatrizDistancias();
+    vector<int> excentricidades(ordem); // Vetor para armazenar as excentricidades
+
+    // Para cada vértice no grafo...
+    for (int i = 0; i < ordem; i++) {
+        int max_dist = -1; // Inicializa a maior distância encontrada
+
+        // Procura a maior distância a partir do vértice i (excentricidade)
+        for (int dist : distancias[i]) {
+            // Considera apenas distâncias válidas (diferentes de infinito)
+            if (dist != INT_MAX && dist > max_dist) {
+                max_dist = dist;
+            }
+        }
+
+        // Se não encontrou nenhuma distância válida (vértice isolado), excentricidade = 0
+        // Caso contrário, armazena a maior distância encontrada
+        excentricidades[i] = (max_dist == -1) ? 0 : max_dist;
+    }
+
+    return excentricidades; // Retorna o vetor de excentricidades
 }
 
 int Grafo::raio(vector <int> excentricidade) {
