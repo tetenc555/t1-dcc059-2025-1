@@ -6,10 +6,10 @@
 **Data entrega: 30/06**
 
 # Grupo
-Estêvão Barbosa Fiorilo da Rocha
-Isabela Coelho Oliveira
-Vitor Hugo Coradini Fares
-Yan Dias Ferreira
+1. Estêvão Barbosa Fiorilo da Rocha
+2. Isabela Coelho Oliveira
+3. Vitor Hugo Coradini Fares
+4. Yan Dias Ferreira
 
 # Compilacão
 
