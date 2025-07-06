@@ -613,13 +613,21 @@ vector<int> Grafo::calcularExcentricidades() {
 }
 
 int Grafo::raio(vector <int> excentricidade) {
-    cout<<"Metodo nao implementado"<<endl;
-    return 0;
+    int menor = excentricidade[0];
+    for (int e : excentricidade) {
+        if (e < menor)
+            menor = e;
+    }
+    return menor;
 }
 
 int Grafo::diametro(vector <int> excentricidade) {
-    cout<<"Metodo nao implementado"<<endl;
-    return 0;
+    int maior = excentricidade[0];
+    for (int e : excentricidade) {
+        if (e > maior)
+            maior = e;
+    }
+    return maior;
 }
 
 vector<char> Grafo::centro(vector <int> excentricidade) {
