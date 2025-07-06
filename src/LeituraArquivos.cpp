@@ -106,7 +106,7 @@ void Grafo::salvarGrafoEmArquivo(const string& caminhoArquivo) { //É O FORMATO 
 
         // Adiciona as arestas
         if (!lista_adj[i]->arestas.empty()) {
-            arquivo << " -> ";
+            arquivo << ": ";
             for (size_t j = 0; j < lista_adj[i]->arestas.size(); j++) {
                 arquivo << lista_adj[i]->arestas[j]->id_no_alvo;
 
@@ -117,7 +117,7 @@ void Grafo::salvarGrafoEmArquivo(const string& caminhoArquivo) { //É O FORMATO 
 
                 // Adiciona separador se não for a última aresta
                 if (j != lista_adj[i]->arestas.size() - 1) {
-                    arquivo << " ";
+                    arquivo << " -> ";
                 }
             }
         }
