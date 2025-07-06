@@ -6,6 +6,7 @@
 #include <stack>
 #include <unordered_map>
 #include <limits>
+#include <algorithm>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE. UNICOS MOMENTOS N2 ATE A IMPRESSAO SIMPLES.
@@ -393,27 +394,34 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
     //adicionar as arestas e peso com condição de duplicata
     for (No *no : Inicial->lista_adj) {
         for (Aresta* a : no->arestas) {
-            if (no->id < a->id_no_alvo) { //verifica duplicata
+            if (no->id < a->id_no_alvo) { //aq verifica duplicata
                 arestas.push_back({no->id, a->id_no_alvo, a->peso});
             }
         }
     }
 
     //Terceiro: ordenar as arestas
-
+    sort(arestas.begin(), arestas.end(), [](const auto& a, const auto& b) {
+       return get<2>(a) < get<2>(b);
+    });
     //Quarto: union find
-    //uma lista com ponderamento de arestas em ordem
-    //algoritmo principal
+    unordered_map<char, char> pais;
 
-    for (auto no : Inicial->lista_adj)
-    {
-        //verificar se a aresta (dois vertices que se ligam) tem algum vertice em comum//usa union n sei o q la
+    for (No* no : Inicial->lista_adj) {
+        pais[no->id] = no->id;
     }
+
+    //find
+
+    //union
+
+    //Quinto passo//nosprocessados
 
 
     //Ultimo passo: criar grafo de retonro
     //copia arestas definidas como certas para o grafo retorno
     Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
+
     for (auto item : nosProcessados) {
         char idOrigem = get<0>(item);
         char idAlvo = get<1>(item);
