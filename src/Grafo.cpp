@@ -630,15 +630,15 @@ int Grafo::diametro(vector <int> excentricidade) {
     return maior;
 }
 
-vector<char> Grafo::centro(vector <int> excentricidade, int raio) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
+vector<char> Grafo::calculoCentroPeriferia(vector <int> excentricidade, int valorComparar) { //juntei as duas funcoes pois o processamento e o mesmo, mudando o parametro jogado
+    vector<char> retorno;
+    for (int i=0; i<(int(excentricidade.size()));i++) {
+        if (excentricidade[i]==valorComparar)
+            retorno.push_back(this->lista_adj[i]->id);
+    }
+    return retorno;
 }
 
-vector<char> Grafo::periferia(vector <int> excentricidade, int diametro) {
-    cout<<"Metodo nao implementado"<<endl;
-    return {};
-}
 
 vector<char> Grafo::vertices_de_articulacao(vector <int> excentricidade) {
     cout<<"Metodo nao implementado"<<endl;

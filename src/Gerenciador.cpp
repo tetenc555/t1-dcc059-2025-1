@@ -227,9 +227,9 @@ void Gerenciador::comandos(Grafo* grafo) {
 
             int raio = grafo->raio(excentricidades);
             int diametro = grafo->diametro(excentricidades);
-            vector<char> centro = grafo->centro(excentricidades,raio);
-            vector<char> periferia = grafo->periferia(excentricidades,diametro);
-
+            vector<char> centro = grafo->calculoCentroPeriferia(excentricidades,raio);
+            vector<char> periferia = grafo->calculoCentroPeriferia(excentricidades,diametro);
+            //impressao
             cout << raio << endl;
             cout << diametro << endl;
             for (char a : centro) {
@@ -243,6 +243,7 @@ void Gerenciador::comandos(Grafo* grafo) {
                     cout << ",";
                 cout << a;
             }
+            cout << endl;
 
             if(pergunta_imprimir_arquivo("raio_diametro_centro_periferia.txt")) {
                 ofstream arqExcentricidade("./output/raio_diametro_centro_periferia.txt");
