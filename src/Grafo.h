@@ -21,6 +21,7 @@ private:
     unordered_map<char, int> indiceNos;
     vector<vector<int>> distFloyd;
     bool floydPronto = false;
+    unordered_map<char, char> pais;
 
 public:
     Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice, int ordem);
@@ -80,6 +81,9 @@ public:
     bool in_ponderado_vertice;
     vector<No*> lista_adj;
     listaArestas* lista_arestas = nullptr;
+
+    char find(char x);
+    void union_sets(char a, char b);
 };
 
 

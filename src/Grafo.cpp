@@ -6,6 +6,7 @@
 #include <stack>
 #include <unordered_map>
 #include <limits>
+#include <algorithm>
 
 Grafo::Grafo(bool direcionado, bool ehPondAresta, bool ehPondVertice) { //COMPLEXIDADE N2! TENTAR AJUSTAR!
     //MOTIVOS: CRIACAO ARESTA / CRIACAO LKISTA VERTICE.
@@ -377,27 +378,82 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     return retorno; //retorna arvore gerada
 }
 
+char Grafo::find(char x) {
+    if (pais[x] != x)
+        pais[x] = find(pais[x]); // Path compression
+    return pais[x];
+}
+
+void Grafo::union_sets(char a, char b) {
+    a = find(a);
+    b = find(b);
+    if (a != b)
+        pais[b] = a;
+}
+
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
 {
-    //condicoes // verifica se eh conexo? //verificar return
+    //Primeiro passo: gerar subgrafo e fazer condicoes
+    Grafo* grafoInicial = criaSubGrafoVerticeInduzido(ids_nos);
+
+    //condicoes pra fazer o algoritmo (alem de ser conexo
     if (!this->in_ponderado_aresta) { //se nao for ponderado vai de arrasta
         cout<<"Nao eh ponderado!"<<endl;
-        return {};
+        return nullptr;
     }
     if (this->in_direcionado){ // se eh direcionado vai de arrasta
         cout<<"Eh direcionado!" << endl;
         return nullptr;
     }
 
-    //uma lista com ponderamento de arestas em ordem
-    //uma vazia para passar a ordem
-    //retornar essa "vazia"
-    for (int arestasArvoreGeradora=0; ordem-1 != 0; arestasArvoreGeradora++) //condicao de uma arvore geradora de kruskal
-    {
-        //verificar se a aresta (dois vertices que se ligam) tem algum vertice em comum
+    //Segundo passo: armazenar todas as arestas
+    grafoInicial->pais.clear();
+    for (No* no : grafoInicial->lista_adj) {
+        grafoInicial->pais[no->id] = no->id;
     }
-    cout<<"Metodo nao implementado"<<endl;
-    return nullptr; //retorno a lista da arvore geradora
+
+    //ordena arestas por peso
+    vector<tuple<int, char, char>> arestasOrdenadas;
+    unordered_set<string> arestasInseridas;
+
+    //algoritmo principal
+    for (No* no : grafoInicial->lista_adj) {
+        char u = no->id;
+        for (Aresta* a : no->arestas) {
+            char v = a->id_no_alvo;
+            int peso = a->peso;
+            //evitar duplicata
+            string chave = u < v ? string{u, v} : string{v, u};
+            if (arestasInseridas.find(chave) == arestasInseridas.end()) {
+                arestasOrdenadas.push_back({peso, u, v});
+                arestasInseridas.insert(chave);
+            }
+        }
+    }
+
+    sort(arestasOrdenadas.begin(), arestasOrdenadas.end());
+
+    //Ultimo passo: crIar grafo de retonro
+    Grafo * retorno = new Grafo(false, grafoInicial->in_ponderado_aresta, false); //define sem peso nos vertices
+
+    for (No* no : grafoInicial->lista_adj) {
+        retorno->inserirNos(no->id, -1);
+    }
+
+    for (auto& aresta : arestasOrdenadas) {
+        int peso = get<0>(aresta);
+        char u = get<1>(aresta);
+        char v = get<2>(aresta);
+
+        if (grafoInicial->find(u) != grafoInicial->find(v)) {
+            grafoInicial->union_sets(u, v);
+            retorno->processarArestaIda(u, v, peso);
+            retorno->processarArestaVolta(v, u, peso);
+        }
+    }
+    //cria lista de arestas apos processamento
+    retorno->criaListaArestas();
+    return retorno; //retorna arvore gerada
 }
 
 Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
