@@ -389,7 +389,7 @@ void Grafo::union_sets(char a, char b) {
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
 {
     //Primeiro passo: gerar subgrafo e fazer condicoes
-    Grafo* Inicial = criaSubGrafoVerticeInduzido(ids_nos);
+    Grafo* grafoInicial = criaSubGrafoVerticeInduzido(ids_nos);
 
     //condicoes pra fazer o algoritmo (alem de ser conexo
     if (!this->in_ponderado_aresta) { //se nao for ponderado vai de arrasta
@@ -402,53 +402,49 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
     }
 
     //Segundo passo: armazenar todas as arestas
-    vector<tuple<char, char, int>> arestas;
+    grafoInicial->pais.clear();
+    for (No* no : grafoInicial->lista_adj) {
+        grafoInicial->pais[no->id] = no->id;
+    }
 
-    //adicionar as arestas e peso com condição de duplicata
-    for (No *no : Inicial->lista_adj) {
+    //ordena arestas por peso
+    vector<tuple<int, char, char>> arestasOrdenadas;
+    unordered_set<string> arestasInseridas;
+
+    //algoritmo principal
+    for (No* no : grafoInicial->lista_adj) {
+        char u = no->id;
         for (Aresta* a : no->arestas) {
-            if (no->id < a->id_no_alvo) { //aq verifica duplicata
-                arestas.push_back({no->id, a->id_no_alvo, a->peso});
+            char v = a->id_no_alvo;
+            int peso = a->peso;
+            //evitar duplicata
+            string chave = u < v ? string{u, v} : string{v, u};
+            if (arestasInseridas.find(chave) == arestasInseridas.end()) {
+                arestasOrdenadas.push_back({peso, u, v});
+                arestasInseridas.insert(chave);
             }
         }
     }
 
-    //Terceiro: ordenar as arestas
-    sort(arestas.begin(), arestas.end(), [](const auto& a, const auto& b) {
-       return get<2>(a) < get<2>(b);
-    });
+    sort(arestasOrdenadas.begin(), arestasOrdenadas.end());
 
-    //Quarto: funcoes union find
+    //Ultimo passo: crIar grafo de retonro
+    Grafo * retorno = new Grafo(false, grafoInicial->in_ponderado_aresta, false); //define sem peso nos vertices
 
-    for (No* no : Inicial->lista_adj) {
-        pais[no->id] = no->id;
+    for (No* no : grafoInicial->lista_adj) {
+        retorno->inserirNos(no->id, -1);
     }
 
-    //Quinto passo//nosprocessados
-    vector<tuple<char, char, int>> nosProcessados;
-    for (auto& [u, v, peso] : arestas) {
-        if (find(u) != find(v)) {
-            union_sets(u, v);
-            nosProcessados.push_back({u, v, peso});
+    for (auto& aresta : arestasOrdenadas) {
+        int peso = get<0>(aresta);
+        char u = get<1>(aresta);
+        char v = get<2>(aresta);
+
+        if (grafoInicial->find(u) != grafoInicial->find(v)) {
+            grafoInicial->union_sets(u, v);
+            retorno->processarArestaIda(u, v, peso);
+            retorno->processarArestaVolta(v, u, peso);
         }
-    }
-
-    //Ultimo passo: criar grafo de retonro
-    //copia arestas definidas como certas para o grafo retorno
-    Grafo * retorno = new Grafo(Inicial->in_direcionado, Inicial->in_ponderado_aresta, false); //define sem peso nos vertices
-
-    for (auto item : nosProcessados) {
-        char idOrigem = get<0>(item);
-        char idAlvo = get<1>(item);
-        int peso = get<2>(item);
-        //cria nos se nao existirem
-        if (!retorno->verificaExistenciaNo(idOrigem))
-            retorno->inserirNos(idOrigem,-1);
-        if (!retorno->verificaExistenciaNo(idAlvo))
-            retorno->inserirNos(idAlvo,-1);
-        //salva aresta
-        retorno->processarArestaIda(idOrigem,idAlvo,peso);
-        retorno->processarArestaVolta(idAlvo,idOrigem,peso);
     }
     //cria lista de arestas apos processamento
     retorno->criaListaArestas();
