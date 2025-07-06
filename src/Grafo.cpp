@@ -76,7 +76,7 @@ bool Grafo::verificaExistenciaNo(const char idNo) {
 
 void Grafo::processarArestaIda(const char idOrigem, const char idAlvoAresta,const int peso) {
     if (!(verificaExistenciaNo(idOrigem) && verificaExistenciaNo(idAlvoAresta))) { // se o no for invalido, quebra e nao processa a aresta
-        cout << "Erro! No invalido na aresta! Nao adicionada, tente novamente" << endl; //imprime mensagem de erro;
+        cerr << "Erro! No invalido na aresta! Nao adicionada, tente novamente" << endl; //imprime mensagem de erro;
         return; //retorna sem adicionar aresta
     }
     const int indice = encontraIndiceNo(idOrigem); //busca indice
@@ -194,7 +194,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 
     //se nao achar retorna o q tem
     if (pesoCaminho[destino] == numeric_limits<int>::max()) {
-        cout << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
+        cerr << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
         return caminhoFinal;
     }
 
@@ -262,7 +262,7 @@ vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
     int destino = indiceNos[id_no_b];
 
     if (proxNo[origem][destino] == -1) {
-        cout << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
+        cerr << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
         return {};
     }
 
@@ -283,7 +283,7 @@ Grafo * Grafo::criaSubGrafoVerticeInduzido(const vector <char>& ids_nos) {
     for (char id : ids_nos) { // percorre cada id para copiar nos
         int indice = this->encontraIndiceNo(id); // encontra indice
         if (indice == -1) { //verifica se achou
-            cout << "No de ID:" << id << " nao encontrado! Pulamos este." << endl;
+            cerr << "No de ID:" << id << " nao encontrado! Pulamos este." << endl;
         }
         else {
             subGrafo->lista_adj.push_back(new No(this->lista_adj[indice])); // adiciona no com sua arestas na lista
@@ -440,7 +440,7 @@ Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
     //Verifica se o no inicial existe
     int indiceInicial = encontraIndiceNo(id_no);
     if (indiceInicial == -1) {
-        cout << "No inicial nao encontrado!" << endl;
+        cerr << "No inicial nao encontrado!" << endl;
         return nullptr;
     }
 

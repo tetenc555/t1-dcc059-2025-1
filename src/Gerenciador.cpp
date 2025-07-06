@@ -189,7 +189,7 @@ void Gerenciador::comandos(Grafo* grafo) {
 
         case 'd': {
             if (!grafo->in_ponderado_aresta) {
-                cerr << "Erro: Floyd-Warshall requer arestas ponderadas" << endl;
+                cerr << "Erro: Floyd requer arestas ponderadas" << endl;
                 this_thread::sleep_for(chrono::milliseconds(50));
                 break;
             }
@@ -352,7 +352,7 @@ void Gerenciador::comandos(Grafo* grafo) {
             exit(0);
         }
         default: {
-            cout<<"Opção inválida"<<endl;
+            cerr<<"Opção inválida"<<endl;
         }
     }
 
