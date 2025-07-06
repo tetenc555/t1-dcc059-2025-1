@@ -373,6 +373,19 @@ Grafo * Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     return retorno; //retorna arvore gerada
 }
 
+char Grafo::find(char x) {
+    if (pais[x] != x)
+        pais[x] = find(pais[x]); // Path compression
+    return pais[x];
+}
+
+void Grafo::union_sets(char a, char b) {
+    a = find(a);
+    b = find(b);
+    if (a != b)
+        pais[b] = a;
+}
+
 Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
 {
     //Primeiro passo: gerar subgrafo e fazer condicoes
@@ -404,19 +417,21 @@ Grafo * Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
     sort(arestas.begin(), arestas.end(), [](const auto& a, const auto& b) {
        return get<2>(a) < get<2>(b);
     });
-    //Quarto: union find
-    unordered_map<char, char> pais;
+
+    //Quarto: funcoes union find
 
     for (No* no : Inicial->lista_adj) {
         pais[no->id] = no->id;
     }
 
-    //find
-
-    //union
-
     //Quinto passo//nosprocessados
-
+    vector<tuple<char, char, int>> nosProcessados;
+    for (auto& [u, v, peso] : arestas) {
+        if (find(u) != find(v)) {
+            union_sets(u, v);
+            nosProcessados.push_back({u, v, peso});
+        }
+    }
 
     //Ultimo passo: criar grafo de retonro
     //copia arestas definidas como certas para o grafo retorno
