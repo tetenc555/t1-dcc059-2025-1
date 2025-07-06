@@ -666,3 +666,14 @@ void Grafo::imprimirFormato() {
     }
 }
 
+    void Grafo::impressaoFinal() {
+        cout << this->in_direcionado << " " << this->in_ponderado_aresta << " " << this->in_ponderado_vertice << endl;
+        cout << this->lista_adj.size() << endl; //arruma impressão
+        for (int i = 0; i < int(lista_adj.size()); i++) {
+            if (lista_adj[i] != nullptr) {
+                this->lista_adj[i]->impressaoFinal();
+            }
+        }
+    }
+
+

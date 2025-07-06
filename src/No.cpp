@@ -81,6 +81,22 @@ void No::imprimeFormato(bool ehPondAresta) {
     cout << endl;
 }
 
+void No::impressaoFinal() {
+    cout << this->id << ": ";
+    int tamanho = arestas.size();
+    if (tamanho == 0) {
+        cout << "-- " << endl;
+        return;
+    }
+    for (int i = 0; i < tamanho; i++) {
+        if (i != 0) {
+            cout << " -> ";
+        }
+        cout << arestas[i]->id_no_alvo;
+    }
+    cout << endl;
+}
+
 void No::setVisitado(bool visitado) {
     this->visitado=visitado;
 }

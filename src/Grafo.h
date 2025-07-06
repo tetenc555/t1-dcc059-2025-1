@@ -65,6 +65,7 @@ public:
 
     void imprimirGrafo(); // h
     void imprimirFormato();
+    void impressaoFinal();
 
     vector<int> calculaExcentricidades(); //h 0
     int raio(vector <int> excentricidade); // h 1

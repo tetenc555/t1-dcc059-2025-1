@@ -22,6 +22,7 @@ public:
     void imprimeConexoes(bool ehPondAresta);
 
     void imprimeFormato(bool ehPondAresta);
+    void impressaoFinal();
 
     void setVisitado(bool visitado);
 

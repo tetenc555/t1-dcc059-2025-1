@@ -193,7 +193,7 @@ void Gerenciador::comandos(Grafo* grafo) {
 
                 vector<char> ids = get_conjunto_ids(grafo,tam);
                 Grafo* arvore_geradora_minima_prim = grafo->arvore_geradora_minima_prim(ids);
-                arvore_geradora_minima_prim->imprimirFormato();
+                arvore_geradora_minima_prim->impressaoFinal();
 
                 if(pergunta_imprimir_arquivo("agm_prim.txt")) {
                     arvore_geradora_minima_prim->salvarGrafoEmArquivo("./output/agm_prim.txt");
@@ -218,7 +218,7 @@ void Gerenciador::comandos(Grafo* grafo) {
 
                 vector<char> ids = get_conjunto_ids(grafo,tam);
                 Grafo* arvore_geradora_minima_kruskal = grafo->arvore_geradora_minima_kruskal(ids);
-                arvore_geradora_minima_kruskal->imprimirFormato();
+                arvore_geradora_minima_kruskal->impressaoFinal();
 
                 if(pergunta_imprimir_arquivo("agm_kruskal.txt")) {
                     arvore_geradora_minima_kruskal->salvarGrafoEmArquivo("./output/agm_kruskal.txt");
@@ -237,7 +237,7 @@ void Gerenciador::comandos(Grafo* grafo) {
 
             char id_no = get_id_entrada();
             Grafo* arvore_caminhamento_profundidade = grafo->arvore_caminhamento_profundidade(id_no);
-            arvore_caminhamento_profundidade->imprimirFormato();
+            arvore_caminhamento_profundidade->impressaoFinal();
 
             if(pergunta_imprimir_arquivo("arvore_caminhamento_profundidade.txt")) {
                 arvore_caminhamento_profundidade->salvarGrafoEmArquivo("./output/arvore_caminhamento_profundidade.txt");
