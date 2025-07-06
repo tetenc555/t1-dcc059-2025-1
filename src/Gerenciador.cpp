@@ -216,10 +216,39 @@ void Gerenciador::comandos(Grafo* grafo) {
             vector<char> centro = grafo->centro();
             vector<char> periferia = grafo->periferia();
 
-            cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
+            cout << raio << endl;
+            cout << diametro << endl;
+            for (char a : centro) {
+                if (a!=centro[0])
+                    cout << ",";
+                cout << a;
+            }
+            cout << endl;
+            for (char a : periferia) {
+                if (a!=periferia[0])
+                    cout << ",";
+                cout << a;
+            }
 
             if(pergunta_imprimir_arquivo("raio_diametro_centro_periferia.txt")) {
-                cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
+                ofstream arqExcentricidade("./output/raio_diametro_centro_periferia.txt");
+                if (!arqExcentricidade.is_open()) {
+                    throw runtime_error("Erro ao criar arquivo ./output/raio_diametro_centro_periferia.txt");
+                }
+
+                arqExcentricidade << raio << endl;
+                arqExcentricidade << diametro << endl;
+                for (char a : centro) {
+                    if (a!=centro[0])
+                        arqExcentricidade << ",";
+                    arqExcentricidade << a;
+                }
+                arqExcentricidade << endl;
+                for (char a : periferia) {
+                    if (a!=periferia[0])
+                        arqExcentricidade << ",";
+                    arqExcentricidade << a;
+                }
             }
 
             break;
