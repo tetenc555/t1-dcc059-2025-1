@@ -43,6 +43,44 @@ void salvaCaminhoMinimoArquivo(const string& caminhoArquivo, const string& tipo,
     arquivo.close();
 }
 
+void imprimeFuncoesExcentricidadeTela(int raio, int diametro, vector<char> centro, vector<char> periferia) {
+    cout << raio << endl;
+    cout << diametro << endl;
+    for (char a : centro) {
+        if (a!=centro[0])
+            cout << ",";
+        cout << a;
+    }
+    cout << endl;
+    for (char a : periferia) {
+        if (a!=periferia[0])
+            cout << ",";
+        cout << a;
+    }
+    cout << endl;
+}
+
+void salvaFuncoesExcentricidadeArquivo(int raio, int diametro, vector<char> centro, vector<char> periferia) {
+    ofstream arqExcentricidade("./output/raio_diametro_centro_periferia.txt");
+    if (!arqExcentricidade.is_open()) {
+        throw runtime_error("Erro ao criar arquivo ./output/raio_diametro_centro_periferia.txt");
+    }
+
+    arqExcentricidade << raio << endl;
+    arqExcentricidade << diametro << endl;
+    for (char a : centro) {
+        if (a!=centro[0])
+            arqExcentricidade << ",";
+        arqExcentricidade << a;
+    }
+    arqExcentricidade << endl;
+    for (char a : periferia) {
+        if (a!=periferia[0])
+            arqExcentricidade << ",";
+        arqExcentricidade << a;
+    }
+}
+
 
 void Gerenciador::comandos(Grafo* grafo) {
     grafoAtual = grafo;
@@ -211,59 +249,14 @@ void Gerenciador::comandos(Grafo* grafo) {
 
         case 'h': {
             vector<int> excentricidades = grafo->calcularExcentricidades();
-
-            // Imprime as excentricidades para teste
-            cout << "Excentricidades dos vertices:" << endl;
-            for (int i = 0; i < grafo->ordem; i++) {
-                cout << "Vertice " << grafo->lista_adj[i]->id << ": ";
-                if (excentricidades[i] == INT_MAX) {
-                    cout << "INF (inalcancavel)";
-                } else {
-                    cout << excentricidades[i];
-                }
-                cout << endl;
-            }
-            cout << endl;
-
             int raio = grafo->raio(excentricidades);
             int diametro = grafo->diametro(excentricidades);
             vector<char> centro = grafo->calculoCentroPeriferia(excentricidades,raio);
             vector<char> periferia = grafo->calculoCentroPeriferia(excentricidades,diametro);
             //impressao
-            cout << raio << endl;
-            cout << diametro << endl;
-            for (char a : centro) {
-                if (a!=centro[0])
-                    cout << ",";
-                cout << a;
-            }
-            cout << endl;
-            for (char a : periferia) {
-                if (a!=periferia[0])
-                    cout << ",";
-                cout << a;
-            }
-            cout << endl;
-
+            imprimeFuncoesExcentricidadeTela(raio,diametro,centro,periferia);
             if(pergunta_imprimir_arquivo("raio_diametro_centro_periferia.txt")) {
-                ofstream arqExcentricidade("./output/raio_diametro_centro_periferia.txt");
-                if (!arqExcentricidade.is_open()) {
-                    throw runtime_error("Erro ao criar arquivo ./output/raio_diametro_centro_periferia.txt");
-                }
-
-                arqExcentricidade << raio << endl;
-                arqExcentricidade << diametro << endl;
-                for (char a : centro) {
-                    if (a!=centro[0])
-                        arqExcentricidade << ",";
-                    arqExcentricidade << a;
-                }
-                arqExcentricidade << endl;
-                for (char a : periferia) {
-                    if (a!=periferia[0])
-                        arqExcentricidade << ",";
-                    arqExcentricidade << a;
-                }
+                salvaFuncoesExcentricidadeArquivo(raio,diametro,centro,periferia);
             }
 
             break;
