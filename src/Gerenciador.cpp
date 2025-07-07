@@ -173,6 +173,11 @@ void Gerenciador::comandos(Grafo* grafo) {
             }
             vector<char> caminho_minimo_dijkstra = grafo->caminho_minimo_dijkstra(id_no_1,id_no_2);
             cout << "Caminho minimo de Dijkstra do " << id_no_1 << " a " << id_no_2 << ": "  << endl;
+            if(caminho_minimo_dijkstra.empty()){
+                cerr << "Não existe caminho entre " << id_no_1 << " e " << id_no_2 << endl;                
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             for (char no: caminho_minimo_dijkstra) {
                 if (no!=caminho_minimo_dijkstra[0])
                     cout << ",";
@@ -206,6 +211,11 @@ void Gerenciador::comandos(Grafo* grafo) {
                 break;
             }
             vector<char> caminho_minimo_floyd = grafo->caminho_minimo_floyd(id_no_1,id_no_2);
+            if(caminho_minimo_floyd.empty()){
+                cerr << "Não existe caminho entre " << id_no_1 << " e " << id_no_2 << endl;                
+                this_thread::sleep_for(chrono::milliseconds(50));
+                break;
+            }
             cout << "Caminho minimo de Floyd do " << id_no_1 << " a " << id_no_2 << ": "  << endl;
             for (char no: caminho_minimo_floyd) {
                 if (no!=caminho_minimo_floyd[0])
@@ -224,11 +234,13 @@ void Gerenciador::comandos(Grafo* grafo) {
         case 'e': {
             if (grafo->in_direcionado) {
                 cerr << "Erro! Grafo Direcionado." << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
                 break;
             }
 
             if (!grafo->in_ponderado_aresta) {
                 cerr << "Erro! Grafo nao eh ponderado." << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
                 break;
             }
             int tam;
@@ -248,7 +260,7 @@ void Gerenciador::comandos(Grafo* grafo) {
                 delete arvore_geradora_minima_prim;
 
             }else {
-                cout<<"Valor invalido"<<endl;
+                cerr<<"Valor invalido"<<endl;
             }
 
             break;
@@ -257,11 +269,13 @@ void Gerenciador::comandos(Grafo* grafo) {
         case 'f': {
             if (grafo->in_direcionado) {
                 cerr << "Erro! Grafo Direcionado." << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
                 break;
             }
 
             if (!grafo->in_ponderado_aresta) {
                 cerr << "Erro! Grafo nao eh ponderado." << endl;
+                this_thread::sleep_for(chrono::milliseconds(50));
                 break;
             }
             int tam;
@@ -281,7 +295,7 @@ void Gerenciador::comandos(Grafo* grafo) {
                 delete arvore_geradora_minima_kruskal;
 
             }else {
-                cout<<"Valor invalido"<<endl;
+                cerr<<"Valor invalido"<<endl;
             }
 
             break;

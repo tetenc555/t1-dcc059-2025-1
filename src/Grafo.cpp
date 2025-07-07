@@ -194,7 +194,6 @@ vector<char> Grafo::caminho_minimo_dijkstra(char id_no_a, char id_no_b) {
 
     //se nao achar retorna o q tem
     if (pesoCaminho[destino] == numeric_limits<int>::max()) {
-        cerr << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
         return caminhoFinal;
     }
 
@@ -262,7 +261,6 @@ vector<char> Grafo::caminho_minimo_floyd(char id_no_a, char id_no_b) {
     int destino = indiceNos[id_no_b];
 
     if (proxNo[origem][destino] == -1) {
-        cerr << "Não existe caminho entre " << id_no_a << " e " << id_no_b << endl;
         return {};
     }
 
