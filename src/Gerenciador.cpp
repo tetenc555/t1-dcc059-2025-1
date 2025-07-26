@@ -4,6 +4,7 @@
 #include <thread>
 #include <chrono>
 #include "LeituraArquivos.h"
+#include "MinWeightDominatingSet.h"
 
 static Grafo* grafoAtual = nullptr;
 
@@ -98,6 +99,10 @@ void Gerenciador::comandos(Grafo* grafo) {
     cout<<"(h) Raio, diametro, centro e periferia do grafo;"<<endl;
     cout<<"(j) Imprimir grafo;"<<endl;
     cout <<"(m) Alterar Arquivo de teste;" <<endl;
+    cout<< "Trabalho 2:" << endl;
+    cout <<"(n) Gerar Conjunto Dominante de Peso Minimo - Algoritmo Guloso;" <<endl;
+    cout <<"(o) Gerar Conjunto Dominante de Peso Minimo - Algoritmo Guloso Randomizado;" <<endl;
+    cout <<"(p) Gerar Conjunto Dominante de Peso Minimo - Algoritmo Guloso Randomizado Adaptativo;" <<endl;
     cout<<"(0) Sair;"<<endl<<endl;
 
     char resp;
@@ -358,6 +363,27 @@ void Gerenciador::comandos(Grafo* grafo) {
                 cerr << "Erro ao carregar o arquivo: " << e.what() << endl;
                 exit(1);
             }
+
+            break;
+        }
+        case 'n': {
+            MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 0);
+            Grafo* Resposta = setCalculado->conjuntoSolucao;
+            Resposta->imprimirGrafo();
+
+            break;
+        }
+        case 'o': {
+            MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 1);
+            Grafo* Resposta = setCalculado->conjuntoSolucao;
+            Resposta->imprimirGrafo();
+
+            break;
+        }
+        case 'p': {
+            MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 2);
+            Grafo* Resposta = setCalculado->conjuntoSolucao;
+            Resposta->imprimirGrafo();
 
             break;
         }
