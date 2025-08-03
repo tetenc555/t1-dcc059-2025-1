@@ -11,21 +11,21 @@ class No {
 public:
     No(char id, bool ehPondVertice);
     No(const No* noOriginal);
+    No(char id, int peso);
+    No(char id, int peso, bool isDominante);
     ~No();
 
     char id;
     int peso;
+    bool isDominante;
     vector<Aresta*> arestas;
-    No(char id, int peso);
     bool visitado;
+
     void criaAresta(char alvo);
     void imprimeConexoes(bool ehPondAresta);
-
     void imprimeFormato(bool ehPondAresta);
     void impressaoFinal();
-
     void setVisitado(bool visitado);
-
     bool getVisitado();
 };
 
