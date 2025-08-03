@@ -18,6 +18,7 @@ public:
     void guloso(Grafo* grafoInicial);
     void gulosoRand(Grafo* grafoInicial);
     void gulosoRandAdapt(Grafo* grafoInicial);
+    void impressao();
 };
 
 #endif //MINWEIGHTDOMINATINGSET_H

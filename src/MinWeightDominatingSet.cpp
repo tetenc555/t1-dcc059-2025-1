@@ -100,7 +100,26 @@ void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {
     cout<< "teste guloso random adapt" << endl;
 }
 
-
+void MinWeightDominatingSet::impressaoTeste()
+{
+    cout << "Vértices Domintantes: " << endl;
+    for (No* no : this->conjuntoSolucao->lista_adj)
+    {
+        if (no->isDominante)
+        {
+            cout << no->id << " (Peso:" << no->peso << "), ";
+        }
+    }
+    cout << endl;
+    cout << "Vértices Dominadas: " << endl;
+    for (No* no : this->conjuntoSolucao->lista_adj)
+    {
+        if (!no->isDominante)
+        {
+            cout << no->id << " (Peso:" << no->peso << "), ";
+        }
+    }
+}
 
 
 
