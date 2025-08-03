@@ -44,7 +44,7 @@ void reCalculaPesoNoCandidatoGuloso(priority_queue<tuple<float,char>,vector<tupl
         if (!conjuntoSolucao->verificaExistenciaNo(idNoAtualizar))
         {
             No* noGrafoInicial = grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(idNoAtualizar)];
-            float pesoProcessamento = noGrafoInicial->peso;
+            float pesoRelativo = noGrafoInicial->peso;
             int qtdArestasValidas = 0;
             for (Aresta* aresta : noGrafoInicial->arestas)
             {
@@ -52,8 +52,8 @@ void reCalculaPesoNoCandidatoGuloso(priority_queue<tuple<float,char>,vector<tupl
                     qtdArestasValidas++;
             }
             if (qtdArestasValidas != 0)
-                pesoProcessamento = pesoProcessamento / noGrafoInicial->arestas.size();
-            filaAtualizada.emplace(make_tuple(pesoProcessamento, idNoAtualizar));
+                pesoRelativo = pesoRelativo / qtdArestasValidas;
+            filaAtualizada.emplace(make_tuple(pesoRelativo, idNoAtualizar));
         }
     }
     candidatos->swap(filaAtualizada);
@@ -62,16 +62,17 @@ void reCalculaPesoNoCandidatoGuloso(priority_queue<tuple<float,char>,vector<tupl
 void MinWeightDominatingSet::guloso(Grafo *grafoInicial)
 {
     conjuntoSolucao = new Grafo(grafoInicial->in_direcionado,grafoInicial->in_ponderado_aresta,grafoInicial->in_ponderado_vertice); //declara solucao vazia
-    priority_queue<tuple<float,char>, vector<float,char>, greater<tuple<float,char>>> candidatos; //lista de candidatos
+    priority_queue<tuple<float,char>, vector<tuple<float,char>>, greater<tuple<float,char>>> candidatos; //lista de candidatos
     for (No* no : grafoInicial->lista_adj) //adicao inicial a lista de candidatos
     {
-        float pesoProcessamento=no->peso;
-        pesoProcessamento=pesoProcessamento/no->arestas.size();
-        candidatos.emplace(make_tuple(pesoProcessamento,no->id));
+        float pesoRelativo=no->peso;
+        pesoRelativo=pesoRelativo/no->arestas.size();
+        candidatos.emplace(make_tuple(pesoRelativo,no->id));
     }
 
     while (conjuntoSolucao->lista_adj.size() < grafoInicial->lista_adj.size() || !candidatos.empty())
     {
+        if (candidatos.empty()) break;
         tuple<float,char> melhorCandidato = candidatos.top();
         candidatos.pop();
         No* melhorCandidatoNo = new No(grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(get<1>(melhorCandidato))]);
@@ -87,7 +88,7 @@ void MinWeightDominatingSet::guloso(Grafo *grafoInicial)
                 conjuntoSolucao->processarArestaVolta(noAlvo->id,melhorCandidatoNo->id,noAlvo->peso);
             }
         }
-        reCalculaPesoNoCandidatoGuloso(candidatos, conjuntoSolucao, grafoInicial);
+        reCalculaPesoNoCandidatoGuloso(&candidatos, conjuntoSolucao, grafoInicial);
     }
 }
 
