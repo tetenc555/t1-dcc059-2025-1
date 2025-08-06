@@ -41,20 +41,17 @@ void reCalculaPesoNoCandidatoGuloso(priority_queue<tuple<float,char>,vector<tupl
         tuple<float,char> noAtualizar = candidatos->top();
         char idNoAtualizar = get<1>(noAtualizar);
         candidatos->pop();
-        if (!conjuntoSolucao->verificaExistenciaNo(idNoAtualizar))
-        {
-            No* noGrafoInicial = grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(idNoAtualizar)];
-            float pesoRelativo = noGrafoInicial->peso;
-            int qtdArestasValidas = 0;
+        No* noGrafoInicial = grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(idNoAtualizar)];
+        float pesoRelativo = noGrafoInicial->peso;
+        int qtdArestasValidas = 0;
             for (Aresta* aresta : noGrafoInicial->arestas)
             {
-                if (!conjuntoSolucao->verificaExistenciaNo(aresta->id_no_alvo))
+                if (!conjuntoSolucao->verificaExistenciaNo(aresta->id_no_alvo)) //verifica se a aresta se conecta a um no que ja e dominado, contando apenas elas
                     qtdArestasValidas++;
             }
             if (qtdArestasValidas != 0)
                 pesoRelativo = pesoRelativo / qtdArestasValidas;
             filaAtualizada.emplace(make_tuple(pesoRelativo, idNoAtualizar));
-        }
     }
     candidatos->swap(filaAtualizada);
 }
@@ -79,7 +76,7 @@ void MinWeightDominatingSet::guloso(Grafo *grafoInicial)
         melhorCandidatoNo->isDominante = true;
         for (Aresta* aresta : melhorCandidatoNo->arestas)
         {
-            if (!conjuntoSolucao->verificaExistenciaNo(aresta->id_no_alvo))
+            if (!conjuntoSolucao->verificaExistenciaNo(aresta->id_no_alvo)) // apenas adiciona no como dominado e define a aresta como aresta que domina se ele ja nao for dominado por outro no.
             {
                 No* noAlvo = new No(grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(aresta->id_no_alvo)]);
                 noAlvo->isDominante =false;

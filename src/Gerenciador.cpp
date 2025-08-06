@@ -368,23 +368,18 @@ void Gerenciador::comandos(Grafo* grafo) {
         }
         case 'n': {
             MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 0);
-            Grafo* Resposta = setCalculado->conjuntoSolucao;
-            Resposta->imprimirGrafo();
+                setCalculado->impressao();
 
             break;
         }
         case 'o': {
             MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 1);
-            Grafo* Resposta = setCalculado->conjuntoSolucao;
-            Resposta->imprimirGrafo();
-
+                setCalculado->impressao();
             break;
         }
         case 'p': {
             MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 2);
-            Grafo* Resposta = setCalculado->conjuntoSolucao;
-            Resposta->imprimirGrafo();
-
+            setCalculado->impressao();
             break;
         }
         case '0': {
