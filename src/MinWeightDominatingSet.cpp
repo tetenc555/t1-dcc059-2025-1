@@ -10,6 +10,9 @@
 using namespace std;
 
 MinWeightDominatingSet::MinWeightDominatingSet(Grafo* grafoInicial, int tipo) {
+    if (!grafoInicial->in_ponderado_vertice){
+        throw logic_error("Grafo não é vértice ponderado!");
+    }
     switch (tipo) {
         case 0: {
             this->guloso(grafoInicial);
