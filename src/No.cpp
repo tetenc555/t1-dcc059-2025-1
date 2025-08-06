@@ -18,18 +18,10 @@ No::No(char id, int peso) {
 }
 
 No::No(char id, int peso, bool isDominante) {
-    if (peso == -1) {
-        this->id=id;
-        this->peso=0;
-        this->visitado=false;
-        this->isDominante=isDominante;
-    }
-    else {
-        this->id=id;
-        this->peso=peso;
-        this->visitado=false;
-        this->isDominante=false;
-    }
+    this->id = id;
+    this->peso = (peso == -1) ? 0 : peso;  // Simplificado
+    this->visitado = false;
+    this->isDominante = isDominante;  // Sempre usa o valor recebido
 }
 
 No::No(const No* noOriginal) {
