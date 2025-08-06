@@ -14,9 +14,12 @@ public:
     Grafo* conjuntoSolucao;
 
     MinWeightDominatingSet(Grafo* grafoInicial, int tipo);
+
+    MinWeightDominatingSet(Grafo *grafoInicial, int tipo, float alpha);
+
     ~MinWeightDominatingSet();
     void guloso(Grafo* grafoInicial);
-    void gulosoRand(Grafo* grafoInicial);
+    void gulosoRand(Grafo *grafoInicial, float alpha);
     void gulosoRandAdapt(Grafo* grafoInicial);
     void impressao();
 };

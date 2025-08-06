@@ -19,8 +19,28 @@ MinWeightDominatingSet::MinWeightDominatingSet(Grafo* grafoInicial, int tipo) {
             this->guloso(grafoInicial);
             break;
         }
+        case 2: {
+            this->gulosoRandAdapt(grafoInicial);
+            break;
+        }
+        default: {
+            throw logic_error("Tipo de construtor inválido!");
+        }
+    }
+}
+
+//Cria novo construtor pro randomizado
+MinWeightDominatingSet::MinWeightDominatingSet(Grafo* grafoInicial, int tipo, float alpha) {
+    if (!grafoInicial->in_ponderado_vertice){
+        throw logic_error("Grafo não é vértice ponderado!");
+    }
+    switch (tipo) {
+        case 0: {
+            this->guloso(grafoInicial);
+            break;
+        }
         case 1: {
-            this->gulosoRand(grafoInicial);
+            this->gulosoRand(grafoInicial, alpha);
             break;
         }
         case 2: {
@@ -100,8 +120,75 @@ void MinWeightDominatingSet::guloso(Grafo *grafoInicial)
     }
 }
 
-void MinWeightDominatingSet::gulosoRand(Grafo *grafoInicial) {
-    cout<< "teste guloso random" << endl;
+void MinWeightDominatingSet::gulosoRand(Grafo *grafoInicial, float alpha) {
+    if (alpha < 0 || alpha > 1) {
+        throw invalid_argument("Alpha deve estar entre 0 e 1");
+    }
+
+    conjuntoSolucao = new Grafo(grafoInicial->in_direcionado, grafoInicial->in_ponderado_aresta, grafoInicial->in_ponderado_vertice);
+    priority_queue<tuple<float, char>, vector<tuple<float, char>>, greater<tuple<float, char>>> Listacandidatos;
+
+    // Inicializa lista de candidatos
+    for (No* no : grafoInicial->lista_adj) {
+        float heuristica = no->peso / no->arestas.size();
+        Listacandidatos.emplace(make_tuple(heuristica, no->id));
+    }
+
+    while (!Listacandidatos.empty() && conjuntoSolucao->lista_adj.size() < grafoInicial->lista_adj.size()) {
+        // Cria lista restrita de candidatos (RCL)
+        vector<tuple<float, char>> rcl;
+        priority_queue tempQueue = Listacandidatos; // Cópia temporária auxiliar
+
+        // Determina quantos candidatos considerar (top alpha%)
+        int rclSize = max(1, static_cast<int>(alpha * Listacandidatos.size()));
+
+        // Preenche RCL
+        for (int i = 0; i < rclSize && !tempQueue.empty(); ++i) {
+            rcl.push_back(tempQueue.top());
+            tempQueue.pop();
+        }
+
+        // Seleciona aleatoriamente da RCL
+        int indiceAleatorio = rand() % rcl.size();
+        auto noSelecionado = rcl[indiceAleatorio];
+        char idNoSelecionado = get<1>(noSelecionado);
+
+        // Remove o selecionado da fila original
+        priority_queue<tuple<float, char>, vector<tuple<float, char>>, greater<tuple<float, char>>> newQueue; //cria uma nova fila
+        bool removed = false; //flag de remoção
+        while (!Listacandidatos.empty()) {
+            auto current = Listacandidatos.top(); //pega o elemento do topo da fila
+            if (!removed && get<1>(current) == idNoSelecionado) { //verifica se é o elemento selecionado e se ele não foi removido ainda
+                Listacandidatos.pop(); // remove o elemento selecionado da lista de candidatos
+                removed = true; // marca que o elemento foi removido
+                continue;
+            }
+            newQueue.push(current); // adiciona o elemento atual na nova fila
+            Listacandidatos.pop(); // remove o elemento atual da fila original
+        }
+        Listacandidatos = newQueue; // atualiza a fila de candidatos
+
+        // Processa o nó selecionado
+        No* selectedNo = grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(idNoSelecionado)];
+
+        // Insere nó dominante
+        conjuntoSolucao->inserirNosComDominancia(selectedNo->id, selectedNo->peso, true);
+
+        // Processa vizinhos
+        for (Aresta* aresta : selectedNo->arestas) {
+            if (!conjuntoSolucao->verificaExistenciaNo(aresta->id_no_alvo)) {
+                No* noAlvo = grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(aresta->id_no_alvo)];
+                conjuntoSolucao->inserirNosComDominancia(noAlvo->id, noAlvo->peso, false);
+
+                // Mantém conectividade
+                conjuntoSolucao->processarArestaIda(selectedNo->id, noAlvo->id, noAlvo->peso);
+                conjuntoSolucao->processarArestaVolta(noAlvo->id, selectedNo->id, noAlvo->peso);
+            }
+        }
+
+        // Atualiza pesos dos candidatos restantes
+        reCalculaPesoNoCandidatoGuloso(&Listacandidatos, conjuntoSolucao, grafoInicial);
+    }
 }
 
 void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {

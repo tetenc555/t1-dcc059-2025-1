@@ -373,7 +373,7 @@ void Gerenciador::comandos(Grafo* grafo) {
             break;
         }
         case 'o': {
-            MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 1);
+            MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 1, 0.2);
                 setCalculado->impressao();
             break;
         }
