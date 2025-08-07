@@ -6,6 +6,7 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
+#include <cfloat>
 #include <complex>
 using namespace std;
 
@@ -70,25 +71,32 @@ void MinWeightDominatingSet::guloso(Grafo *grafoInicial)
         candidatos.emplace(make_tuple(pesoRelativo,no->id));
     }
 
-    while (conjuntoSolucao->lista_adj.size() < grafoInicial->lista_adj.size() || !candidatos.empty())
-    {
-        if (candidatos.empty()) break;
-        tuple<float,char> melhorCandidato = candidatos.top();
+    // Enquanto houver candidatos disponíveis E o conjunto solução não cobrir todo o grafo
+    while (!candidatos.empty() && conjuntoSolucao->lista_adj.size() < grafoInicial->lista_adj.size()) {
+        // Pega o melhor candidato da lista de candidatos
+        tuple<float, char> melhorCandidato = candidatos.top();
         candidatos.pop();
-        No* melhorCandidatoNo = new No(grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(get<1>(melhorCandidato))]);
-        melhorCandidatoNo->isDominante = true;
-        for (Aresta* aresta : melhorCandidatoNo->arestas)
-        {
-            if (!conjuntoSolucao->verificaExistenciaNo(aresta->id_no_alvo)) // apenas adiciona no como dominado e define a aresta como aresta que domina se ele ja nao for dominado por outro no.
-            {
-                No* noAlvo = new No(grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(aresta->id_no_alvo)]);
-                noAlvo->isDominante =false;
-                conjuntoSolucao->inserirNos(noAlvo->id,noAlvo->peso);
-                conjuntoSolucao->processarArestaIda(melhorCandidatoNo->id,noAlvo->id,noAlvo->peso);
-                conjuntoSolucao->processarArestaVolta(noAlvo->id,melhorCandidatoNo->id,noAlvo->peso);
+        // Encontra o nó correspondente no grafo original
+        No* melhorCandidatoNo = grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(get<1>(melhorCandidato))];
+
+        // INSERE O NÓ DOMINANTE NO CONJUNTO SOLUÇÃO (com 'true' indicando que é dominante)
+        conjuntoSolucao->inserirNosComDominancia(melhorCandidatoNo->id, melhorCandidatoNo->peso, true);
+
+        // Processa os vizinhos (nós dominados)
+        for (Aresta* aresta : melhorCandidatoNo->arestas) {
+            // Verifica se o nó alvo ainda não está no conjunto solução
+            if (!conjuntoSolucao->verificaExistenciaNo(aresta->id_no_alvo)) {
+                // Obtém o nó alvo a partir do grafo original
+                No* noAlvo = grafoInicial->lista_adj[grafoInicial->encontraIndiceNo(aresta->id_no_alvo)];
+
+                // Insere o nó dominado no conjunto solução (com 'false' indicando que não é dominante)
+                conjuntoSolucao->inserirNosComDominancia(noAlvo->id, noAlvo->peso, false);
+
+                // Adiciona arestas para manter a conectividade no conjunto solução
+                conjuntoSolucao->processarArestaIda(melhorCandidatoNo->id, noAlvo->id, noAlvo->peso);
+                conjuntoSolucao->processarArestaVolta(noAlvo->id, melhorCandidatoNo->id, noAlvo->peso);
             }
         }
-        reCalculaPesoNoCandidatoGuloso(&candidatos, conjuntoSolucao, grafoInicial);
     }
 }
 
