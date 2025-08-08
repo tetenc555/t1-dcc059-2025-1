@@ -5,6 +5,7 @@
 #include <chrono>
 #include "LeituraArquivos.h"
 #include "MinWeightDominatingSet.h"
+#include "ProcessarInstancias.hpp"
 
 static Grafo* grafoAtual = nullptr;
 
@@ -103,6 +104,7 @@ void Gerenciador::comandos(Grafo* grafo) {
     cout <<"(n) Gerar Conjunto Dominante de Peso Minimo - Algoritmo Guloso;" <<endl;
     cout <<"(o) Gerar Conjunto Dominante de Peso Minimo - Algoritmo Guloso Randomizado;" <<endl;
     cout <<"(p) Gerar Conjunto Dominante de Peso Minimo - Algoritmo Guloso Randomizado Adaptativo;" <<endl;
+    cout <<"(q) Gerar Arquivo com a Tabela Comparativa dos Algoritmos Gulosos" <<endl;
     cout<<"(0) Sair;"<<endl<<endl;
 
     char resp;
@@ -380,6 +382,12 @@ void Gerenciador::comandos(Grafo* grafo) {
         case 'p': {
             MinWeightDominatingSet* setCalculado = new MinWeightDominatingSet(grafo, 2);
             setCalculado->impressao();
+            break;
+        }
+        case 'q': {
+            cout << "Processamento comparativo de instâncias" << endl;
+            processarInstanciasComparativo("./input/instances.txt");
+            cout << "Processamento comparativo de instâncias concluido" << endl;
             break;
         }
         case '0': {
