@@ -9,6 +9,7 @@
 #include <cfloat>
 #include <complex>
 #include <vector>
+#include <cstdlib>
 using namespace std;
 
 MinWeightDominatingSet::MinWeightDominatingSet(Grafo* grafoInicial, int tipo) {
@@ -196,8 +197,8 @@ void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {
     int bloco=50;
     int numIteracao=300;
 
-    vector<float> alphas= {0.3, 0.5, 0.7};
-    int numAlphas= alphas.size();
+    vector<float> ListaDeAlphas= {0.3, 0.5, 0.7};
+    int numAlphas= ListaDeAlphas.size();
 
     vector<float> probabilidade(numAlphas, 1/numAlphas);
     vector<float> contadorDeUsos(numAlphas, 0);
@@ -205,6 +206,35 @@ void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {
 
     Grafo* melhorSolucao= nullptr;
     float melhorCusto=FLT_MAX; //é uma constante difinida na biblioteca cfloat q representa o maior valor possivel de um float legal ne
+
+    for (int i=1; i < numIteracao; i++){
+        float numAleatorio = static_cast<float>(rand())/RAND_MAX; //vai me gerar um float entre 0 e 1
+        float alphaEscolhido=0;
+        float somaTemporaria=0;
+
+        //encontro o alpha esoclhido com base na probabilidade
+        for (int j=0; j < numAlphas; j++) {
+            somaTemporaria+=probabilidade[j];
+            if (somaTemporaria > numAleatorio) {
+                alphaEscolhido = ListaDeAlphas[j];
+                break;
+            }
+        }
+
+        //utilizando o randomizado
+        Grafo* atualSolucao = new Grafo (grafoInicial->in_direcionado,grafoInicial->in_ponderado_aresta,grafoInicial->in_ponderado_vertice);
+        this->conjuntoSolucao = atualSolucao;
+        this->gulosoRand(atualSolucao,alphaEscolhido);
+
+        //calcular o peso dos vertices
+        float atualCusto = 0;
+        for (No* no:this->conjuntoSolucao->lista_adj) {
+            if (no->isDominante)
+                atualCusto+= no->peso;
+        }
+
+
+    }
 }
 
 void MinWeightDominatingSet::impressao()
