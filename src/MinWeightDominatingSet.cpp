@@ -194,52 +194,84 @@ void MinWeightDominatingSet::gulosoRand(Grafo *grafoInicial, float alpha) {
 }
 
 void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {
-    int bloco=50;
-    int numIteracao=300;
+    vector<float> LA = {0.1f, 0.3f, 0.5f, 0.7f, 0.9f};
+    int numAlpha = LA.size();
 
-    vector<float> ListaDeAlphas= {0.3, 0.5, 0.7};
-    int numAlphas= ListaDeAlphas.size();
+    // Inicialização das probabilidades, qualidades e contadores
+    vector<float> P(numAlpha, 1.0f / numAlpha); // Probabilidades iniciais
+    vector<float> M(numAlpha, 0.0f);            // Soma das qualidades
+    vector<int> m(numAlpha, 0);                  // Número de usos
 
-    vector<float> probabilidade(numAlphas, 1/numAlphas);
-    vector<float> contadorDeUsos(numAlphas, 0);
-    vector<float> qualidade(numAlphas, 0);
+    // Configurações
+    int numIteracao = 300;
+    int bloco = 50;
 
-    Grafo* melhorSolucao= nullptr;
-    float melhorCusto=FLT_MAX; //é uma constante difinida na biblioteca cfloat q representa o maior valor possivel de um float legal ne
+    Grafo* melhorSolucao = nullptr;
+    float custo_best = FLT_MAX;
 
-    for (int i=1; i < numIteracao; i++){
-        float numAleatorio = static_cast<float>(rand())/RAND_MAX; //vai me gerar um float entre 0 e 1
-        float alphaEscolhido=0;
-        float somaTemporaria=0;
-
-        //encontro o alpha esoclhido com base na probabilidade
-        for (int j=0; j < numAlphas; j++) {
-            somaTemporaria+=probabilidade[j];
-            if (somaTemporaria > numAleatorio) {
-                alphaEscolhido = ListaDeAlphas[j];
+    for (int i = 1; i <= numIteracao; i++) {
+        //escolhe alpha
+        float r = static_cast<float>(rand()) / RAND_MAX;
+        int idxAlpha = 0;
+        float acumulado = 0.0f;
+        for (int j = 0; j < numAlpha; j++) {
+            acumulado += P[j];
+            if (r <= acumulado) {
+                idxAlpha = j;
                 break;
             }
         }
+        float alphaEscolhido = LA[idxAlpha];
 
-        //utilizando o randomizado
-        Grafo* atualSolucao = new Grafo (grafoInicial->in_direcionado,grafoInicial->in_ponderado_aresta,grafoInicial->in_ponderado_vertice);
-        this->conjuntoSolucao = atualSolucao;
-        this->gulosoRand(atualSolucao,alphaEscolhido);
+        //chama guloso rand c alpha definio
+        Grafo* solucaoAtual = new Grafo(grafoInicial->in_direcionado, grafoInicial->in_ponderado_aresta, grafoInicial->in_ponderado_vertice);
+        this->conjuntoSolucao = solucaoAtual;
+        this->gulosoRand(grafoInicial, alphaEscolhido);
 
-        //calcular o peso dos vertices
-        float atualCusto = 0;
-        for (No* no:this->conjuntoSolucao->lista_adj) {
-            if (no->isDominante)
-                atualCusto+= no->peso;
+        //calcula custo da solução atual
+        float custo_S = 0.0f;
+        for (No* no : this->conjuntoSolucao->lista_adj) {
+            if (no->isDominante) {
+                custo_S += no->peso;
+            }
         }
 
+        //att estatísticas
+        float qualidade = 1.0f / custo_S;
+        m[idxAlpha] += 1;
+        M[idxAlpha] += qualidade;
 
+        //att mlehor solucao de todas
+        if (custo_S < custo_best) {
+            custo_best = custo_S;
+            if (melhorSolucao) delete melhorSolucao;
+            melhorSolucao = new Grafo(*this->conjuntoSolucao); // cópia profunda
+        }
+
+        //att prob
+        if (i % bloco == 0) {
+            float somaQualidade = 0.0f;
+            for (int j = 0; j < numAlpha; j++) {
+                if (m[j] > 0) {
+                    somaQualidade += (M[j]/m[j]);
+                }
+            }
+            for (int j = 0; j < numAlpha; j++) {
+                if (m[j] > 0) {
+                    P[j] = (M[j]/m[j]) /somaQualidade;
+                }
+            }
+        }
     }
+
+    // Define o melhor conjunto como solução final
+    delete this->conjuntoSolucao;
+    this->conjuntoSolucao = melhorSolucao;
 }
 
-void MinWeightDominatingSet::impressao()
-{
-    cout << "Vértices Domintantes: " << endl;
+
+void MinWeightDominatingSet::impressao() {
+    cout << "Vértices Dominantes: " << endl;
     for (No* no : this->conjuntoSolucao->lista_adj)
     {
         if (no->isDominante)
