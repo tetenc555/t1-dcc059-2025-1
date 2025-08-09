@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cfloat>
 #include <complex>
+#include <vector>
 using namespace std;
 
 MinWeightDominatingSet::MinWeightDominatingSet(Grafo* grafoInicial, int tipo) {
@@ -192,7 +193,18 @@ void MinWeightDominatingSet::gulosoRand(Grafo *grafoInicial, float alpha) {
 }
 
 void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {
-    cout<< "teste guloso random adapt" << endl;
+    int bloco=50;
+    int numIteracao=300;
+
+    vector<float> alphas= {0.3, 0.5, 0.7};
+    int numAlphas= alphas.size();
+
+    vector<float> probabilidade(numAlphas, 1/numAlphas);
+    vector<float> contadorDeUsos(numAlphas, 0);
+    vector<float> qualidade(numAlphas, 0);
+
+    Grafo* melhorSolucao= nullptr;
+    float melhorCusto=FLT_MAX; //é uma constante difinida na biblioteca cfloat q representa o maior valor possivel de um float legal ne
 }
 
 void MinWeightDominatingSet::impressao()
