@@ -20,6 +20,7 @@ struct ResultadoInstancia {
     float randomizadoAlpha02;
     float randomizadoAlpha03;
     float randomizadoAlpha04;
+    float adaptativo;
 
     //tempo
     double guloso_tempo;
@@ -27,6 +28,7 @@ struct ResultadoInstancia {
     double randomizadoAlpha03_tempo;
     double randomizadoAlpha04_tempo;
 
+    double adaptativo_tempo;
 };
 
 void processarInstanciasComparativo(const string& arquivoLista);

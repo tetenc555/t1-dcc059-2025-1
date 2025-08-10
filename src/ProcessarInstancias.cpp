@@ -48,6 +48,26 @@ tuple<float, double> executarGulosoRandomizado(Grafo* grafo, float alpha, int nu
     return make_tuple(melhorResultado, tempoTotal / numExecucoes);
 }
 
+tuple<float, double> executarGulosoAdaptativo(Grafo* grafo, int numExecucoes) {
+    float melhorResultado = numeric_limits<float>::max();
+    double tempoTotal = 0.0;
+
+    for (int i = 0; i < numExecucoes; i++) {
+        auto inicio = high_resolution_clock::now();
+        
+        auto* setAdapt = new MinWeightDominatingSet(grafo, 2); // 2 para adaptativo reativo
+        float peso = calcularPeso(setAdapt);
+        if (peso < melhorResultado) melhorResultado = peso;
+        
+        auto fim = high_resolution_clock::now();
+        tempoTotal += duration_cast<milliseconds>(fim - inicio).count();
+        delete setAdapt;
+    }
+
+    return make_tuple(melhorResultado, tempoTotal / numExecucoes);
+}
+
+
 // Função principal que processa todas as instâncias e gera a tabela comparativa
 void processarInstanciasComparativo(const string& arquivoLista) {
     // Constantes para configuração do experimento
@@ -113,12 +133,18 @@ void processarInstanciasComparativo(const string& arquivoLista) {
             resultado.randomizadoAlpha04 = melhorAlpha04;
             resultado.randomizadoAlpha04_tempo = tempoAlpha04;
 
-            // Determina a melhor solução entre todas as abordagens
+            // 3. Algoritmo adaptativo reativo
+            auto [melhorAdaptativo, tempoAdaptativo] = executarGulosoAdaptativo(grafo, NUM_EXECUCOES);
+            resultado.adaptativo = melhorAdaptativo;
+            resultado.adaptativo_tempo = tempoAdaptativo;
+
+            // Determina a melhor solução
             resultado.bestSolucao = min({
                 resultado.guloso,
                 resultado.randomizadoAlpha02,
                 resultado.randomizadoAlpha03,
-                resultado.randomizadoAlpha04
+                resultado.randomizadoAlpha04,
+                resultado.adaptativo
             });
 
             // Armazena os resultados e libera memória
@@ -152,7 +178,8 @@ void processarInstanciasComparativo(const string& arquivoLista) {
                  << "Guloso_Melhor,Guloso_Tempo(ns),"
                  << "Rand02_Melhor,Rand02_Tempo(ms),"
                  << "Rand03_Melhor,Rand03_Tempo(ms),"
-                 << "Rand04_Melhor,Rand04_Tempo(ms)\n";
+                 << "Rand04_Melhor,Rand04_Tempo(ms),"
+                 << "Adaptativo_Melhor,Adaptativo_Tempo(ms)\n";
 
     // Escreve os dados de cada instância
     for (const auto& res : resultados) {
@@ -162,7 +189,8 @@ void processarInstanciasComparativo(const string& arquivoLista) {
                      << res.guloso << "," << res.guloso_tempo << ","
                      << res.randomizadoAlpha02 << "," << res.randomizadoAlpha02_tempo << ","
                      << res.randomizadoAlpha03 << "," << res.randomizadoAlpha03_tempo << ","
-                     << res.randomizadoAlpha04 << "," << res.randomizadoAlpha04_tempo << "\n";
+                     << res.randomizadoAlpha04 << "," << res.randomizadoAlpha04_tempo << ","
+                     << res.adaptativo << "," << res.adaptativo_tempo << "\n";
     }
 
     arquivoSaida.close();
