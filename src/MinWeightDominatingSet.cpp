@@ -194,7 +194,7 @@ void MinWeightDominatingSet::gulosoRand(Grafo *grafoInicial, float alpha) {
 }
 
 void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {
-    vector<float> LA = {0.1f, 0.3f, 0.5f, 0.7f, 0.9f};
+    vector<float> LA = {0.2f, 0.5f, 0.8f};
     int numAlpha = LA.size();
 
     // Inicialização das probabilidades, qualidades e contadores
@@ -204,7 +204,7 @@ void MinWeightDominatingSet::gulosoRandAdapt(Grafo *grafoInicial) {
 
     // Configurações
     int numIteracao = 300;
-    int bloco = 50;
+    int bloco = 40;
 
     Grafo* melhorSolucao = nullptr;
     float custo_best = FLT_MAX;
