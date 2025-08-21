@@ -7,12 +7,21 @@ No::No(char id, int peso) {
         this->id=id;
         this->peso=0;
         this->visitado=false;
+        this->isDominante=false;
     }
     else {
         this->id=id;
         this->peso=peso;
         this->visitado=false;
+        this->isDominante=false;
     }
+}
+
+No::No(char id, int peso, bool isDominante) {
+    this->id = id;
+    this->peso = (peso == -1) ? 0 : peso;  // Simplificado
+    this->visitado = false;
+    this->isDominante = isDominante;  // Sempre usa o valor recebido
 }
 
 No::No(const No* noOriginal) {
@@ -20,11 +29,13 @@ No::No(const No* noOriginal) {
         this->id=noOriginal->id;
         this->peso=0;
         this->visitado=false;
+        this->isDominante=noOriginal->isDominante;
     }
     else {
         this->id=noOriginal->id;
         this->peso=noOriginal->peso;
         this->visitado=false;
+        this->isDominante=noOriginal->isDominante;
     }
     for (Aresta* a : noOriginal->arestas) {
         this->arestas.push_back(new Aresta(a));

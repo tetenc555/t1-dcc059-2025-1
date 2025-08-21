@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
-project(MeuProjeto CXX)
+project(Trb_Grafos CXX)
+set(CMAKE_CXX_STANDARD 23)
 
 # Diretórios
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)

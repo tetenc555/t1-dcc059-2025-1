@@ -31,6 +31,8 @@ public:
 
     void inserirNos(char id, int pesoNo);
 
+    void inserirNosComDominancia(char id, int pesoNo, bool isDominante);
+
     void criaListaArestas();
 
     void imprimirNos();

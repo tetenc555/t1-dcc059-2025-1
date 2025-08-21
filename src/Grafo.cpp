@@ -40,6 +40,21 @@ void Grafo::inserirNos(char id, int pesoNo) {
     }
 }
 
+//inserção de nós do trabalho 2, só inclui dominancia na insterção
+void Grafo::inserirNosComDominancia(char id, int pesoNo, bool isDominante) {
+    if (!verificaExistenciaNo(id)) {
+        No* addNo = new No(id, pesoNo, isDominante);
+        this->lista_adj.push_back(addNo);
+        this->ordem++;
+    } else {
+        // Se o nó já existe, apenas atualiza a dominância
+        int idx = encontraIndiceNo(id);
+        if (idx != -1) {
+            lista_adj[idx]->isDominante = isDominante;
+        }
+    }
+}
+
 void Grafo::criaListaArestas() {
     this->lista_arestas = new listaArestas(this->lista_adj);
 }
